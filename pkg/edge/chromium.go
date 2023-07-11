@@ -297,6 +297,28 @@ func (e *Chromium) SetPermission(kind CoreWebView2PermissionKind, state CoreWebV
 	e.permissions[kind] = state
 }
 
+func (e *Chromium) SetBackgroundColour(R, G, B, A uint8) {
+	controller := e.GetController()
+	controller2 := controller.GetICoreWebView2Controller2()
+
+	backgroundCol := COREWEBVIEW2_COLOR{
+		A: A,
+		R: R,
+		G: G,
+		B: B,
+	}
+
+	// WebView2 only has 0 and 255 as valid values.
+	if backgroundCol.A > 0 && backgroundCol.A < 255 {
+		backgroundCol.A = 255
+	}
+
+	err := controller2.PutDefaultBackgroundColor(backgroundCol)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func (e *Chromium) SetGlobalPermission(state CoreWebView2PermissionState) {
 	e.globalPermission = &state
 }
