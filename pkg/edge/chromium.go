@@ -49,7 +49,7 @@ type Chromium struct {
 
 	// Callbacks
 	MessageCallback                      func(string)
-	MessageWithAdditionalObjectsCallback func(message string, sender *ICoreWebView2, args *iCoreWebView2WebMessageReceivedEventArgs)
+	MessageWithAdditionalObjectsCallback func(message string, sender *ICoreWebView2, args *ICoreWebView2WebMessageReceivedEventArgs)
 	WebResourceRequestedCallback         func(request *ICoreWebView2WebResourceRequest, args *ICoreWebView2WebResourceRequestedEventArgs)
 	NavigationCompletedCallback          func(sender *ICoreWebView2, args *ICoreWebView2NavigationCompletedEventArgs)
 	ProcessFailedCallback                func(sender *ICoreWebView2, args *ICoreWebView2ProcessFailedEventArgs)
@@ -277,7 +277,7 @@ func (e *Chromium) CreateCoreWebView2ControllerCompleted(res uintptr, controller
 	return 0
 }
 
-func (e *Chromium) MessageReceived(sender *ICoreWebView2, args *iCoreWebView2WebMessageReceivedEventArgs) uintptr {
+func (e *Chromium) MessageReceived(sender *ICoreWebView2, args *ICoreWebView2WebMessageReceivedEventArgs) uintptr {
 	var _message *uint16
 	args.vtbl.TryGetWebMessageAsString.Call(
 		uintptr(unsafe.Pointer(args)),

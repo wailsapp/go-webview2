@@ -16,11 +16,11 @@ type iCoreWebView2WebMessageReceivedEventArgsVtbl struct {
 	GetAdditionalObjects     ComProc
 }
 
-type iCoreWebView2WebMessageReceivedEventArgs struct {
+type ICoreWebView2WebMessageReceivedEventArgs struct {
 	vtbl *iCoreWebView2WebMessageReceivedEventArgsVtbl
 }
 
-func (i *iCoreWebView2WebMessageReceivedEventArgs) GetAdditionalObjects() (*ICoreWebView2ObjectCollectionView, error) {
+func (i *ICoreWebView2WebMessageReceivedEventArgs) GetAdditionalObjects() (*ICoreWebView2ObjectCollectionView, error) {
 	var err error
 	var value *ICoreWebView2ObjectCollectionView
 	_, _, err = i.vtbl.GetAdditionalObjects.Call(

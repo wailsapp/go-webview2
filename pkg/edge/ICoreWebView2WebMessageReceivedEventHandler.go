@@ -24,13 +24,13 @@ func _ICoreWebView2WebMessageReceivedEventHandlerIUnknownRelease(this *iCoreWebV
 	return this.impl.Release()
 }
 
-func _ICoreWebView2WebMessageReceivedEventHandlerInvoke(this *iCoreWebView2WebMessageReceivedEventHandler, sender *ICoreWebView2, args *iCoreWebView2WebMessageReceivedEventArgs) uintptr {
+func _ICoreWebView2WebMessageReceivedEventHandlerInvoke(this *iCoreWebView2WebMessageReceivedEventHandler, sender *ICoreWebView2, args *ICoreWebView2WebMessageReceivedEventArgs) uintptr {
 	return this.impl.MessageReceived(sender, args)
 }
 
 type iCoreWebView2WebMessageReceivedEventHandlerImpl interface {
 	_IUnknownImpl
-	MessageReceived(sender *ICoreWebView2, args *iCoreWebView2WebMessageReceivedEventArgs) uintptr
+	MessageReceived(sender *ICoreWebView2, args *ICoreWebView2WebMessageReceivedEventArgs) uintptr
 }
 
 var iCoreWebView2WebMessageReceivedEventHandlerFn = iCoreWebView2WebMessageReceivedEventHandlerVtbl{
