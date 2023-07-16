@@ -48,11 +48,12 @@ type Chromium struct {
 	globalPermission *CoreWebView2PermissionState
 
 	// Callbacks
-	MessageCallback              func(string)
-	WebResourceRequestedCallback func(request *ICoreWebView2WebResourceRequest, args *ICoreWebView2WebResourceRequestedEventArgs)
-	NavigationCompletedCallback  func(sender *ICoreWebView2, args *ICoreWebView2NavigationCompletedEventArgs)
-	ProcessFailedCallback        func(sender *ICoreWebView2, args *ICoreWebView2ProcessFailedEventArgs)
-	AcceleratorKeyCallback       func(uint) bool
+	MessageCallback                      func(string)
+	MessageWithAdditionalObjectsCallback func(message string, sender *ICoreWebView2, args *iCoreWebView2WebMessageReceivedEventArgs)
+	WebResourceRequestedCallback         func(request *ICoreWebView2WebResourceRequest, args *ICoreWebView2WebResourceRequestedEventArgs)
+	NavigationCompletedCallback          func(sender *ICoreWebView2, args *ICoreWebView2NavigationCompletedEventArgs)
+	ProcessFailedCallback                func(sender *ICoreWebView2, args *ICoreWebView2ProcessFailedEventArgs)
+	AcceleratorKeyCallback               func(uint) bool
 }
 
 func NewChromium() *Chromium {
@@ -277,19 +278,26 @@ func (e *Chromium) CreateCoreWebView2ControllerCompleted(res uintptr, controller
 }
 
 func (e *Chromium) MessageReceived(sender *ICoreWebView2, args *iCoreWebView2WebMessageReceivedEventArgs) uintptr {
-	var message *uint16
+	var _message *uint16
 	args.vtbl.TryGetWebMessageAsString.Call(
 		uintptr(unsafe.Pointer(args)),
-		uintptr(unsafe.Pointer(&message)),
+		uintptr(unsafe.Pointer(&_message)),
 	)
-	if e.MessageCallback != nil {
-		e.MessageCallback(w32.Utf16PtrToString(message))
+
+	message := w32.Utf16PtrToString(_message)
+
+	obj, _ := args.GetAdditionalObjects()
+	if obj != nil && e.MessageWithAdditionalObjectsCallback != nil {
+		e.MessageWithAdditionalObjectsCallback(message, sender, args)
+	} else if e.MessageCallback != nil {
+		e.MessageCallback(message)
 	}
+
 	sender.vtbl.PostWebMessageAsString.Call(
 		uintptr(unsafe.Pointer(sender)),
-		uintptr(unsafe.Pointer(message)),
+		uintptr(unsafe.Pointer(_message)),
 	)
-	windows.CoTaskMemFree(unsafe.Pointer(message))
+	windows.CoTaskMemFree(unsafe.Pointer(_message))
 	return 0
 }
 
