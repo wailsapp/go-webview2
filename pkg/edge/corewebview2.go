@@ -207,6 +207,19 @@ func (i *ICoreWebView2) GetSettings() (*ICoreWebViewSettings, error) {
 	return settings, nil
 }
 
+func (i *ICoreWebView2) GetContainsFullScreenElement() (bool, error) {
+	var err error
+	var result bool
+	_, _, err = i.vtbl.GetContainsFullScreenElement.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&result)),
+	)
+	if err != windows.ERROR_SUCCESS {
+		return false, err
+	}
+	return result, nil
+}
+
 // ICoreWebView2Environment
 
 type iCoreWebView2EnvironmentVtbl struct {
