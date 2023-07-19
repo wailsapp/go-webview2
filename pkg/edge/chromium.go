@@ -20,18 +20,19 @@ import (
 type Rect = w32.Rect
 
 type Chromium struct {
-	hwnd                  uintptr
-	controller            *ICoreWebView2Controller
-	webview               *ICoreWebView2
-	inited                uintptr
-	envCompleted          *iCoreWebView2CreateCoreWebView2EnvironmentCompletedHandler
-	controllerCompleted   *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler
-	webMessageReceived    *iCoreWebView2WebMessageReceivedEventHandler
-	permissionRequested   *iCoreWebView2PermissionRequestedEventHandler
-	webResourceRequested  *iCoreWebView2WebResourceRequestedEventHandler
-	acceleratorKeyPressed *ICoreWebView2AcceleratorKeyPressedEventHandler
-	navigationCompleted   *ICoreWebView2NavigationCompletedEventHandler
-	processFailed         *ICoreWebView2ProcessFailedEventHandler
+	hwnd                             uintptr
+	controller                       *ICoreWebView2Controller
+	webview                          *ICoreWebView2
+	inited                           uintptr
+	envCompleted                     *iCoreWebView2CreateCoreWebView2EnvironmentCompletedHandler
+	controllerCompleted              *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler
+	webMessageReceived               *iCoreWebView2WebMessageReceivedEventHandler
+	containsFullScreenElementChanged *ICoreWebView2ContainsFullScreenElementChangedEventHandler
+	permissionRequested              *iCoreWebView2PermissionRequestedEventHandler
+	webResourceRequested             *iCoreWebView2WebResourceRequestedEventHandler
+	acceleratorKeyPressed            *ICoreWebView2AcceleratorKeyPressedEventHandler
+	navigationCompleted              *ICoreWebView2NavigationCompletedEventHandler
+	processFailed                    *ICoreWebView2ProcessFailedEventHandler
 
 	environment *ICoreWebView2Environment
 
@@ -48,12 +49,13 @@ type Chromium struct {
 	globalPermission *CoreWebView2PermissionState
 
 	// Callbacks
-	MessageCallback                      func(string)
-	MessageWithAdditionalObjectsCallback func(message string, sender *ICoreWebView2, args *ICoreWebView2WebMessageReceivedEventArgs)
-	WebResourceRequestedCallback         func(request *ICoreWebView2WebResourceRequest, args *ICoreWebView2WebResourceRequestedEventArgs)
-	NavigationCompletedCallback          func(sender *ICoreWebView2, args *ICoreWebView2NavigationCompletedEventArgs)
-	ProcessFailedCallback                func(sender *ICoreWebView2, args *ICoreWebView2ProcessFailedEventArgs)
-	AcceleratorKeyCallback               func(uint) bool
+	MessageCallback                          func(string)
+	MessageWithAdditionalObjectsCallback     func(message string, sender *ICoreWebView2, args *ICoreWebView2WebMessageReceivedEventArgs)
+	WebResourceRequestedCallback             func(request *ICoreWebView2WebResourceRequest, args *ICoreWebView2WebResourceRequestedEventArgs)
+	NavigationCompletedCallback              func(sender *ICoreWebView2, args *ICoreWebView2NavigationCompletedEventArgs)
+	ProcessFailedCallback                    func(sender *ICoreWebView2, args *ICoreWebView2ProcessFailedEventArgs)
+	ContainsFullScreenElementChangedCallback func(sender *ICoreWebView2, args *ICoreWebView2ContainsFullScreenElementChangedEventArgs)
+	AcceleratorKeyCallback                   func(uint) bool
 }
 
 func NewChromium() *Chromium {
@@ -77,6 +79,7 @@ func NewChromium() *Chromium {
 	e.acceleratorKeyPressed = newICoreWebView2AcceleratorKeyPressedEventHandler(e)
 	e.navigationCompleted = newICoreWebView2NavigationCompletedEventHandler(e)
 	e.processFailed = newICoreWebView2ProcessFailedEventHandler(e)
+	e.containsFullScreenElementChanged = newICoreWebView2ContainsFullScreenElementChangedEventHandler(e)
 	e.permissions = make(map[CoreWebView2PermissionKind]CoreWebView2PermissionState)
 
 	return e
@@ -269,11 +272,23 @@ func (e *Chromium) CreateCoreWebView2ControllerCompleted(res uintptr, controller
 		uintptr(unsafe.Pointer(e.processFailed)),
 		uintptr(unsafe.Pointer(&token)),
 	)
+	e.webview.vtbl.AddContainsFullScreenElementChanged.Call(
+		uintptr(unsafe.Pointer(e.webview)),
+		uintptr(unsafe.Pointer(e.containsFullScreenElementChanged)),
+		uintptr(unsafe.Pointer(&token)),
+	)
 
 	e.controller.AddAcceleratorKeyPressed(e.acceleratorKeyPressed, &token)
 
 	atomic.StoreUintptr(&e.inited, 1)
 
+	return 0
+}
+
+func (e *Chromium) ContainsFullScreenElementChanged(sender *ICoreWebView2, args *ICoreWebView2ContainsFullScreenElementChangedEventArgs) uintptr {
+	if e.ContainsFullScreenElementChangedCallback != nil {
+		e.ContainsFullScreenElementChangedCallback(sender, args)
+	}
 	return 0
 }
 
