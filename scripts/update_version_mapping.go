@@ -1,10 +1,14 @@
 package main
 
 import (
+	"archive/zip"
 	"bufio"
 	"bytes"
+	_ "embed"
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"github.com/wailsapp/go-webview2/webviewloader"
+	"io"
 	"log"
 	"os"
 	"regexp"
@@ -13,6 +17,9 @@ import (
 )
 
 const URL = "https://raw.githubusercontent.com/MicrosoftDocs/edge-developer/master/microsoft-edge/webview2/release-notes.md"
+
+//go:embed latest_version.txt
+var latestVersionProcessed string
 
 type Version struct {
 	Number         string
@@ -48,6 +55,8 @@ func extractVersion(in string) string {
 	version := regex.Find([]byte(in))
 	return string(version)
 }
+
+var latestVersion string
 
 func main() {
 
@@ -86,6 +95,8 @@ func main() {
 			}
 			if currentVersion != nil {
 				versions = append(versions, currentVersion)
+			} else {
+				latestVersion = version
 			}
 			currentVersion = &Version{
 				Number: version,
@@ -135,4 +146,60 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Check if the latest version is different from the last time we ran this script
+	latest, err := webviewloader.CompareBrowserVersions(latestVersion, latestVersionProcessed)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if latest != 1 {
+		println("No new version found")
+		os.Exit(0)
+	}
+
+	println("Processing version: ", latestVersion)
+	// Download Webview2 IDL for this version
+	idlData, err := DownloadIDL(latestVersion)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	println(idlData)
+
+}
+
+func DownloadIDL(version string) (string, error) {
+
+	// URL for the nuget package: https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/<version>
+	// Download the package to the current directory
+	client := resty.New()
+	println("Downloading: ", fmt.Sprintf("https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/%s", version))
+	resp, err := client.R().
+		EnableTrace().
+		Get(fmt.Sprintf("https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/%s", version))
+	if err != nil {
+		return "", err
+	}
+
+	reader := bytes.NewReader(resp.Body())
+	zr, err := zip.NewReader(reader, int64(reader.Len()))
+	if err != nil {
+		return "", err
+	}
+
+	var idlfile string
+	for _, file := range zr.File {
+		println(file.Name)
+		if file.Name == "WebView2.idl" {
+			r, err := file.Open()
+			if err != nil {
+				return "", err
+			}
+			idlData, err := io.ReadAll(r)
+			if err != nil {
+				return "", err
+			}
+			idlfile = string(idlData)
+		}
+	}
+	return idlfile, nil
 }
