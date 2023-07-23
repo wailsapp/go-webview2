@@ -1,0 +1,17 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  generate:mappings:
+    dir: scripts
+    cmds:
+      - go run update_version_mapping.go
+
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
