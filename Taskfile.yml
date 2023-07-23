@@ -19,5 +19,5 @@ tasks:
     cmds:
       - go run update_version_mapping.go
       - task: gofmt
-      - task: commit
+#      - task: commit
 

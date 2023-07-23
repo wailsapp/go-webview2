@@ -1,0 +1,4 @@
+	// Get result and cleanup
+	{{.Name}} := windows.UTF16PtrToString({{.LocalName}})
+	windows.CoTaskMemFree(unsafe.Pointer({{.LocalName}}))
+	{{- .ClearLocalName}}

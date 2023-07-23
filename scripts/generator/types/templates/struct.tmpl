@@ -1,0 +1,7 @@
+package {{.PackageName}}
+
+type {{.Name}} struct {
+	{{- range .Fields}}
+	{{.Name}} {{.GoType}}
+	{{- end}}
+}

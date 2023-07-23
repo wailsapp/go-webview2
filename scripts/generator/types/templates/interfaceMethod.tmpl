@@ -1,0 +1,15 @@
+
+func (i *{{.Name}}) {{.Method.ProcessedName}}({{.Method.GoInputs}}) ({{.Method.GoReturnTypes}}) {
+	var err error
+{{ .Method.SetupCode}}
+	_, _, err = i.vtbl.{{.Method.ProcessedName}}.Call(
+		uintptr(unsafe.Pointer(i)),
+{{ .Method.VtableCallInputs}}	)
+	if err != windows.ERROR_SUCCESS {
+		return {{.Method.ErrorValues}}
+	}
+
+
+{{- .Method.CleanupCode}}
+	return {{.Method.SuccessValues}}
+}

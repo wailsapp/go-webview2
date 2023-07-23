@@ -1,0 +1,9 @@
+package {{.PackageName}}
+
+type {{.Name}} uint32
+
+const (
+	{{- range .Values}}
+	{{.Key}} = {{.Value.Value}}
+	{{- end}}
+)

@@ -1,0 +1,23 @@
+package {{.PackageName}}
+
+{{- if .Includes }}
+import (
+{{- range .Includes}}
+	{{.}}
+{{- end}}
+)
+{{- end}}
+
+type _{{.Name}}Vtbl struct {
+	_IUnknownVtbl
+	{{- range .Methods}}
+	{{.ProcessedName}} ComProc
+	{{- end}}
+}
+
+type {{.Name}} struct {
+	vtbl *_{{.Name}}Vtbl
+	{{- if .HasInvokeMethod }}
+	impl _{{.Name}}Impl
+	{{- end}}
+}

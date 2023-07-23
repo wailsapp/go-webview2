@@ -1,0 +1,36 @@
+func _{{.Name}}IUnknownQueryInterface(this *{{.Declaration.Name}}, refiid, object uintptr) uintptr {
+	return this.impl.QueryInterface(refiid, object)
+}
+
+func _{{.Declaration.Name}}IUnknownAddRef(this *{{.Declaration.Name}}) uintptr {
+	return this.impl.AddRef()
+}
+
+func _{{.Declaration.Name}}IUnknownRelease(this *{{.Declaration.Name}}) uintptr {
+	return this.impl.Release()
+}
+
+func _{{.Declaration.Name}}Invoke(this *{{.Declaration.Name}}, {{.InvokeMethod.GoInputs}}) uintptr {
+	return this.impl.{{.InvokeMethod.GoMethodName}}({{.InvokeMethod.InputParamNames}})
+}
+
+type _{{.Declaration.Name}}Impl interface {
+	_IUnknownImpl
+	{{.InvokeMethod.GoMethodName}}({{.InvokeMethod.GoInputs}}) uintptr
+}
+
+var _{{.Declaration.Name}}Fn = _{{.Declaration.Name}}Vtbl{
+	_IUnknownVtbl {
+		NewComProc(_{{.Declaration.Name}}IUnknownQueryInterface),
+		NewComProc(_{{.Declaration.Name}}IUnknownAddRef),
+		NewComProc(_{{.Declaration.Name}}IUnknownRelease),
+	},
+	NewComProc(_{{.Declaration.Name}}Invoke),
+}
+
+func New{{.Declaration.Name}}(impl _{{.Declaration.Name}}Impl) *{{.Declaration.Name}} {
+	return &{{.Declaration.Name}}{
+		vtbl: &_{{.Declaration.Name}}Fn,
+		impl: impl,
+	}
+}

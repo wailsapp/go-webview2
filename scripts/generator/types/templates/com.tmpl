@@ -1,0 +1,62 @@
+package {{.PackageName}}
+
+import (
+	"golang.org/x/sys/windows"
+	"syscall"
+)
+
+// ComProc stores a COM procedure.
+type ComProc uintptr
+
+// NewComProc creates a new COM proc from a Go function.
+func NewComProc(fn interface{}) ComProc {
+	return ComProc(windows.NewCallback(fn))
+}
+
+type EventRegistrationToken struct {
+	value int64
+}
+
+// IUnknown
+type _IUnknown struct {
+	vtbl *_IUnknownVtbl
+}
+
+type _IUnknownVtbl struct {
+	QueryInterface ComProc
+	AddRef         ComProc
+	Release        ComProc
+}
+
+type _IUnknownImpl interface {
+	QueryInterface(refiid, object uintptr) uintptr
+	AddRef() uintptr
+	Release() uintptr
+}
+
+// Call calls a COM procedure.
+func (p ComProc) Call(a ...uintptr) (r1, r2 uintptr, lastErr error) {
+	return syscall.SyscallN(uintptr(p), a...)
+}
+
+type POINT struct {
+	X, Y int32
+}
+type RECT struct {
+	Left   int32
+	Top    int32
+	Right  int32
+	Bottom int32
+}
+type HANDLE uintptr
+type HBRUSH uintptr
+type HCURSOR uintptr
+type HICON uintptr
+type HINSTANCE uintptr
+type HMENU uintptr
+type HMODULE uintptr
+type HWND uintptr
+
+// NOTE: For sure, this is wrong!
+type IStream uintptr
+type VARIANT uintptr

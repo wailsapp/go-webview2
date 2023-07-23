@@ -14,6 +14,7 @@ import (
 	"regexp"
 	"strings"
 	"text/scanner"
+	"updater/generator"
 )
 
 const URL = "https://raw.githubusercontent.com/MicrosoftDocs/edge-developer/master/microsoft-edge/webview2/release-notes.md"
@@ -163,11 +164,19 @@ func main() {
 		log.Fatal(err)
 	}
 
-	println(idlData)
+	err = generator.ParseIDL(idlData, "../pkg/edge_generated")
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	// Save the version to latest_version.txt
+	err = os.WriteFile("latest_version.txt", []byte(latestVersion), 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-func DownloadIDL(version string) (string, error) {
+func DownloadIDL(version string) ([]byte, error) {
 
 	// URL for the nuget package: https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/<version>
 	// Download the package to the current directory
@@ -177,29 +186,27 @@ func DownloadIDL(version string) (string, error) {
 		EnableTrace().
 		Get(fmt.Sprintf("https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/%s", version))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	reader := bytes.NewReader(resp.Body())
 	zr, err := zip.NewReader(reader, int64(reader.Len()))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	var idlfile string
+	var idlData []byte
 	for _, file := range zr.File {
-		println(file.Name)
 		if file.Name == "WebView2.idl" {
 			r, err := file.Open()
 			if err != nil {
-				return "", err
+				return nil, err
 			}
-			idlData, err := io.ReadAll(r)
+			idlData, err = io.ReadAll(r)
 			if err != nil {
-				return "", err
+				return nil, err
 			}
-			idlfile = string(idlData)
 		}
 	}
-	return idlfile, nil
+	return idlData, nil
 }
