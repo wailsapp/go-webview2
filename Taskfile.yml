@@ -2,16 +2,22 @@
 
 version: '3'
 
-vars:
-  GREETING: Hello, World!
-
 tasks:
+
+  commit:
+    cmds:
+      - git add .
+      - git commit -m "Updated mappings"
+
+  gofmt:
+    dir: webviewloader
+    cmds:
+      - go fmt
+
   generate:mappings:
     dir: scripts
     cmds:
       - go run update_version_mapping.go
+      - task: gofmt
+      - task: commit
 
-  default:
-    cmds:
-      - echo "{{.GREETING}}"
-    silent: true
