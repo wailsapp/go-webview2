@@ -10,11 +10,11 @@ tasks:
       - git commit -m "Updated mappings"
 
   gofmt:
-    dir: webviewloader
+    dir: pkg/webview2
     cmds:
       - go fmt
 
-  generate:mappings:
+  update:
     dir: scripts
     cmds:
       - go run update_version_mapping.go

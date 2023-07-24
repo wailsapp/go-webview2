@@ -1,3 +1,5 @@
+//go:build windows
+
 package {{.PackageName}}
 
 {{- if .Includes }}
@@ -20,4 +22,8 @@ type {{.Name}} struct {
 	{{- if .HasInvokeMethod }}
 	impl _{{.Name}}Impl
 	{{- end}}
+}
+
+func (i *{{.Name}}) AddRef() uintptr {
+	return i.AddRef()
 }

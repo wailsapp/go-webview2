@@ -1,0 +1,53 @@
+//go:build windows
+
+package webview2
+
+type _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerVtbl struct {
+	_IUnknownVtbl
+	Invoke ComProc
+}
+
+type ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler struct {
+	vtbl *_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerVtbl
+	impl _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerImpl
+}
+
+func (i *ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler) AddRef() uintptr {
+	return i.AddRef()
+}
+func _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerIUnknownQueryInterface(this *ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler, refiid, object uintptr) uintptr {
+	return this.impl.QueryInterface(refiid, object)
+}
+
+func _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerIUnknownAddRef(this *ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler) uintptr {
+	return this.impl.AddRef()
+}
+
+func _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerIUnknownRelease(this *ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler) uintptr {
+	return this.impl.Release()
+}
+
+func _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerInvoke(this *ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler, errorCode uintptr, collectionView *ICoreWebView2PermissionSettingCollectionView) uintptr {
+	return this.impl.GetNonDefaultPermissionSettingsCompleted(errorCode, collectionView)
+}
+
+type _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerImpl interface {
+	_IUnknownImpl
+	GetNonDefaultPermissionSettingsCompleted(errorCode uintptr, collectionView *ICoreWebView2PermissionSettingCollectionView) uintptr
+}
+
+var _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerFn = _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerVtbl{
+	_IUnknownVtbl{
+		NewComProc(_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerIUnknownQueryInterface),
+		NewComProc(_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerIUnknownAddRef),
+		NewComProc(_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerIUnknownRelease),
+	},
+	NewComProc(_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerInvoke),
+}
+
+func NewICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler(impl _ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerImpl) *ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler {
+	return &ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler{
+		vtbl: &_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerFn,
+		impl: impl,
+	}
+}

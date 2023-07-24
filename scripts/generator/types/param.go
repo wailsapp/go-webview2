@@ -96,7 +96,7 @@ func (p *Param) processVtableCallInput() {
 		return
 	}
 	if p.IsEnum() {
-		p.VtableCallInput = "uintptr(unsafe.Pointer(&" + variableName + "))"
+		p.VtableCallInput = "uintptr(" + variableName + ")"
 		return
 	}
 	p.VtableCallInput = "uintptr(unsafe.Pointer(&" + variableName + "))"

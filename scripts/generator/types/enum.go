@@ -3,7 +3,6 @@ package types
 import (
 	"io"
 	"log"
-	"path/filepath"
 	"strconv"
 	"text/template"
 )
@@ -45,15 +44,6 @@ func (d *EnumDeclaration) Process(decl *Declaration) error {
 	}
 	decl.library.enums.Add(d.Name)
 	return nil
-}
-
-func path(p string) string {
-	p = filepath.FromSlash(p)
-	res, err := filepath.Abs(p)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return res
 }
 
 func (d *EnumDeclaration) Generate(packageName string, w io.Writer) error {
