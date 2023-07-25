@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2PointerInfoVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2PointerInfoVtbl struct {
+	IUnknownVtbl
 	GetPointerKind         ComProc
 	PutPointerKind         ComProc
 	GetPointerId           ComProc
@@ -68,793 +69,738 @@ type _ICoreWebView2PointerInfoVtbl struct {
 }
 
 type ICoreWebView2PointerInfo struct {
-	vtbl *_ICoreWebView2PointerInfoVtbl
+	Vtbl *ICoreWebView2PointerInfoVtbl
 }
 
 func (i *ICoreWebView2PointerInfo) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2PointerInfo) GetPointerKind() (*DWORD, error) {
-	var err error
+func (i *ICoreWebView2PointerInfo) GetPointerKind() (*uint32, error) {
 
-	var pointerKind *DWORD
+	var pointerKind uint32
 
-	_, _, err = i.vtbl.GetPointerKind.Call(
+	hr, _, err := i.Vtbl.GetPointerKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pointerKind)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return pointerKind, nil
+	return &pointerKind, err
 }
 
-func (i *ICoreWebView2PointerInfo) PutPointerKind(pointerKind DWORD) error {
-	var err error
+func (i *ICoreWebView2PointerInfo) PutPointerKind(pointerKind uint32) error {
 
-	_, _, err = i.vtbl.PutPointerKind.Call(
+	hr, _, err := i.Vtbl.PutPointerKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pointerKind)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPointerId() (*uint32, error) {
-	var err error
 
-	var pointerId *uint32
+	var pointerId uint32
 
-	_, _, err = i.vtbl.GetPointerId.Call(
+	hr, _, err := i.Vtbl.GetPointerId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pointerId)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return pointerId, nil
+	return &pointerId, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPointerId(pointerId uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPointerId.Call(
+	hr, _, err := i.Vtbl.PutPointerId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pointerId)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetFrameId() (*uint32, error) {
-	var err error
 
-	var frameId *uint32
+	var frameId uint32
 
-	_, _, err = i.vtbl.GetFrameId.Call(
+	hr, _, err := i.Vtbl.GetFrameId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&frameId)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return frameId, nil
+	return &frameId, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutFrameId(frameId uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutFrameId.Call(
+	hr, _, err := i.Vtbl.PutFrameId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&frameId)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPointerFlags() (*uint32, error) {
-	var err error
 
-	var pointerFlags *uint32
+	var pointerFlags uint32
 
-	_, _, err = i.vtbl.GetPointerFlags.Call(
+	hr, _, err := i.Vtbl.GetPointerFlags.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pointerFlags)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return pointerFlags, nil
+	return &pointerFlags, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPointerFlags(pointerFlags uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPointerFlags.Call(
+	hr, _, err := i.Vtbl.PutPointerFlags.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pointerFlags)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPointerDeviceRect() (*RECT, error) {
-	var err error
 
-	var pointerDeviceRect *RECT
+	var pointerDeviceRect RECT
 
-	_, _, err = i.vtbl.GetPointerDeviceRect.Call(
+	hr, _, err := i.Vtbl.GetPointerDeviceRect.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pointerDeviceRect)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return pointerDeviceRect, nil
+	return &pointerDeviceRect, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPointerDeviceRect(pointerDeviceRect RECT) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPointerDeviceRect.Call(
+	hr, _, err := i.Vtbl.PutPointerDeviceRect.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pointerDeviceRect)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetDisplayRect() (*RECT, error) {
-	var err error
 
-	var displayRect *RECT
+	var displayRect RECT
 
-	_, _, err = i.vtbl.GetDisplayRect.Call(
+	hr, _, err := i.Vtbl.GetDisplayRect.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&displayRect)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return displayRect, nil
+	return &displayRect, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutDisplayRect(displayRect RECT) error {
-	var err error
 
-	_, _, err = i.vtbl.PutDisplayRect.Call(
+	hr, _, err := i.Vtbl.PutDisplayRect.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&displayRect)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPixelLocation() (*POINT, error) {
-	var err error
 
-	var pixelLocation *POINT
+	var pixelLocation POINT
 
-	_, _, err = i.vtbl.GetPixelLocation.Call(
+	hr, _, err := i.Vtbl.GetPixelLocation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pixelLocation)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return pixelLocation, nil
+	return &pixelLocation, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPixelLocation(pixelLocation POINT) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPixelLocation.Call(
+	hr, _, err := i.Vtbl.PutPixelLocation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pixelLocation)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetHimetricLocation() (*POINT, error) {
-	var err error
 
-	var himetricLocation *POINT
+	var himetricLocation POINT
 
-	_, _, err = i.vtbl.GetHimetricLocation.Call(
+	hr, _, err := i.Vtbl.GetHimetricLocation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&himetricLocation)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return himetricLocation, nil
+	return &himetricLocation, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutHimetricLocation(himetricLocation POINT) error {
-	var err error
 
-	_, _, err = i.vtbl.PutHimetricLocation.Call(
+	hr, _, err := i.Vtbl.PutHimetricLocation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&himetricLocation)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPixelLocationRaw() (*POINT, error) {
-	var err error
 
-	var pixelLocationRaw *POINT
+	var pixelLocationRaw POINT
 
-	_, _, err = i.vtbl.GetPixelLocationRaw.Call(
+	hr, _, err := i.Vtbl.GetPixelLocationRaw.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pixelLocationRaw)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return pixelLocationRaw, nil
+	return &pixelLocationRaw, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPixelLocationRaw(pixelLocationRaw POINT) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPixelLocationRaw.Call(
+	hr, _, err := i.Vtbl.PutPixelLocationRaw.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pixelLocationRaw)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetHimetricLocationRaw() (*POINT, error) {
-	var err error
 
-	var himetricLocationRaw *POINT
+	var himetricLocationRaw POINT
 
-	_, _, err = i.vtbl.GetHimetricLocationRaw.Call(
+	hr, _, err := i.Vtbl.GetHimetricLocationRaw.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&himetricLocationRaw)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return himetricLocationRaw, nil
+	return &himetricLocationRaw, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutHimetricLocationRaw(himetricLocationRaw POINT) error {
-	var err error
 
-	_, _, err = i.vtbl.PutHimetricLocationRaw.Call(
+	hr, _, err := i.Vtbl.PutHimetricLocationRaw.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&himetricLocationRaw)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2PointerInfo) GetTime() (*DWORD, error) {
-	var err error
+func (i *ICoreWebView2PointerInfo) GetTime() (*uint32, error) {
 
-	var time *DWORD
+	var time uint32
 
-	_, _, err = i.vtbl.GetTime.Call(
+	hr, _, err := i.Vtbl.GetTime.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&time)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return time, nil
+	return &time, err
 }
 
-func (i *ICoreWebView2PointerInfo) PutTime(time DWORD) error {
-	var err error
+func (i *ICoreWebView2PointerInfo) PutTime(time uint32) error {
 
-	_, _, err = i.vtbl.PutTime.Call(
+	hr, _, err := i.Vtbl.PutTime.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&time)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetHistoryCount() (*uint32, error) {
-	var err error
 
-	var historyCount *uint32
+	var historyCount uint32
 
-	_, _, err = i.vtbl.GetHistoryCount.Call(
+	hr, _, err := i.Vtbl.GetHistoryCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&historyCount)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return historyCount, nil
+	return &historyCount, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutHistoryCount(historyCount uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutHistoryCount.Call(
+	hr, _, err := i.Vtbl.PutHistoryCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&historyCount)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2PointerInfo) GetInputData() (*INT32, error) {
-	var err error
+func (i *ICoreWebView2PointerInfo) GetInputData() (*int32, error) {
 
-	var inputData *INT32
+	var inputData int32
 
-	_, _, err = i.vtbl.GetInputData.Call(
+	hr, _, err := i.Vtbl.GetInputData.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&inputData)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return inputData, nil
+	return &inputData, err
 }
 
-func (i *ICoreWebView2PointerInfo) PutInputData(inputData INT32) error {
-	var err error
+func (i *ICoreWebView2PointerInfo) PutInputData(inputData int32) error {
 
-	_, _, err = i.vtbl.PutInputData.Call(
+	hr, _, err := i.Vtbl.PutInputData.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&inputData)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2PointerInfo) GetKeyStates() (*DWORD, error) {
-	var err error
+func (i *ICoreWebView2PointerInfo) GetKeyStates() (*uint32, error) {
 
-	var keyStates *DWORD
+	var keyStates uint32
 
-	_, _, err = i.vtbl.GetKeyStates.Call(
+	hr, _, err := i.Vtbl.GetKeyStates.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&keyStates)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return keyStates, nil
+	return &keyStates, err
 }
 
-func (i *ICoreWebView2PointerInfo) PutKeyStates(keyStates DWORD) error {
-	var err error
+func (i *ICoreWebView2PointerInfo) PutKeyStates(keyStates uint32) error {
 
-	_, _, err = i.vtbl.PutKeyStates.Call(
+	hr, _, err := i.Vtbl.PutKeyStates.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&keyStates)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPerformanceCount() (*uint64, error) {
-	var err error
 
-	var performanceCount *uint64
+	var performanceCount uint64
 
-	_, _, err = i.vtbl.GetPerformanceCount.Call(
+	hr, _, err := i.Vtbl.GetPerformanceCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&performanceCount)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return performanceCount, nil
+	return &performanceCount, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPerformanceCount(performanceCount uint64) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPerformanceCount.Call(
+	hr, _, err := i.Vtbl.PutPerformanceCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&performanceCount)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2PointerInfo) GetButtonChangeKind() (*INT32, error) {
-	var err error
+func (i *ICoreWebView2PointerInfo) GetButtonChangeKind() (*int32, error) {
 
-	var buttonChangeKind *INT32
+	var buttonChangeKind int32
 
-	_, _, err = i.vtbl.GetButtonChangeKind.Call(
+	hr, _, err := i.Vtbl.GetButtonChangeKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&buttonChangeKind)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return buttonChangeKind, nil
+	return &buttonChangeKind, err
 }
 
-func (i *ICoreWebView2PointerInfo) PutButtonChangeKind(buttonChangeKind INT32) error {
-	var err error
+func (i *ICoreWebView2PointerInfo) PutButtonChangeKind(buttonChangeKind int32) error {
 
-	_, _, err = i.vtbl.PutButtonChangeKind.Call(
+	hr, _, err := i.Vtbl.PutButtonChangeKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&buttonChangeKind)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPenFlags() (*uint32, error) {
-	var err error
 
-	var penFLags *uint32
+	var penFLags uint32
 
-	_, _, err = i.vtbl.GetPenFlags.Call(
+	hr, _, err := i.Vtbl.GetPenFlags.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penFLags)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return penFLags, nil
+	return &penFLags, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPenFlags(penFLags uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPenFlags.Call(
+	hr, _, err := i.Vtbl.PutPenFlags.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penFLags)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPenMask() (*uint32, error) {
-	var err error
 
-	var penMask *uint32
+	var penMask uint32
 
-	_, _, err = i.vtbl.GetPenMask.Call(
+	hr, _, err := i.Vtbl.GetPenMask.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penMask)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return penMask, nil
+	return &penMask, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPenMask(penMask uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPenMask.Call(
+	hr, _, err := i.Vtbl.PutPenMask.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penMask)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPenPressure() (*uint32, error) {
-	var err error
 
-	var penPressure *uint32
+	var penPressure uint32
 
-	_, _, err = i.vtbl.GetPenPressure.Call(
+	hr, _, err := i.Vtbl.GetPenPressure.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penPressure)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return penPressure, nil
+	return &penPressure, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPenPressure(penPressure uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPenPressure.Call(
+	hr, _, err := i.Vtbl.PutPenPressure.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penPressure)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetPenRotation() (*uint32, error) {
-	var err error
 
-	var penRotation *uint32
+	var penRotation uint32
 
-	_, _, err = i.vtbl.GetPenRotation.Call(
+	hr, _, err := i.Vtbl.GetPenRotation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penRotation)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return penRotation, nil
+	return &penRotation, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutPenRotation(penRotation uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPenRotation.Call(
+	hr, _, err := i.Vtbl.PutPenRotation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penRotation)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2PointerInfo) GetPenTiltX() (*INT32, error) {
-	var err error
+func (i *ICoreWebView2PointerInfo) GetPenTiltX() (*int32, error) {
 
-	var penTiltX *INT32
+	var penTiltX int32
 
-	_, _, err = i.vtbl.GetPenTiltX.Call(
+	hr, _, err := i.Vtbl.GetPenTiltX.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penTiltX)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return penTiltX, nil
+	return &penTiltX, err
 }
 
-func (i *ICoreWebView2PointerInfo) PutPenTiltX(penTiltX INT32) error {
-	var err error
+func (i *ICoreWebView2PointerInfo) PutPenTiltX(penTiltX int32) error {
 
-	_, _, err = i.vtbl.PutPenTiltX.Call(
+	hr, _, err := i.Vtbl.PutPenTiltX.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penTiltX)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2PointerInfo) GetPenTiltY() (*INT32, error) {
-	var err error
+func (i *ICoreWebView2PointerInfo) GetPenTiltY() (*int32, error) {
 
-	var penTiltY *INT32
+	var penTiltY int32
 
-	_, _, err = i.vtbl.GetPenTiltY.Call(
+	hr, _, err := i.Vtbl.GetPenTiltY.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penTiltY)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return penTiltY, nil
+	return &penTiltY, err
 }
 
-func (i *ICoreWebView2PointerInfo) PutPenTiltY(penTiltY INT32) error {
-	var err error
+func (i *ICoreWebView2PointerInfo) PutPenTiltY(penTiltY int32) error {
 
-	_, _, err = i.vtbl.PutPenTiltY.Call(
+	hr, _, err := i.Vtbl.PutPenTiltY.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&penTiltY)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetTouchFlags() (*uint32, error) {
-	var err error
 
-	var touchFlags *uint32
+	var touchFlags uint32
 
-	_, _, err = i.vtbl.GetTouchFlags.Call(
+	hr, _, err := i.Vtbl.GetTouchFlags.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchFlags)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return touchFlags, nil
+	return &touchFlags, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutTouchFlags(touchFlags uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutTouchFlags.Call(
+	hr, _, err := i.Vtbl.PutTouchFlags.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchFlags)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetTouchMask() (*uint32, error) {
-	var err error
 
-	var touchMask *uint32
+	var touchMask uint32
 
-	_, _, err = i.vtbl.GetTouchMask.Call(
+	hr, _, err := i.Vtbl.GetTouchMask.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchMask)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return touchMask, nil
+	return &touchMask, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutTouchMask(touchMask uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutTouchMask.Call(
+	hr, _, err := i.Vtbl.PutTouchMask.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchMask)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetTouchContact() (*RECT, error) {
-	var err error
 
-	var touchContact *RECT
+	var touchContact RECT
 
-	_, _, err = i.vtbl.GetTouchContact.Call(
+	hr, _, err := i.Vtbl.GetTouchContact.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchContact)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return touchContact, nil
+	return &touchContact, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutTouchContact(touchContact RECT) error {
-	var err error
 
-	_, _, err = i.vtbl.PutTouchContact.Call(
+	hr, _, err := i.Vtbl.PutTouchContact.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchContact)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetTouchContactRaw() (*RECT, error) {
-	var err error
 
-	var touchContactRaw *RECT
+	var touchContactRaw RECT
 
-	_, _, err = i.vtbl.GetTouchContactRaw.Call(
+	hr, _, err := i.Vtbl.GetTouchContactRaw.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchContactRaw)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return touchContactRaw, nil
+	return &touchContactRaw, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutTouchContactRaw(touchContactRaw RECT) error {
-	var err error
 
-	_, _, err = i.vtbl.PutTouchContactRaw.Call(
+	hr, _, err := i.Vtbl.PutTouchContactRaw.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchContactRaw)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetTouchOrientation() (*uint32, error) {
-	var err error
 
-	var touchOrientation *uint32
+	var touchOrientation uint32
 
-	_, _, err = i.vtbl.GetTouchOrientation.Call(
+	hr, _, err := i.Vtbl.GetTouchOrientation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchOrientation)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return touchOrientation, nil
+	return &touchOrientation, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutTouchOrientation(touchOrientation uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutTouchOrientation.Call(
+	hr, _, err := i.Vtbl.PutTouchOrientation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchOrientation)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PointerInfo) GetTouchPressure() (*uint32, error) {
-	var err error
 
-	var touchPressure *uint32
+	var touchPressure uint32
 
-	_, _, err = i.vtbl.GetTouchPressure.Call(
+	hr, _, err := i.Vtbl.GetTouchPressure.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchPressure)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return touchPressure, nil
+	return &touchPressure, err
 }
 
 func (i *ICoreWebView2PointerInfo) PutTouchPressure(touchPressure uint32) error {
-	var err error
 
-	_, _, err = i.vtbl.PutTouchPressure.Call(
+	hr, _, err := i.Vtbl.PutTouchPressure.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&touchPressure)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

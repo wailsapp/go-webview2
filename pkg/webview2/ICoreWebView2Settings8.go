@@ -4,47 +4,60 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2Settings8Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2Settings8Vtbl struct {
+	IUnknownVtbl
 	GetIsReputationCheckingRequired ComProc
 	PutIsReputationCheckingRequired ComProc
 }
 
 type ICoreWebView2Settings8 struct {
-	vtbl *_ICoreWebView2Settings8Vtbl
+	Vtbl *ICoreWebView2Settings8Vtbl
 }
 
 func (i *ICoreWebView2Settings8) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2Settings8) GetIsReputationCheckingRequired() (bool, error) {
-	var err error
+func (i *ICoreWebView2) GetICoreWebView2Settings8() *ICoreWebView2Settings8 {
+	var result *ICoreWebView2Settings8
 
-	var value bool
-
-	_, _, err = i.vtbl.GetIsReputationCheckingRequired.Call(
+	iidICoreWebView2Settings8 := NewGUID("{9e6b0e8f-86ad-4e81-8147-a9b5edb68650}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Settings8)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
+}
+
+func (i *ICoreWebView2Settings8) GetIsReputationCheckingRequired() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
+
+	hr, _, err := i.Vtbl.GetIsReputationCheckingRequired.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }
 
 func (i *ICoreWebView2Settings8) PutIsReputationCheckingRequired(value bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutIsReputationCheckingRequired.Call(
+	hr, _, err := i.Vtbl.PutIsReputationCheckingRequired.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

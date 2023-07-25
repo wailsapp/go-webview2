@@ -4,48 +4,60 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2_10Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2_10Vtbl struct {
+	IUnknownVtbl
 	AddBasicAuthenticationRequested    ComProc
 	RemoveBasicAuthenticationRequested ComProc
 }
 
 type ICoreWebView2_10 struct {
-	vtbl *_ICoreWebView2_10Vtbl
+	Vtbl *ICoreWebView2_10Vtbl
 }
 
 func (i *ICoreWebView2_10) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2_10() *ICoreWebView2_10 {
+	var result *ICoreWebView2_10
+
+	iidICoreWebView2_10 := NewGUID("{b1690564-6f5a-4983-8e48-31d1143fecdb}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2_10)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2_10) AddBasicAuthenticationRequested(eventHandler *ICoreWebView2BasicAuthenticationRequestedEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddBasicAuthenticationRequested.Call(
+	hr, _, err := i.Vtbl.AddBasicAuthenticationRequested.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2_10) RemoveBasicAuthenticationRequested(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveBasicAuthenticationRequested.Call(
+	hr, _, err := i.Vtbl.RemoveBasicAuthenticationRequested.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

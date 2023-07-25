@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2LaunchingExternalUriSchemeEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2LaunchingExternalUriSchemeEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2LaunchingExternalUriSchemeEventHandler struct {
-	vtbl *_ICoreWebView2LaunchingExternalUriSchemeEventHandlerVtbl
-	impl _ICoreWebView2LaunchingExternalUriSchemeEventHandlerImpl
+	Vtbl *ICoreWebView2LaunchingExternalUriSchemeEventHandlerVtbl
+	impl ICoreWebView2LaunchingExternalUriSchemeEventHandlerImpl
 }
 
 func (i *ICoreWebView2LaunchingExternalUriSchemeEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownQueryInterface(this *ICoreWebView2LaunchingExternalUriSchemeEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownQueryInterface(this *ICoreWebView2LaunchingExternalUriSchemeEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownAddRef(this *ICoreWebView2LaunchingExternalUriSchemeEventHandler) uintptr {
+func ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownAddRef(this *ICoreWebView2LaunchingExternalUriSchemeEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownRelease(this *ICoreWebView2LaunchingExternalUriSchemeEventHandler) uintptr {
+func ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownRelease(this *ICoreWebView2LaunchingExternalUriSchemeEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2LaunchingExternalUriSchemeEventHandlerInvoke(this *ICoreWebView2LaunchingExternalUriSchemeEventHandler, sender *ICoreWebView2, args *ICoreWebView2LaunchingExternalUriSchemeEventArgs) uintptr {
+func ICoreWebView2LaunchingExternalUriSchemeEventHandlerInvoke(this *ICoreWebView2LaunchingExternalUriSchemeEventHandler, sender *ICoreWebView2, args *ICoreWebView2LaunchingExternalUriSchemeEventArgs) uintptr {
 	return this.impl.LaunchingExternalUriScheme(sender, args)
 }
 
-type _ICoreWebView2LaunchingExternalUriSchemeEventHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2LaunchingExternalUriSchemeEventHandlerImpl interface {
+	IUnknownImpl
 	LaunchingExternalUriScheme(sender *ICoreWebView2, args *ICoreWebView2LaunchingExternalUriSchemeEventArgs) uintptr
 }
 
-var _ICoreWebView2LaunchingExternalUriSchemeEventHandlerFn = _ICoreWebView2LaunchingExternalUriSchemeEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownRelease),
+var ICoreWebView2LaunchingExternalUriSchemeEventHandlerFn = ICoreWebView2LaunchingExternalUriSchemeEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2LaunchingExternalUriSchemeEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2LaunchingExternalUriSchemeEventHandlerInvoke),
+	NewComProc(ICoreWebView2LaunchingExternalUriSchemeEventHandlerInvoke),
 }
 
-func NewICoreWebView2LaunchingExternalUriSchemeEventHandler(impl _ICoreWebView2LaunchingExternalUriSchemeEventHandlerImpl) *ICoreWebView2LaunchingExternalUriSchemeEventHandler {
+func NewICoreWebView2LaunchingExternalUriSchemeEventHandler(impl ICoreWebView2LaunchingExternalUriSchemeEventHandlerImpl) *ICoreWebView2LaunchingExternalUriSchemeEventHandler {
 	return &ICoreWebView2LaunchingExternalUriSchemeEventHandler{
-		vtbl: &_ICoreWebView2LaunchingExternalUriSchemeEventHandlerFn,
+		Vtbl: &ICoreWebView2LaunchingExternalUriSchemeEventHandlerFn,
 		impl: impl,
 	}
 }

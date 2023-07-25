@@ -4,30 +4,31 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2DeferralVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2DeferralVtbl struct {
+	IUnknownVtbl
 	Complete ComProc
 }
 
 type ICoreWebView2Deferral struct {
-	vtbl *_ICoreWebView2DeferralVtbl
+	Vtbl *ICoreWebView2DeferralVtbl
 }
 
 func (i *ICoreWebView2Deferral) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2Deferral) Complete() error {
-	var err error
 
-	_, _, err = i.vtbl.Complete.Call(
+	hr, _, err := i.Vtbl.Complete.Call(
 		uintptr(unsafe.Pointer(i)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

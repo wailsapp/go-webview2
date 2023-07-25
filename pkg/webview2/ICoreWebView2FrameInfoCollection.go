@@ -4,33 +4,34 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2FrameInfoCollectionVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2FrameInfoCollectionVtbl struct {
+	IUnknownVtbl
 	GetIterator ComProc
 }
 
 type ICoreWebView2FrameInfoCollection struct {
-	vtbl *_ICoreWebView2FrameInfoCollectionVtbl
+	Vtbl *ICoreWebView2FrameInfoCollectionVtbl
 }
 
 func (i *ICoreWebView2FrameInfoCollection) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2FrameInfoCollection) GetIterator() (*ICoreWebView2FrameInfoCollectionIterator, error) {
-	var err error
 
-	var iterator *ICoreWebView2FrameInfoCollectionIterator
+	var iterator ICoreWebView2FrameInfoCollectionIterator
 
-	_, _, err = i.vtbl.GetIterator.Call(
+	hr, _, err := i.Vtbl.GetIterator.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&iterator)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return iterator, nil
+	return &iterator, err
 }

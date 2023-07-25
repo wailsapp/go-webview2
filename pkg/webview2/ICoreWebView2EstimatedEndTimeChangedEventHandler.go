@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2EstimatedEndTimeChangedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2EstimatedEndTimeChangedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2EstimatedEndTimeChangedEventHandler struct {
-	vtbl *_ICoreWebView2EstimatedEndTimeChangedEventHandlerVtbl
-	impl _ICoreWebView2EstimatedEndTimeChangedEventHandlerImpl
+	Vtbl *ICoreWebView2EstimatedEndTimeChangedEventHandlerVtbl
+	impl ICoreWebView2EstimatedEndTimeChangedEventHandlerImpl
 }
 
 func (i *ICoreWebView2EstimatedEndTimeChangedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2EstimatedEndTimeChangedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2EstimatedEndTimeChangedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownAddRef(this *ICoreWebView2EstimatedEndTimeChangedEventHandler) uintptr {
+func ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownAddRef(this *ICoreWebView2EstimatedEndTimeChangedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownRelease(this *ICoreWebView2EstimatedEndTimeChangedEventHandler) uintptr {
+func ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownRelease(this *ICoreWebView2EstimatedEndTimeChangedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2EstimatedEndTimeChangedEventHandlerInvoke(this *ICoreWebView2EstimatedEndTimeChangedEventHandler, sender *ICoreWebView2DownloadOperation, args *_IUnknown) uintptr {
+func ICoreWebView2EstimatedEndTimeChangedEventHandlerInvoke(this *ICoreWebView2EstimatedEndTimeChangedEventHandler, sender *ICoreWebView2DownloadOperation, args *IUnknown) uintptr {
 	return this.impl.EstimatedEndTimeChanged(sender, args)
 }
 
-type _ICoreWebView2EstimatedEndTimeChangedEventHandlerImpl interface {
-	_IUnknownImpl
-	EstimatedEndTimeChanged(sender *ICoreWebView2DownloadOperation, args *_IUnknown) uintptr
+type ICoreWebView2EstimatedEndTimeChangedEventHandlerImpl interface {
+	IUnknownImpl
+	EstimatedEndTimeChanged(sender *ICoreWebView2DownloadOperation, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2EstimatedEndTimeChangedEventHandlerFn = _ICoreWebView2EstimatedEndTimeChangedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownRelease),
+var ICoreWebView2EstimatedEndTimeChangedEventHandlerFn = ICoreWebView2EstimatedEndTimeChangedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2EstimatedEndTimeChangedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2EstimatedEndTimeChangedEventHandlerInvoke),
+	NewComProc(ICoreWebView2EstimatedEndTimeChangedEventHandlerInvoke),
 }
 
-func NewICoreWebView2EstimatedEndTimeChangedEventHandler(impl _ICoreWebView2EstimatedEndTimeChangedEventHandlerImpl) *ICoreWebView2EstimatedEndTimeChangedEventHandler {
+func NewICoreWebView2EstimatedEndTimeChangedEventHandler(impl ICoreWebView2EstimatedEndTimeChangedEventHandlerImpl) *ICoreWebView2EstimatedEndTimeChangedEventHandler {
 	return &ICoreWebView2EstimatedEndTimeChangedEventHandler{
-		vtbl: &_ICoreWebView2EstimatedEndTimeChangedEventHandlerFn,
+		Vtbl: &ICoreWebView2EstimatedEndTimeChangedEventHandlerFn,
 		impl: impl,
 	}
 }

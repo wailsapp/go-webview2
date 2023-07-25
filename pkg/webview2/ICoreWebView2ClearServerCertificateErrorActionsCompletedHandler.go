@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler struct {
-	vtbl *_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerVtbl
-	impl _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerImpl
+	Vtbl *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerVtbl
+	impl ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerImpl
 }
 
 func (i *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownQueryInterface(this *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownQueryInterface(this *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownAddRef(this *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler) uintptr {
+func ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownAddRef(this *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownRelease(this *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler) uintptr {
+func ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownRelease(this *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerInvoke(this *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler, errorCode uintptr) uintptr {
+func ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerInvoke(this *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler, errorCode uintptr) uintptr {
 	return this.impl.ClearServerCertificateErrorActionsCompleted(errorCode)
 }
 
-type _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerImpl interface {
+	IUnknownImpl
 	ClearServerCertificateErrorActionsCompleted(errorCode uintptr) uintptr
 }
 
-var _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerFn = _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownRelease),
+var ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerFn = ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerInvoke),
+	NewComProc(ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerInvoke),
 }
 
-func NewICoreWebView2ClearServerCertificateErrorActionsCompletedHandler(impl _ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerImpl) *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler {
+func NewICoreWebView2ClearServerCertificateErrorActionsCompletedHandler(impl ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerImpl) *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler {
 	return &ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler{
-		vtbl: &_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerFn,
+		Vtbl: &ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerFn,
 		impl: impl,
 	}
 }

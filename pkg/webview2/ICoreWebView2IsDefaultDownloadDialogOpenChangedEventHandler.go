@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler struct {
-	vtbl *_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerVtbl
-	impl _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerImpl
+	Vtbl *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerVtbl
+	impl ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerImpl
 }
 
 func (i *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownAddRef(this *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler) uintptr {
+func ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownAddRef(this *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownRelease(this *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler) uintptr {
+func ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownRelease(this *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerInvoke(this *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler, sender *ICoreWebView2, args *_IUnknown) uintptr {
+func ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerInvoke(this *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler, sender *ICoreWebView2, args *IUnknown) uintptr {
 	return this.impl.IsDefaultDownloadDialogOpenChanged(sender, args)
 }
 
-type _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerImpl interface {
-	_IUnknownImpl
-	IsDefaultDownloadDialogOpenChanged(sender *ICoreWebView2, args *_IUnknown) uintptr
+type ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerImpl interface {
+	IUnknownImpl
+	IsDefaultDownloadDialogOpenChanged(sender *ICoreWebView2, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerFn = _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownRelease),
+var ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerFn = ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerInvoke),
+	NewComProc(ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerInvoke),
 }
 
-func NewICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler(impl _ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerImpl) *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler {
+func NewICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler(impl ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerImpl) *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler {
 	return &ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler{
-		vtbl: &_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerFn,
+		Vtbl: &ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerFn,
 		impl: impl,
 	}
 }

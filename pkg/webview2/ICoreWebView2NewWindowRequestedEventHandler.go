@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2NewWindowRequestedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2NewWindowRequestedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2NewWindowRequestedEventHandler struct {
-	vtbl *_ICoreWebView2NewWindowRequestedEventHandlerVtbl
-	impl _ICoreWebView2NewWindowRequestedEventHandlerImpl
+	Vtbl *ICoreWebView2NewWindowRequestedEventHandlerVtbl
+	impl ICoreWebView2NewWindowRequestedEventHandlerImpl
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2NewWindowRequestedEventHandlerIUnknownQueryInterface(this *ICoreWebView2NewWindowRequestedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2NewWindowRequestedEventHandlerIUnknownQueryInterface(this *ICoreWebView2NewWindowRequestedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2NewWindowRequestedEventHandlerIUnknownAddRef(this *ICoreWebView2NewWindowRequestedEventHandler) uintptr {
+func ICoreWebView2NewWindowRequestedEventHandlerIUnknownAddRef(this *ICoreWebView2NewWindowRequestedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2NewWindowRequestedEventHandlerIUnknownRelease(this *ICoreWebView2NewWindowRequestedEventHandler) uintptr {
+func ICoreWebView2NewWindowRequestedEventHandlerIUnknownRelease(this *ICoreWebView2NewWindowRequestedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2NewWindowRequestedEventHandlerInvoke(this *ICoreWebView2NewWindowRequestedEventHandler, sender *ICoreWebView2, args *ICoreWebView2NewWindowRequestedEventArgs) uintptr {
+func ICoreWebView2NewWindowRequestedEventHandlerInvoke(this *ICoreWebView2NewWindowRequestedEventHandler, sender *ICoreWebView2, args *ICoreWebView2NewWindowRequestedEventArgs) uintptr {
 	return this.impl.NewWindowRequested(sender, args)
 }
 
-type _ICoreWebView2NewWindowRequestedEventHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2NewWindowRequestedEventHandlerImpl interface {
+	IUnknownImpl
 	NewWindowRequested(sender *ICoreWebView2, args *ICoreWebView2NewWindowRequestedEventArgs) uintptr
 }
 
-var _ICoreWebView2NewWindowRequestedEventHandlerFn = _ICoreWebView2NewWindowRequestedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2NewWindowRequestedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2NewWindowRequestedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2NewWindowRequestedEventHandlerIUnknownRelease),
+var ICoreWebView2NewWindowRequestedEventHandlerFn = ICoreWebView2NewWindowRequestedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2NewWindowRequestedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2NewWindowRequestedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2NewWindowRequestedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2NewWindowRequestedEventHandlerInvoke),
+	NewComProc(ICoreWebView2NewWindowRequestedEventHandlerInvoke),
 }
 
-func NewICoreWebView2NewWindowRequestedEventHandler(impl _ICoreWebView2NewWindowRequestedEventHandlerImpl) *ICoreWebView2NewWindowRequestedEventHandler {
+func NewICoreWebView2NewWindowRequestedEventHandler(impl ICoreWebView2NewWindowRequestedEventHandlerImpl) *ICoreWebView2NewWindowRequestedEventHandler {
 	return &ICoreWebView2NewWindowRequestedEventHandler{
-		vtbl: &_ICoreWebView2NewWindowRequestedEventHandlerFn,
+		Vtbl: &ICoreWebView2NewWindowRequestedEventHandlerFn,
 		impl: impl,
 	}
 }

@@ -4,67 +4,66 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2PermissionSettingVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2PermissionSettingVtbl struct {
+	IUnknownVtbl
 	GetPermissionKind   ComProc
 	GetPermissionOrigin ComProc
 	GetPermissionState  ComProc
 }
 
 type ICoreWebView2PermissionSetting struct {
-	vtbl *_ICoreWebView2PermissionSettingVtbl
+	Vtbl *ICoreWebView2PermissionSettingVtbl
 }
 
 func (i *ICoreWebView2PermissionSetting) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2PermissionSetting) GetPermissionKind() (*COREWEBVIEW2_PERMISSION_KIND, error) {
-	var err error
 
-	var value *COREWEBVIEW2_PERMISSION_KIND
+	var value COREWEBVIEW2_PERMISSION_KIND
 
-	_, _, err = i.vtbl.GetPermissionKind.Call(
+	hr, _, err := i.Vtbl.GetPermissionKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
-func (i *ICoreWebView2PermissionSetting) GetPermissionOrigin() (string, error) {
-	var err error
+func (i *ICoreWebView2PermissionSetting) GetPermissionOrigin() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetPermissionOrigin.Call(
+	hr, _, err := i.Vtbl.GetPermissionOrigin.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
 func (i *ICoreWebView2PermissionSetting) GetPermissionState() (*COREWEBVIEW2_PERMISSION_STATE, error) {
-	var err error
 
-	var value *COREWEBVIEW2_PERMISSION_STATE
+	var value COREWEBVIEW2_PERMISSION_STATE
 
-	_, _, err = i.vtbl.GetPermissionState.Call(
+	hr, _, err := i.Vtbl.GetPermissionState.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }

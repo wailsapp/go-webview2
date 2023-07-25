@@ -4,33 +4,34 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2FrameCreatedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2FrameCreatedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetFrame ComProc
 }
 
 type ICoreWebView2FrameCreatedEventArgs struct {
-	vtbl *_ICoreWebView2FrameCreatedEventArgsVtbl
+	Vtbl *ICoreWebView2FrameCreatedEventArgsVtbl
 }
 
 func (i *ICoreWebView2FrameCreatedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2FrameCreatedEventArgs) GetFrame() (*ICoreWebView2Frame, error) {
-	var err error
 
-	var frame *ICoreWebView2Frame
+	var frame ICoreWebView2Frame
 
-	_, _, err = i.vtbl.GetFrame.Call(
+	hr, _, err := i.Vtbl.GetFrame.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&frame)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return frame, nil
+	return &frame, err
 }

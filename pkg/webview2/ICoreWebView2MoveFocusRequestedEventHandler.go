@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2MoveFocusRequestedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2MoveFocusRequestedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2MoveFocusRequestedEventHandler struct {
-	vtbl *_ICoreWebView2MoveFocusRequestedEventHandlerVtbl
-	impl _ICoreWebView2MoveFocusRequestedEventHandlerImpl
+	Vtbl *ICoreWebView2MoveFocusRequestedEventHandlerVtbl
+	impl ICoreWebView2MoveFocusRequestedEventHandlerImpl
 }
 
 func (i *ICoreWebView2MoveFocusRequestedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2MoveFocusRequestedEventHandlerIUnknownQueryInterface(this *ICoreWebView2MoveFocusRequestedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2MoveFocusRequestedEventHandlerIUnknownQueryInterface(this *ICoreWebView2MoveFocusRequestedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2MoveFocusRequestedEventHandlerIUnknownAddRef(this *ICoreWebView2MoveFocusRequestedEventHandler) uintptr {
+func ICoreWebView2MoveFocusRequestedEventHandlerIUnknownAddRef(this *ICoreWebView2MoveFocusRequestedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2MoveFocusRequestedEventHandlerIUnknownRelease(this *ICoreWebView2MoveFocusRequestedEventHandler) uintptr {
+func ICoreWebView2MoveFocusRequestedEventHandlerIUnknownRelease(this *ICoreWebView2MoveFocusRequestedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2MoveFocusRequestedEventHandlerInvoke(this *ICoreWebView2MoveFocusRequestedEventHandler, sender *ICoreWebView2Controller, args *ICoreWebView2MoveFocusRequestedEventArgs) uintptr {
+func ICoreWebView2MoveFocusRequestedEventHandlerInvoke(this *ICoreWebView2MoveFocusRequestedEventHandler, sender *ICoreWebView2Controller, args *ICoreWebView2MoveFocusRequestedEventArgs) uintptr {
 	return this.impl.MoveFocusRequested(sender, args)
 }
 
-type _ICoreWebView2MoveFocusRequestedEventHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2MoveFocusRequestedEventHandlerImpl interface {
+	IUnknownImpl
 	MoveFocusRequested(sender *ICoreWebView2Controller, args *ICoreWebView2MoveFocusRequestedEventArgs) uintptr
 }
 
-var _ICoreWebView2MoveFocusRequestedEventHandlerFn = _ICoreWebView2MoveFocusRequestedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2MoveFocusRequestedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2MoveFocusRequestedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2MoveFocusRequestedEventHandlerIUnknownRelease),
+var ICoreWebView2MoveFocusRequestedEventHandlerFn = ICoreWebView2MoveFocusRequestedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2MoveFocusRequestedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2MoveFocusRequestedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2MoveFocusRequestedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2MoveFocusRequestedEventHandlerInvoke),
+	NewComProc(ICoreWebView2MoveFocusRequestedEventHandlerInvoke),
 }
 
-func NewICoreWebView2MoveFocusRequestedEventHandler(impl _ICoreWebView2MoveFocusRequestedEventHandlerImpl) *ICoreWebView2MoveFocusRequestedEventHandler {
+func NewICoreWebView2MoveFocusRequestedEventHandler(impl ICoreWebView2MoveFocusRequestedEventHandlerImpl) *ICoreWebView2MoveFocusRequestedEventHandler {
 	return &ICoreWebView2MoveFocusRequestedEventHandler{
-		vtbl: &_ICoreWebView2MoveFocusRequestedEventHandlerFn,
+		Vtbl: &ICoreWebView2MoveFocusRequestedEventHandlerFn,
 		impl: impl,
 	}
 }

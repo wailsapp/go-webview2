@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2NewWindowRequestedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2NewWindowRequestedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetUri             ComProc
 	PutNewWindow       ComProc
 	GetNewWindow       ComProc
@@ -20,127 +21,122 @@ type _ICoreWebView2NewWindowRequestedEventArgsVtbl struct {
 }
 
 type ICoreWebView2NewWindowRequestedEventArgs struct {
-	vtbl *_ICoreWebView2NewWindowRequestedEventArgsVtbl
+	Vtbl *ICoreWebView2NewWindowRequestedEventArgsVtbl
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2NewWindowRequestedEventArgs) GetUri() (string, error) {
-	var err error
+func (i *ICoreWebView2NewWindowRequestedEventArgs) GetUri() (*string, error) {
 	// Create *uint16 to hold result
 	var _uri *uint16
 
-	_, _, err = i.vtbl.GetUri.Call(
+	hr, _, err := i.Vtbl.GetUri.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_uri)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	uri := windows.UTF16PtrToString(_uri)
-	windows.CoTaskMemFree(unsafe.Pointer(_uri))
-	return uri, nil
+	uri := UTF16PtrToString(_uri)
+	CoTaskMemFree(unsafe.Pointer(_uri))
+	return &uri, err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) PutNewWindow(newWindow *ICoreWebView2) error {
-	var err error
 
-	_, _, err = i.vtbl.PutNewWindow.Call(
+	hr, _, err := i.Vtbl.PutNewWindow.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(newWindow)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) GetNewWindow() (*ICoreWebView2, error) {
-	var err error
 
-	var newWindow *ICoreWebView2
+	var newWindow ICoreWebView2
 
-	_, _, err = i.vtbl.GetNewWindow.Call(
+	hr, _, err := i.Vtbl.GetNewWindow.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&newWindow)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return newWindow, nil
+	return &newWindow, err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) PutHandled(handled bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutHandled.Call(
+	hr, _, err := i.Vtbl.PutHandled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&handled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2NewWindowRequestedEventArgs) GetHandled() (bool, error) {
-	var err error
+func (i *ICoreWebView2NewWindowRequestedEventArgs) GetHandled() (*bool, error) {
+	// Create int32 to hold bool result
+	var _handled int32
 
-	var handled bool
-
-	_, _, err = i.vtbl.GetHandled.Call(
+	hr, _, err := i.Vtbl.GetHandled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&handled)),
+		uintptr(unsafe.Pointer(&_handled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return handled, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	handled := _handled != 0
+	return &handled, err
 }
 
-func (i *ICoreWebView2NewWindowRequestedEventArgs) GetIsUserInitiated() (bool, error) {
-	var err error
+func (i *ICoreWebView2NewWindowRequestedEventArgs) GetIsUserInitiated() (*bool, error) {
+	// Create int32 to hold bool result
+	var _isUserInitiated int32
 
-	var isUserInitiated bool
-
-	_, _, err = i.vtbl.GetIsUserInitiated.Call(
+	hr, _, err := i.Vtbl.GetIsUserInitiated.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isUserInitiated)),
+		uintptr(unsafe.Pointer(&_isUserInitiated)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return isUserInitiated, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	isUserInitiated := _isUserInitiated != 0
+	return &isUserInitiated, err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
-	var err error
 
-	var deferral *ICoreWebView2Deferral
+	var deferral ICoreWebView2Deferral
 
-	_, _, err = i.vtbl.GetDeferral.Call(
+	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&deferral)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return deferral, nil
+	return &deferral, err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) GetWindowFeatures() (*ICoreWebView2WindowFeatures, error) {
-	var err error
 
-	var value *ICoreWebView2WindowFeatures
+	var value ICoreWebView2WindowFeatures
 
-	_, _, err = i.vtbl.GetWindowFeatures.Call(
+	hr, _, err := i.Vtbl.GetWindowFeatures.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }

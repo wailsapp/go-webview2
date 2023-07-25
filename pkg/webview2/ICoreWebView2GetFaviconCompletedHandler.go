@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2GetFaviconCompletedHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2GetFaviconCompletedHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2GetFaviconCompletedHandler struct {
-	vtbl *_ICoreWebView2GetFaviconCompletedHandlerVtbl
-	impl _ICoreWebView2GetFaviconCompletedHandlerImpl
+	Vtbl *ICoreWebView2GetFaviconCompletedHandlerVtbl
+	impl ICoreWebView2GetFaviconCompletedHandlerImpl
 }
 
 func (i *ICoreWebView2GetFaviconCompletedHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2GetFaviconCompletedHandlerIUnknownQueryInterface(this *ICoreWebView2GetFaviconCompletedHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2GetFaviconCompletedHandlerIUnknownQueryInterface(this *ICoreWebView2GetFaviconCompletedHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2GetFaviconCompletedHandlerIUnknownAddRef(this *ICoreWebView2GetFaviconCompletedHandler) uintptr {
+func ICoreWebView2GetFaviconCompletedHandlerIUnknownAddRef(this *ICoreWebView2GetFaviconCompletedHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2GetFaviconCompletedHandlerIUnknownRelease(this *ICoreWebView2GetFaviconCompletedHandler) uintptr {
+func ICoreWebView2GetFaviconCompletedHandlerIUnknownRelease(this *ICoreWebView2GetFaviconCompletedHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2GetFaviconCompletedHandlerInvoke(this *ICoreWebView2GetFaviconCompletedHandler, errorCode uintptr, faviconStream *IStream) uintptr {
+func ICoreWebView2GetFaviconCompletedHandlerInvoke(this *ICoreWebView2GetFaviconCompletedHandler, errorCode uintptr, faviconStream *IStream) uintptr {
 	return this.impl.GetFaviconCompleted(errorCode, faviconStream)
 }
 
-type _ICoreWebView2GetFaviconCompletedHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2GetFaviconCompletedHandlerImpl interface {
+	IUnknownImpl
 	GetFaviconCompleted(errorCode uintptr, faviconStream *IStream) uintptr
 }
 
-var _ICoreWebView2GetFaviconCompletedHandlerFn = _ICoreWebView2GetFaviconCompletedHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2GetFaviconCompletedHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2GetFaviconCompletedHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2GetFaviconCompletedHandlerIUnknownRelease),
+var ICoreWebView2GetFaviconCompletedHandlerFn = ICoreWebView2GetFaviconCompletedHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2GetFaviconCompletedHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2GetFaviconCompletedHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2GetFaviconCompletedHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2GetFaviconCompletedHandlerInvoke),
+	NewComProc(ICoreWebView2GetFaviconCompletedHandlerInvoke),
 }
 
-func NewICoreWebView2GetFaviconCompletedHandler(impl _ICoreWebView2GetFaviconCompletedHandlerImpl) *ICoreWebView2GetFaviconCompletedHandler {
+func NewICoreWebView2GetFaviconCompletedHandler(impl ICoreWebView2GetFaviconCompletedHandlerImpl) *ICoreWebView2GetFaviconCompletedHandler {
 	return &ICoreWebView2GetFaviconCompletedHandler{
-		vtbl: &_ICoreWebView2GetFaviconCompletedHandlerFn,
+		Vtbl: &ICoreWebView2GetFaviconCompletedHandlerFn,
 		impl: impl,
 	}
 }

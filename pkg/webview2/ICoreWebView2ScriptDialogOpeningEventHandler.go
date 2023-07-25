@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2ScriptDialogOpeningEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2ScriptDialogOpeningEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2ScriptDialogOpeningEventHandler struct {
-	vtbl *_ICoreWebView2ScriptDialogOpeningEventHandlerVtbl
-	impl _ICoreWebView2ScriptDialogOpeningEventHandlerImpl
+	Vtbl *ICoreWebView2ScriptDialogOpeningEventHandlerVtbl
+	impl ICoreWebView2ScriptDialogOpeningEventHandlerImpl
 }
 
 func (i *ICoreWebView2ScriptDialogOpeningEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownQueryInterface(this *ICoreWebView2ScriptDialogOpeningEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownQueryInterface(this *ICoreWebView2ScriptDialogOpeningEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownAddRef(this *ICoreWebView2ScriptDialogOpeningEventHandler) uintptr {
+func ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownAddRef(this *ICoreWebView2ScriptDialogOpeningEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownRelease(this *ICoreWebView2ScriptDialogOpeningEventHandler) uintptr {
+func ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownRelease(this *ICoreWebView2ScriptDialogOpeningEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2ScriptDialogOpeningEventHandlerInvoke(this *ICoreWebView2ScriptDialogOpeningEventHandler, sender *ICoreWebView2, args *ICoreWebView2ScriptDialogOpeningEventArgs) uintptr {
+func ICoreWebView2ScriptDialogOpeningEventHandlerInvoke(this *ICoreWebView2ScriptDialogOpeningEventHandler, sender *ICoreWebView2, args *ICoreWebView2ScriptDialogOpeningEventArgs) uintptr {
 	return this.impl.ScriptDialogOpening(sender, args)
 }
 
-type _ICoreWebView2ScriptDialogOpeningEventHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2ScriptDialogOpeningEventHandlerImpl interface {
+	IUnknownImpl
 	ScriptDialogOpening(sender *ICoreWebView2, args *ICoreWebView2ScriptDialogOpeningEventArgs) uintptr
 }
 
-var _ICoreWebView2ScriptDialogOpeningEventHandlerFn = _ICoreWebView2ScriptDialogOpeningEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownRelease),
+var ICoreWebView2ScriptDialogOpeningEventHandlerFn = ICoreWebView2ScriptDialogOpeningEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2ScriptDialogOpeningEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2ScriptDialogOpeningEventHandlerInvoke),
+	NewComProc(ICoreWebView2ScriptDialogOpeningEventHandlerInvoke),
 }
 
-func NewICoreWebView2ScriptDialogOpeningEventHandler(impl _ICoreWebView2ScriptDialogOpeningEventHandlerImpl) *ICoreWebView2ScriptDialogOpeningEventHandler {
+func NewICoreWebView2ScriptDialogOpeningEventHandler(impl ICoreWebView2ScriptDialogOpeningEventHandlerImpl) *ICoreWebView2ScriptDialogOpeningEventHandler {
 	return &ICoreWebView2ScriptDialogOpeningEventHandler{
-		vtbl: &_ICoreWebView2ScriptDialogOpeningEventHandlerFn,
+		Vtbl: &ICoreWebView2ScriptDialogOpeningEventHandlerFn,
 		impl: impl,
 	}
 }

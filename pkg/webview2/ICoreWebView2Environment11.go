@@ -4,35 +4,48 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2Environment11Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2Environment11Vtbl struct {
+	IUnknownVtbl
 	GetFailureReportFolderPath ComProc
 }
 
 type ICoreWebView2Environment11 struct {
-	vtbl *_ICoreWebView2Environment11Vtbl
+	Vtbl *ICoreWebView2Environment11Vtbl
 }
 
 func (i *ICoreWebView2Environment11) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2Environment11) GetFailureReportFolderPath() (string, error) {
-	var err error
+func (i *ICoreWebView2) GetICoreWebView2Environment11() *ICoreWebView2Environment11 {
+	var result *ICoreWebView2Environment11
+
+	iidICoreWebView2Environment11 := NewGUID("{F0913DC6-A0EC-42EF-9805-91DFF3A2966A}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Environment11)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
+}
+
+func (i *ICoreWebView2Environment11) GetFailureReportFolderPath() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetFailureReportFolderPath.Call(
+	hr, _, err := i.Vtbl.GetFailureReportFolderPath.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }

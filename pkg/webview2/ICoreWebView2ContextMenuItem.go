@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2ContextMenuItemVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2ContextMenuItemVtbl struct {
+	IUnknownVtbl
 	GetName                   ComProc
 	GetLabel                  ComProc
 	GetCommandId              ComProc
@@ -25,205 +26,195 @@ type _ICoreWebView2ContextMenuItemVtbl struct {
 }
 
 type ICoreWebView2ContextMenuItem struct {
-	vtbl *_ICoreWebView2ContextMenuItemVtbl
+	Vtbl *ICoreWebView2ContextMenuItemVtbl
 }
 
 func (i *ICoreWebView2ContextMenuItem) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetName() (string, error) {
-	var err error
+func (i *ICoreWebView2ContextMenuItem) GetName() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetName.Call(
+	hr, _, err := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetLabel() (string, error) {
-	var err error
+func (i *ICoreWebView2ContextMenuItem) GetLabel() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetLabel.Call(
+	hr, _, err := i.Vtbl.GetLabel.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetCommandId() (*INT32, error) {
-	var err error
+func (i *ICoreWebView2ContextMenuItem) GetCommandId() (*int32, error) {
 
-	var value *INT32
+	var value int32
 
-	_, _, err = i.vtbl.GetCommandId.Call(
+	hr, _, err := i.Vtbl.GetCommandId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetShortcutKeyDescription() (string, error) {
-	var err error
+func (i *ICoreWebView2ContextMenuItem) GetShortcutKeyDescription() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetShortcutKeyDescription.Call(
+	hr, _, err := i.Vtbl.GetShortcutKeyDescription.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuItem) GetIcon() (*IStream, error) {
-	var err error
 
-	var value *IStream
+	var value IStream
 
-	_, _, err = i.vtbl.GetIcon.Call(
+	hr, _, err := i.Vtbl.GetIcon.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuItem) GetKind() (*COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND, error) {
-	var err error
 
-	var value *COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND
+	var value COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND
 
-	_, _, err = i.vtbl.GetKind.Call(
+	hr, _, err := i.Vtbl.GetKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuItem) PutIsEnabled(value bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutIsEnabled.Call(
+	hr, _, err := i.Vtbl.PutIsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetIsEnabled() (bool, error) {
-	var err error
+func (i *ICoreWebView2ContextMenuItem) GetIsEnabled() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
 
-	var value bool
-
-	_, _, err = i.vtbl.GetIsEnabled.Call(
+	hr, _, err := i.Vtbl.GetIsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuItem) PutIsChecked(value bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutIsChecked.Call(
+	hr, _, err := i.Vtbl.PutIsChecked.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetIsChecked() (bool, error) {
-	var err error
+func (i *ICoreWebView2ContextMenuItem) GetIsChecked() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
 
-	var value bool
-
-	_, _, err = i.vtbl.GetIsChecked.Call(
+	hr, _, err := i.Vtbl.GetIsChecked.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuItem) GetChildren() (*ICoreWebView2ContextMenuItemCollection, error) {
-	var err error
 
-	var value *ICoreWebView2ContextMenuItemCollection
+	var value ICoreWebView2ContextMenuItemCollection
 
-	_, _, err = i.vtbl.GetChildren.Call(
+	hr, _, err := i.Vtbl.GetChildren.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuItem) AddCustomItemSelected(eventHandler *ICoreWebView2CustomItemSelectedEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddCustomItemSelected.Call(
+	hr, _, err := i.Vtbl.AddCustomItemSelected.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2ContextMenuItem) RemoveCustomItemSelected(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveCustomItemSelected.Call(
+	hr, _, err := i.Vtbl.RemoveCustomItemSelected.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

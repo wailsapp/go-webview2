@@ -4,33 +4,46 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2CompositionController2Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2CompositionController2Vtbl struct {
+	IUnknownVtbl
 	GetAutomationProvider ComProc
 }
 
 type ICoreWebView2CompositionController2 struct {
-	vtbl *_ICoreWebView2CompositionController2Vtbl
+	Vtbl *ICoreWebView2CompositionController2Vtbl
 }
 
 func (i *ICoreWebView2CompositionController2) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2CompositionController2) GetAutomationProvider() (*_IUnknown, error) {
-	var err error
+func (i *ICoreWebView2) GetICoreWebView2CompositionController2() *ICoreWebView2CompositionController2 {
+	var result *ICoreWebView2CompositionController2
 
-	var provider *_IUnknown
+	iidICoreWebView2CompositionController2 := NewGUID("{0b6a3d24-49cb-4806-ba20-b5e0734a7b26}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2CompositionController2)),
+		uintptr(unsafe.Pointer(&result)))
 
-	_, _, err = i.vtbl.GetAutomationProvider.Call(
+	return result
+}
+
+func (i *ICoreWebView2CompositionController2) GetAutomationProvider() (*IUnknown, error) {
+
+	var provider IUnknown
+
+	hr, _, err := i.Vtbl.GetAutomationProvider.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&provider)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return provider, nil
+	return &provider, err
 }

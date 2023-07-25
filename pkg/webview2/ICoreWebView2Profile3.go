@@ -4,47 +4,59 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2Profile3Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2Profile3Vtbl struct {
+	IUnknownVtbl
 	GetPreferredTrackingPreventionLevel ComProc
 	PutPreferredTrackingPreventionLevel ComProc
 }
 
 type ICoreWebView2Profile3 struct {
-	vtbl *_ICoreWebView2Profile3Vtbl
+	Vtbl *ICoreWebView2Profile3Vtbl
 }
 
 func (i *ICoreWebView2Profile3) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2Profile3() *ICoreWebView2Profile3 {
+	var result *ICoreWebView2Profile3
+
+	iidICoreWebView2Profile3 := NewGUID("{B188E659-5685-4E05-BDBA-FC640E0F1992}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Profile3)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2Profile3) GetPreferredTrackingPreventionLevel() (*COREWEBVIEW2_TRACKING_PREVENTION_LEVEL, error) {
-	var err error
 
-	var value *COREWEBVIEW2_TRACKING_PREVENTION_LEVEL
+	var value COREWEBVIEW2_TRACKING_PREVENTION_LEVEL
 
-	_, _, err = i.vtbl.GetPreferredTrackingPreventionLevel.Call(
+	hr, _, err := i.Vtbl.GetPreferredTrackingPreventionLevel.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2Profile3) PutPreferredTrackingPreventionLevel(value COREWEBVIEW2_TRACKING_PREVENTION_LEVEL) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPreferredTrackingPreventionLevel.Call(
+	hr, _, err := i.Vtbl.PutPreferredTrackingPreventionLevel.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(value),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

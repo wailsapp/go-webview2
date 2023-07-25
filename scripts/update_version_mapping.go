@@ -61,6 +61,11 @@ var latestVersion string
 
 func main() {
 
+	var forced bool
+	if len(os.Args) > 1 {
+		forced = os.Args[1] == "-forced"
+	}
+
 	var buf bytes.Buffer
 	data := getDoc()
 	buf.Write(data)
@@ -147,14 +152,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Check if the latest version is different from the last time we ran this script
-	latest, err := CompareBrowserVersions(latestVersion, latestVersionProcessed)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if latest != 1 {
-		println("No new version found")
-		os.Exit(0)
+	if !forced {
+		// Check if the latest version is different from the last time we ran this script
+		latest, err := CompareBrowserVersions(latestVersion, latestVersionProcessed)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if latest != 1 {
+			println("No new version found")
+			os.Exit(0)
+		}
 	}
 
 	println("Processing version: ", latestVersion)
@@ -177,6 +184,12 @@ func main() {
 }
 
 func DownloadIDL(version string) ([]byte, error) {
+
+	// Look for the file locally: WebView2.version.idl
+	data, err := os.ReadFile("WebView2." + version + ".idl")
+	if err == nil {
+		return data, nil
+	}
 
 	// URL for the nuget package: https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/<version>
 	// Download the package to the current directory

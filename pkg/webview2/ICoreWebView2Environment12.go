@@ -4,34 +4,47 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2Environment12Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2Environment12Vtbl struct {
+	IUnknownVtbl
 	CreateSharedBuffer ComProc
 }
 
 type ICoreWebView2Environment12 struct {
-	vtbl *_ICoreWebView2Environment12Vtbl
+	Vtbl *ICoreWebView2Environment12Vtbl
 }
 
 func (i *ICoreWebView2Environment12) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2Environment12() *ICoreWebView2Environment12 {
+	var result *ICoreWebView2Environment12
+
+	iidICoreWebView2Environment12 := NewGUID("{F503DB9B-739F-48DD-B151-FDFCF253F54E}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Environment12)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2Environment12) CreateSharedBuffer(size uint64) (*ICoreWebView2SharedBuffer, error) {
-	var err error
 
-	var shared_buffer *ICoreWebView2SharedBuffer
+	var shared_buffer ICoreWebView2SharedBuffer
 
-	_, _, err = i.vtbl.CreateSharedBuffer.Call(
+	hr, _, err := i.Vtbl.CreateSharedBuffer.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&size)),
 		uintptr(unsafe.Pointer(&shared_buffer)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return shared_buffer, nil
+	return &shared_buffer, err
 }

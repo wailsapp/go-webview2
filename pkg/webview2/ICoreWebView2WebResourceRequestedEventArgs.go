@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2WebResourceRequestedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2WebResourceRequestedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetRequest         ComProc
 	GetResponse        ComProc
 	PutResponse        ComProc
@@ -17,82 +18,78 @@ type _ICoreWebView2WebResourceRequestedEventArgsVtbl struct {
 }
 
 type ICoreWebView2WebResourceRequestedEventArgs struct {
-	vtbl *_ICoreWebView2WebResourceRequestedEventArgsVtbl
+	Vtbl *ICoreWebView2WebResourceRequestedEventArgsVtbl
 }
 
 func (i *ICoreWebView2WebResourceRequestedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2WebResourceRequestedEventArgs) GetRequest() (*ICoreWebView2WebResourceRequest, error) {
-	var err error
 
-	var request *ICoreWebView2WebResourceRequest
+	var request ICoreWebView2WebResourceRequest
 
-	_, _, err = i.vtbl.GetRequest.Call(
+	hr, _, err := i.Vtbl.GetRequest.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&request)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return request, nil
+	return &request, err
 }
 
 func (i *ICoreWebView2WebResourceRequestedEventArgs) GetResponse() (*ICoreWebView2WebResourceResponse, error) {
-	var err error
 
-	var response *ICoreWebView2WebResourceResponse
+	var response ICoreWebView2WebResourceResponse
 
-	_, _, err = i.vtbl.GetResponse.Call(
+	hr, _, err := i.Vtbl.GetResponse.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&response)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return response, nil
+	return &response, err
 }
 
 func (i *ICoreWebView2WebResourceRequestedEventArgs) PutResponse(response *ICoreWebView2WebResourceResponse) error {
-	var err error
 
-	_, _, err = i.vtbl.PutResponse.Call(
+	hr, _, err := i.Vtbl.PutResponse.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(response)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2WebResourceRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
-	var err error
 
-	var deferral *ICoreWebView2Deferral
+	var deferral ICoreWebView2Deferral
 
-	_, _, err = i.vtbl.GetDeferral.Call(
+	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&deferral)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return deferral, nil
+	return &deferral, err
 }
 
 func (i *ICoreWebView2WebResourceRequestedEventArgs) GetResourceContext() (*COREWEBVIEW2_WEB_RESOURCE_CONTEXT, error) {
-	var err error
 
-	var context *COREWEBVIEW2_WEB_RESOURCE_CONTEXT
+	var context COREWEBVIEW2_WEB_RESOURCE_CONTEXT
 
-	_, _, err = i.vtbl.GetResourceContext.Call(
+	hr, _, err := i.Vtbl.GetResourceContext.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&context)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return context, nil
+	return &context, err
 }

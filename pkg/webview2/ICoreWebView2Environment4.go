@@ -4,34 +4,47 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2Environment4Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2Environment4Vtbl struct {
+	IUnknownVtbl
 	GetAutomationProviderForWindow ComProc
 }
 
 type ICoreWebView2Environment4 struct {
-	vtbl *_ICoreWebView2Environment4Vtbl
+	Vtbl *ICoreWebView2Environment4Vtbl
 }
 
 func (i *ICoreWebView2Environment4) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2Environment4) GetAutomationProviderForWindow(hwnd HWND) (*_IUnknown, error) {
-	var err error
+func (i *ICoreWebView2) GetICoreWebView2Environment4() *ICoreWebView2Environment4 {
+	var result *ICoreWebView2Environment4
 
-	var provider *_IUnknown
+	iidICoreWebView2Environment4 := NewGUID("{20944379-6dcf-41d6-a0a0-abc0fc50de0d}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Environment4)),
+		uintptr(unsafe.Pointer(&result)))
 
-	_, _, err = i.vtbl.GetAutomationProviderForWindow.Call(
+	return result
+}
+
+func (i *ICoreWebView2Environment4) GetAutomationProviderForWindow(hwnd HWND) (*IUnknown, error) {
+
+	var provider IUnknown
+
+	hr, _, err := i.Vtbl.GetAutomationProviderForWindow.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&hwnd)),
 		uintptr(unsafe.Pointer(&provider)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return provider, nil
+	return &provider, err
 }

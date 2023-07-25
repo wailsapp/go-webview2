@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2CompositionController3Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2CompositionController3Vtbl struct {
+	IUnknownVtbl
 	DragEnter ComProc
 	DragLeave ComProc
 	DragOver  ComProc
@@ -16,74 +17,83 @@ type _ICoreWebView2CompositionController3Vtbl struct {
 }
 
 type ICoreWebView2CompositionController3 struct {
-	vtbl *_ICoreWebView2CompositionController3Vtbl
+	Vtbl *ICoreWebView2CompositionController3Vtbl
 }
 
 func (i *ICoreWebView2CompositionController3) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2CompositionController3) DragEnter(dataObject *IDataObject, keyState DWORD, point POINT) (*DWORD, error) {
-	var err error
+func (i *ICoreWebView2) GetICoreWebView2CompositionController3() *ICoreWebView2CompositionController3 {
+	var result *ICoreWebView2CompositionController3
 
-	var effect *DWORD
+	iidICoreWebView2CompositionController3 := NewGUID("{9570570e-4d76-4361-9ee1-f04d0dbdfb1e}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2CompositionController3)),
+		uintptr(unsafe.Pointer(&result)))
 
-	_, _, err = i.vtbl.DragEnter.Call(
+	return result
+}
+
+func (i *ICoreWebView2CompositionController3) DragEnter(dataObject *IDataObject, keyState uint32, point POINT) (*uint32, error) {
+
+	var effect uint32
+
+	hr, _, err := i.Vtbl.DragEnter.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(dataObject)),
 		uintptr(unsafe.Pointer(&keyState)),
 		uintptr(unsafe.Pointer(&point)),
 		uintptr(unsafe.Pointer(&effect)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return effect, nil
+	return &effect, err
 }
 
 func (i *ICoreWebView2CompositionController3) DragLeave() error {
-	var err error
 
-	_, _, err = i.vtbl.DragLeave.Call(
+	hr, _, err := i.Vtbl.DragLeave.Call(
 		uintptr(unsafe.Pointer(i)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2CompositionController3) DragOver(keyState DWORD, point POINT) (*DWORD, error) {
-	var err error
+func (i *ICoreWebView2CompositionController3) DragOver(keyState uint32, point POINT) (*uint32, error) {
 
-	var effect *DWORD
+	var effect uint32
 
-	_, _, err = i.vtbl.DragOver.Call(
+	hr, _, err := i.Vtbl.DragOver.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&keyState)),
 		uintptr(unsafe.Pointer(&point)),
 		uintptr(unsafe.Pointer(&effect)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return effect, nil
+	return &effect, err
 }
 
-func (i *ICoreWebView2CompositionController3) Drop(dataObject *IDataObject, keyState DWORD, point POINT) (*DWORD, error) {
-	var err error
+func (i *ICoreWebView2CompositionController3) Drop(dataObject *IDataObject, keyState uint32, point POINT) (*uint32, error) {
 
-	var effect *DWORD
+	var effect uint32
 
-	_, _, err = i.vtbl.Drop.Call(
+	hr, _, err := i.Vtbl.Drop.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(dataObject)),
 		uintptr(unsafe.Pointer(&keyState)),
 		uintptr(unsafe.Pointer(&point)),
 		uintptr(unsafe.Pointer(&effect)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return effect, nil
+	return &effect, err
 }

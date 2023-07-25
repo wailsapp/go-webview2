@@ -4,50 +4,50 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2CookieListVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2CookieListVtbl struct {
+	IUnknownVtbl
 	GetCount        ComProc
 	GetValueAtIndex ComProc
 }
 
 type ICoreWebView2CookieList struct {
-	vtbl *_ICoreWebView2CookieListVtbl
+	Vtbl *ICoreWebView2CookieListVtbl
 }
 
 func (i *ICoreWebView2CookieList) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2CookieList) GetCount() (uint, error) {
-	var err error
+func (i *ICoreWebView2CookieList) GetCount() (*uint, error) {
 
 	var count uint
 
-	_, _, err = i.vtbl.GetCount.Call(
+	hr, _, err := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&count)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return 0, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return count, nil
+	return &count, err
 }
 
 func (i *ICoreWebView2CookieList) GetValueAtIndex(index uint) (*ICoreWebView2Cookie, error) {
-	var err error
 
-	var cookie *ICoreWebView2Cookie
+	var cookie ICoreWebView2Cookie
 
-	_, _, err = i.vtbl.GetValueAtIndex.Call(
+	hr, _, err := i.Vtbl.GetValueAtIndex.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&index)),
 		uintptr(unsafe.Pointer(&cookie)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return cookie, nil
+	return &cookie, err
 }

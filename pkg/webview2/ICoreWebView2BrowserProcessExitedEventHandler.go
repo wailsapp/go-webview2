@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2BrowserProcessExitedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2BrowserProcessExitedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2BrowserProcessExitedEventHandler struct {
-	vtbl *_ICoreWebView2BrowserProcessExitedEventHandlerVtbl
-	impl _ICoreWebView2BrowserProcessExitedEventHandlerImpl
+	Vtbl *ICoreWebView2BrowserProcessExitedEventHandlerVtbl
+	impl ICoreWebView2BrowserProcessExitedEventHandlerImpl
 }
 
 func (i *ICoreWebView2BrowserProcessExitedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2BrowserProcessExitedEventHandlerIUnknownQueryInterface(this *ICoreWebView2BrowserProcessExitedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2BrowserProcessExitedEventHandlerIUnknownQueryInterface(this *ICoreWebView2BrowserProcessExitedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2BrowserProcessExitedEventHandlerIUnknownAddRef(this *ICoreWebView2BrowserProcessExitedEventHandler) uintptr {
+func ICoreWebView2BrowserProcessExitedEventHandlerIUnknownAddRef(this *ICoreWebView2BrowserProcessExitedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2BrowserProcessExitedEventHandlerIUnknownRelease(this *ICoreWebView2BrowserProcessExitedEventHandler) uintptr {
+func ICoreWebView2BrowserProcessExitedEventHandlerIUnknownRelease(this *ICoreWebView2BrowserProcessExitedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2BrowserProcessExitedEventHandlerInvoke(this *ICoreWebView2BrowserProcessExitedEventHandler, sender *ICoreWebView2Environment, args *ICoreWebView2BrowserProcessExitedEventArgs) uintptr {
+func ICoreWebView2BrowserProcessExitedEventHandlerInvoke(this *ICoreWebView2BrowserProcessExitedEventHandler, sender *ICoreWebView2Environment, args *ICoreWebView2BrowserProcessExitedEventArgs) uintptr {
 	return this.impl.BrowserProcessExited(sender, args)
 }
 
-type _ICoreWebView2BrowserProcessExitedEventHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2BrowserProcessExitedEventHandlerImpl interface {
+	IUnknownImpl
 	BrowserProcessExited(sender *ICoreWebView2Environment, args *ICoreWebView2BrowserProcessExitedEventArgs) uintptr
 }
 
-var _ICoreWebView2BrowserProcessExitedEventHandlerFn = _ICoreWebView2BrowserProcessExitedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2BrowserProcessExitedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2BrowserProcessExitedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2BrowserProcessExitedEventHandlerIUnknownRelease),
+var ICoreWebView2BrowserProcessExitedEventHandlerFn = ICoreWebView2BrowserProcessExitedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2BrowserProcessExitedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2BrowserProcessExitedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2BrowserProcessExitedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2BrowserProcessExitedEventHandlerInvoke),
+	NewComProc(ICoreWebView2BrowserProcessExitedEventHandlerInvoke),
 }
 
-func NewICoreWebView2BrowserProcessExitedEventHandler(impl _ICoreWebView2BrowserProcessExitedEventHandlerImpl) *ICoreWebView2BrowserProcessExitedEventHandler {
+func NewICoreWebView2BrowserProcessExitedEventHandler(impl ICoreWebView2BrowserProcessExitedEventHandlerImpl) *ICoreWebView2BrowserProcessExitedEventHandler {
 	return &ICoreWebView2BrowserProcessExitedEventHandler{
-		vtbl: &_ICoreWebView2BrowserProcessExitedEventHandlerFn,
+		Vtbl: &ICoreWebView2BrowserProcessExitedEventHandlerFn,
 		impl: impl,
 	}
 }

@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2AcceleratorKeyPressedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2AcceleratorKeyPressedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetKeyEventKind      ComProc
 	GetVirtualKey        ComProc
 	GetKeyEventLParam    ComProc
@@ -18,97 +19,93 @@ type _ICoreWebView2AcceleratorKeyPressedEventArgsVtbl struct {
 }
 
 type ICoreWebView2AcceleratorKeyPressedEventArgs struct {
-	vtbl *_ICoreWebView2AcceleratorKeyPressedEventArgsVtbl
+	Vtbl *ICoreWebView2AcceleratorKeyPressedEventArgsVtbl
 }
 
 func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetKeyEventKind() (*COREWEBVIEW2_KEY_EVENT_KIND, error) {
-	var err error
 
-	var keyEventKind *COREWEBVIEW2_KEY_EVENT_KIND
+	var keyEventKind COREWEBVIEW2_KEY_EVENT_KIND
 
-	_, _, err = i.vtbl.GetKeyEventKind.Call(
+	hr, _, err := i.Vtbl.GetKeyEventKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&keyEventKind)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return keyEventKind, nil
+	return &keyEventKind, err
 }
 
-func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetVirtualKey() (uint, error) {
-	var err error
+func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetVirtualKey() (*uint, error) {
 
 	var virtualKey uint
 
-	_, _, err = i.vtbl.GetVirtualKey.Call(
+	hr, _, err := i.Vtbl.GetVirtualKey.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&virtualKey)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return 0, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return virtualKey, nil
+	return &virtualKey, err
 }
 
-func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetKeyEventLParam() (int, error) {
-	var err error
+func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetKeyEventLParam() (*int, error) {
 
 	var lParam int
 
-	_, _, err = i.vtbl.GetKeyEventLParam.Call(
+	hr, _, err := i.Vtbl.GetKeyEventLParam.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&lParam)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return 0, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return lParam, nil
+	return &lParam, err
 }
 
 func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetPhysicalKeyStatus() (*COREWEBVIEW2_PHYSICAL_KEY_STATUS, error) {
-	var err error
 
-	var physicalKeyStatus *COREWEBVIEW2_PHYSICAL_KEY_STATUS
+	var physicalKeyStatus COREWEBVIEW2_PHYSICAL_KEY_STATUS
 
-	_, _, err = i.vtbl.GetPhysicalKeyStatus.Call(
+	hr, _, err := i.Vtbl.GetPhysicalKeyStatus.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&physicalKeyStatus)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return physicalKeyStatus, nil
+	return &physicalKeyStatus, err
 }
 
-func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetHandled() (bool, error) {
-	var err error
+func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetHandled() (*bool, error) {
+	// Create int32 to hold bool result
+	var _handled int32
 
-	var handled bool
-
-	_, _, err = i.vtbl.GetHandled.Call(
+	hr, _, err := i.Vtbl.GetHandled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&handled)),
+		uintptr(unsafe.Pointer(&_handled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return handled, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	handled := _handled != 0
+	return &handled, err
 }
 
 func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) PutHandled(handled bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutHandled.Call(
+	hr, _, err := i.Vtbl.PutHandled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&handled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

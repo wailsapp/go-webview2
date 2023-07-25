@@ -4,49 +4,49 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2ProcessInfoVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2ProcessInfoVtbl struct {
+	IUnknownVtbl
 	GetProcessId ComProc
 	GetKind      ComProc
 }
 
 type ICoreWebView2ProcessInfo struct {
-	vtbl *_ICoreWebView2ProcessInfoVtbl
+	Vtbl *ICoreWebView2ProcessInfoVtbl
 }
 
 func (i *ICoreWebView2ProcessInfo) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2ProcessInfo) GetProcessId() (*INT32, error) {
-	var err error
+func (i *ICoreWebView2ProcessInfo) GetProcessId() (*int32, error) {
 
-	var value *INT32
+	var value int32
 
-	_, _, err = i.vtbl.GetProcessId.Call(
+	hr, _, err := i.Vtbl.GetProcessId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2ProcessInfo) GetKind() (*COREWEBVIEW2_PROCESS_KIND, error) {
-	var err error
 
-	var kind *COREWEBVIEW2_PROCESS_KIND
+	var kind COREWEBVIEW2_PROCESS_KIND
 
-	_, _, err = i.vtbl.GetKind.Call(
+	hr, _, err := i.Vtbl.GetKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&kind)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return kind, nil
+	return &kind, err
 }

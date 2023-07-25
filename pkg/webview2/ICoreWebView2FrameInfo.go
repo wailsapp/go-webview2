@@ -4,53 +4,53 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2FrameInfoVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2FrameInfoVtbl struct {
+	IUnknownVtbl
 	GetName   ComProc
 	GetSource ComProc
 }
 
 type ICoreWebView2FrameInfo struct {
-	vtbl *_ICoreWebView2FrameInfoVtbl
+	Vtbl *ICoreWebView2FrameInfoVtbl
 }
 
 func (i *ICoreWebView2FrameInfo) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2FrameInfo) GetName() (string, error) {
-	var err error
+func (i *ICoreWebView2FrameInfo) GetName() (*string, error) {
 	// Create *uint16 to hold result
 	var _name *uint16
 
-	_, _, err = i.vtbl.GetName.Call(
+	hr, _, err := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	name := windows.UTF16PtrToString(_name)
-	windows.CoTaskMemFree(unsafe.Pointer(_name))
-	return name, nil
+	name := UTF16PtrToString(_name)
+	CoTaskMemFree(unsafe.Pointer(_name))
+	return &name, err
 }
 
-func (i *ICoreWebView2FrameInfo) GetSource() (string, error) {
-	var err error
+func (i *ICoreWebView2FrameInfo) GetSource() (*string, error) {
 	// Create *uint16 to hold result
 	var _source *uint16
 
-	_, _, err = i.vtbl.GetSource.Call(
+	hr, _, err := i.Vtbl.GetSource.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_source)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	source := windows.UTF16PtrToString(_source)
-	windows.CoTaskMemFree(unsafe.Pointer(_source))
-	return source, nil
+	source := UTF16PtrToString(_source)
+	CoTaskMemFree(unsafe.Pointer(_source))
+	return &source, err
 }

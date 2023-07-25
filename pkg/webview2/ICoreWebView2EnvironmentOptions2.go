@@ -4,47 +4,48 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2EnvironmentOptions2Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2EnvironmentOptions2Vtbl struct {
+	IUnknownVtbl
 	GetExclusiveUserDataFolderAccess ComProc
 	PutExclusiveUserDataFolderAccess ComProc
 }
 
 type ICoreWebView2EnvironmentOptions2 struct {
-	vtbl *_ICoreWebView2EnvironmentOptions2Vtbl
+	Vtbl *ICoreWebView2EnvironmentOptions2Vtbl
 }
 
 func (i *ICoreWebView2EnvironmentOptions2) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2EnvironmentOptions2) GetExclusiveUserDataFolderAccess() (bool, error) {
-	var err error
+func (i *ICoreWebView2EnvironmentOptions2) GetExclusiveUserDataFolderAccess() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
 
-	var value bool
-
-	_, _, err = i.vtbl.GetExclusiveUserDataFolderAccess.Call(
+	hr, _, err := i.Vtbl.GetExclusiveUserDataFolderAccess.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }
 
 func (i *ICoreWebView2EnvironmentOptions2) PutExclusiveUserDataFolderAccess(value bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutExclusiveUserDataFolderAccess.Call(
+	hr, _, err := i.Vtbl.PutExclusiveUserDataFolderAccess.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

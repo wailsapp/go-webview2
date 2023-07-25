@@ -4,35 +4,48 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2Environment7Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2Environment7Vtbl struct {
+	IUnknownVtbl
 	GetUserDataFolder ComProc
 }
 
 type ICoreWebView2Environment7 struct {
-	vtbl *_ICoreWebView2Environment7Vtbl
+	Vtbl *ICoreWebView2Environment7Vtbl
 }
 
 func (i *ICoreWebView2Environment7) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2Environment7) GetUserDataFolder() (string, error) {
-	var err error
+func (i *ICoreWebView2) GetICoreWebView2Environment7() *ICoreWebView2Environment7 {
+	var result *ICoreWebView2Environment7
+
+	iidICoreWebView2Environment7 := NewGUID("{43C22296-3BBD-43A4-9C00-5C0DF6DD29A2}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Environment7)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
+}
+
+func (i *ICoreWebView2Environment7) GetUserDataFolder() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetUserDataFolder.Call(
+	hr, _, err := i.Vtbl.GetUserDataFolder.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }

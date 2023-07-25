@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2BasicAuthenticationRequestedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2BasicAuthenticationRequestedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2BasicAuthenticationRequestedEventHandler struct {
-	vtbl *_ICoreWebView2BasicAuthenticationRequestedEventHandlerVtbl
-	impl _ICoreWebView2BasicAuthenticationRequestedEventHandlerImpl
+	Vtbl *ICoreWebView2BasicAuthenticationRequestedEventHandlerVtbl
+	impl ICoreWebView2BasicAuthenticationRequestedEventHandlerImpl
 }
 
 func (i *ICoreWebView2BasicAuthenticationRequestedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownQueryInterface(this *ICoreWebView2BasicAuthenticationRequestedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownQueryInterface(this *ICoreWebView2BasicAuthenticationRequestedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownAddRef(this *ICoreWebView2BasicAuthenticationRequestedEventHandler) uintptr {
+func ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownAddRef(this *ICoreWebView2BasicAuthenticationRequestedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownRelease(this *ICoreWebView2BasicAuthenticationRequestedEventHandler) uintptr {
+func ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownRelease(this *ICoreWebView2BasicAuthenticationRequestedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2BasicAuthenticationRequestedEventHandlerInvoke(this *ICoreWebView2BasicAuthenticationRequestedEventHandler, sender *ICoreWebView2, args *ICoreWebView2BasicAuthenticationRequestedEventArgs) uintptr {
+func ICoreWebView2BasicAuthenticationRequestedEventHandlerInvoke(this *ICoreWebView2BasicAuthenticationRequestedEventHandler, sender *ICoreWebView2, args *ICoreWebView2BasicAuthenticationRequestedEventArgs) uintptr {
 	return this.impl.BasicAuthenticationRequested(sender, args)
 }
 
-type _ICoreWebView2BasicAuthenticationRequestedEventHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2BasicAuthenticationRequestedEventHandlerImpl interface {
+	IUnknownImpl
 	BasicAuthenticationRequested(sender *ICoreWebView2, args *ICoreWebView2BasicAuthenticationRequestedEventArgs) uintptr
 }
 
-var _ICoreWebView2BasicAuthenticationRequestedEventHandlerFn = _ICoreWebView2BasicAuthenticationRequestedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownRelease),
+var ICoreWebView2BasicAuthenticationRequestedEventHandlerFn = ICoreWebView2BasicAuthenticationRequestedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2BasicAuthenticationRequestedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2BasicAuthenticationRequestedEventHandlerInvoke),
+	NewComProc(ICoreWebView2BasicAuthenticationRequestedEventHandlerInvoke),
 }
 
-func NewICoreWebView2BasicAuthenticationRequestedEventHandler(impl _ICoreWebView2BasicAuthenticationRequestedEventHandlerImpl) *ICoreWebView2BasicAuthenticationRequestedEventHandler {
+func NewICoreWebView2BasicAuthenticationRequestedEventHandler(impl ICoreWebView2BasicAuthenticationRequestedEventHandlerImpl) *ICoreWebView2BasicAuthenticationRequestedEventHandler {
 	return &ICoreWebView2BasicAuthenticationRequestedEventHandler{
-		vtbl: &_ICoreWebView2BasicAuthenticationRequestedEventHandlerFn,
+		Vtbl: &ICoreWebView2BasicAuthenticationRequestedEventHandlerFn,
 		impl: impl,
 	}
 }

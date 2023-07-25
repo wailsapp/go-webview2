@@ -4,71 +4,70 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2WebMessageReceivedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2WebMessageReceivedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetSource                ComProc
 	GetWebMessageAsJson      ComProc
 	TryGetWebMessageAsString ComProc
 }
 
 type ICoreWebView2WebMessageReceivedEventArgs struct {
-	vtbl *_ICoreWebView2WebMessageReceivedEventArgsVtbl
+	Vtbl *ICoreWebView2WebMessageReceivedEventArgsVtbl
 }
 
 func (i *ICoreWebView2WebMessageReceivedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2WebMessageReceivedEventArgs) GetSource() (string, error) {
-	var err error
+func (i *ICoreWebView2WebMessageReceivedEventArgs) GetSource() (*string, error) {
 	// Create *uint16 to hold result
 	var _source *uint16
 
-	_, _, err = i.vtbl.GetSource.Call(
+	hr, _, err := i.Vtbl.GetSource.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_source)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	source := windows.UTF16PtrToString(_source)
-	windows.CoTaskMemFree(unsafe.Pointer(_source))
-	return source, nil
+	source := UTF16PtrToString(_source)
+	CoTaskMemFree(unsafe.Pointer(_source))
+	return &source, err
 }
 
-func (i *ICoreWebView2WebMessageReceivedEventArgs) GetWebMessageAsJson() (string, error) {
-	var err error
+func (i *ICoreWebView2WebMessageReceivedEventArgs) GetWebMessageAsJson() (*string, error) {
 	// Create *uint16 to hold result
 	var _webMessageAsJson *uint16
 
-	_, _, err = i.vtbl.GetWebMessageAsJson.Call(
+	hr, _, err := i.Vtbl.GetWebMessageAsJson.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_webMessageAsJson)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	webMessageAsJson := windows.UTF16PtrToString(_webMessageAsJson)
-	windows.CoTaskMemFree(unsafe.Pointer(_webMessageAsJson))
-	return webMessageAsJson, nil
+	webMessageAsJson := UTF16PtrToString(_webMessageAsJson)
+	CoTaskMemFree(unsafe.Pointer(_webMessageAsJson))
+	return &webMessageAsJson, err
 }
 
-func (i *ICoreWebView2WebMessageReceivedEventArgs) TryGetWebMessageAsString() (string, error) {
-	var err error
+func (i *ICoreWebView2WebMessageReceivedEventArgs) TryGetWebMessageAsString() (*string, error) {
 	// Create *uint16 to hold result
 	var _webMessageAsString *uint16
 
-	_, _, err = i.vtbl.TryGetWebMessageAsString.Call(
+	hr, _, err := i.Vtbl.TryGetWebMessageAsString.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_webMessageAsString)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	webMessageAsString := windows.UTF16PtrToString(_webMessageAsString)
-	windows.CoTaskMemFree(unsafe.Pointer(_webMessageAsString))
-	return webMessageAsString, nil
+	webMessageAsString := UTF16PtrToString(_webMessageAsString)
+	CoTaskMemFree(unsafe.Pointer(_webMessageAsString))
+	return &webMessageAsString, err
 }

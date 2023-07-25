@@ -4,49 +4,50 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2ContentLoadingEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2ContentLoadingEventArgsVtbl struct {
+	IUnknownVtbl
 	GetIsErrorPage  ComProc
 	GetNavigationId ComProc
 }
 
 type ICoreWebView2ContentLoadingEventArgs struct {
-	vtbl *_ICoreWebView2ContentLoadingEventArgsVtbl
+	Vtbl *ICoreWebView2ContentLoadingEventArgsVtbl
 }
 
 func (i *ICoreWebView2ContentLoadingEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2ContentLoadingEventArgs) GetIsErrorPage() (bool, error) {
-	var err error
+func (i *ICoreWebView2ContentLoadingEventArgs) GetIsErrorPage() (*bool, error) {
+	// Create int32 to hold bool result
+	var _isErrorPage int32
 
-	var isErrorPage bool
-
-	_, _, err = i.vtbl.GetIsErrorPage.Call(
+	hr, _, err := i.Vtbl.GetIsErrorPage.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isErrorPage)),
+		uintptr(unsafe.Pointer(&_isErrorPage)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return isErrorPage, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	isErrorPage := _isErrorPage != 0
+	return &isErrorPage, err
 }
 
 func (i *ICoreWebView2ContentLoadingEventArgs) GetNavigationId() (*uint64, error) {
-	var err error
 
-	var navigationId *uint64
+	var navigationId uint64
 
-	_, _, err = i.vtbl.GetNavigationId.Call(
+	hr, _, err := i.Vtbl.GetNavigationId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&navigationId)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return navigationId, nil
+	return &navigationId, err
 }

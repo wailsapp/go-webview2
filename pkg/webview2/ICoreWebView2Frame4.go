@@ -4,39 +4,52 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2Frame4Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2Frame4Vtbl struct {
+	IUnknownVtbl
 	PostSharedBufferToScript ComProc
 }
 
 type ICoreWebView2Frame4 struct {
-	vtbl *_ICoreWebView2Frame4Vtbl
+	Vtbl *ICoreWebView2Frame4Vtbl
 }
 
 func (i *ICoreWebView2Frame4) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2Frame4() *ICoreWebView2Frame4 {
+	var result *ICoreWebView2Frame4
+
+	iidICoreWebView2Frame4 := NewGUID("{188782DC-92AA-4732-AB3C-FCC59F6F68B9}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Frame4)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2Frame4) PostSharedBufferToScript(sharedBuffer *ICoreWebView2SharedBuffer, access COREWEBVIEW2_SHARED_BUFFER_ACCESS, additionalDataAsJson string) error {
-	var err error
 
 	// Convert string 'additionalDataAsJson' to *uint16
-	_additionalDataAsJson, err := windows.UTF16PtrFromString(additionalDataAsJson)
+	_additionalDataAsJson, err := UTF16PtrFromString(additionalDataAsJson)
 	if err != nil {
 		return err
 	}
 
-	_, _, err = i.vtbl.PostSharedBufferToScript.Call(
+	hr, _, err := i.Vtbl.PostSharedBufferToScript.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(sharedBuffer)),
 		uintptr(access),
 		uintptr(unsafe.Pointer(_additionalDataAsJson)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

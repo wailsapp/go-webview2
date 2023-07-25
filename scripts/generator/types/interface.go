@@ -35,10 +35,11 @@ func (d *InterfaceDeclaration) Process(decl *Declaration) error {
 			break
 		}
 	}
+	d.includes.AddUnique(`"unsafe"`)
 	if len(d.Methods) == 1 && d.Methods[0] == d.InvokeMethod {
 		return nil
 	}
-	d.includes.AddUnique(`"unsafe"`)
+	d.includes.AddUnique(`"syscall"`)
 	d.includes.AddUnique(`"golang.org/x/sys/windows"`)
 	return nil
 }
@@ -69,15 +70,29 @@ func (d *InterfaceDeclaration) generateVtbl(packageName string, w io.Writer) err
 		Methods         []*InterfaceMethod
 		HasInvokeMethod bool
 		Includes        []string
+		BaseClass       string
+		Header          *InterfaceHeader
 	}{
 		PackageName:     packageName,
+		BaseClass:       d.BaseClass,
+		Header:          d.Header,
 		Name:            d.Name,
 		Methods:         d.Methods,
 		HasInvokeMethod: d.HasInvokeMethod(),
 		Includes:        d.includes.AsSlice(),
 	}
+	if d.BaseClass == "IUnknown" {
+		data.BaseClass = ""
+	}
 	mustTemplate("Interface Vtbl", "interfacevtbl.tmpl", &data, w)
 	return nil
+}
+
+func (d *InterfaceDeclaration) GetBaseClass() string {
+	if d.BaseClass == "IUnknown" {
+		return ""
+	}
+	return d.BaseClass
 }
 
 func (d *InterfaceDeclaration) generateInvoke(w io.Writer) error {
@@ -216,6 +231,9 @@ func (m *InterfaceMethod) processOutputParams() {
 	m.GoOutputs = outputs.Join(", ")
 	m.OutputParamNames = outputParamNames.Join(", ")
 	m.GoReturnTypes = outputParamTypes.Join(", ")
+	if outputParamTypes.Length() > 1 {
+		m.GoReturnTypes = "(" + m.GoReturnTypes + ")"
+	}
 }
 
 func (m *InterfaceMethod) SetupCode() string {
@@ -242,26 +260,54 @@ func (m *InterfaceMethod) VtableCallInputs() string {
 	return buffer.String()
 }
 
+func (m *InterfaceMethod) ReturnsHRESULT() bool {
+	return m.ReturnType == "HRESULT"
+}
+
 func (m *InterfaceMethod) ErrorValues() string {
 	var errorValues slicer.StringSlicer
 	for _, outputParam := range m.outputParams {
-		errorValues.Add(defaultErrorValue(outputParam.GoType))
+		errorValues.Add(outputParam.defaultErrorValue())
 	}
 	errorValues.Add("err")
 	return errorValues.Join(", ")
+}
+func (m *InterfaceMethod) ErrorValuesHRESULT() string {
+	var errorValues slicer.StringSlicer
+	for _, outputParam := range m.outputParams {
+		errorValues.Add(outputParam.defaultErrorValue())
+	}
+	if m.ReturnsHRESULT() {
+		errorValues.Add("syscall.Errno(hr)")
+	} else {
+		errorValues.Add("err")
+	}
+	return errorValues.Join(", ")
+}
+
+func (m *InterfaceMethod) GetHResultVariable() string {
+	if m.ReturnsHRESULT() {
+		return "hr"
+	}
+	return "_"
 }
 
 func (m *InterfaceMethod) SuccessValues() string {
 	var successValues slicer.StringSlicer
 	for _, outputParam := range m.outputParams {
-		successValues.Add(outputParam.GetVariableName())
+		successValues.Add(outputParam.GetReturnVariableName())
 	}
-	successValues.Add("nil")
+	successValues.Add("err")
 	return successValues.Join(", ")
 }
 
 type InterfaceHeader struct {
 	UUID *UUID `parser:"'uuid' '(' @UUID ')' ',' 'object' ',' 'pointer_default' '(' 'unique' ')'"`
+}
+
+func (h *InterfaceHeader) AsString() string {
+	uuid := *h.UUID
+	return string(`"{` + uuid + `}"`)
 }
 
 type InterfaceMethodName string

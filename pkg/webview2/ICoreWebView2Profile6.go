@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2Profile6Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2Profile6Vtbl struct {
+	IUnknownVtbl
 	GetIsPasswordAutosaveEnabled ComProc
 	PutIsPasswordAutosaveEnabled ComProc
 	GetIsGeneralAutofillEnabled  ComProc
@@ -16,65 +17,76 @@ type _ICoreWebView2Profile6Vtbl struct {
 }
 
 type ICoreWebView2Profile6 struct {
-	vtbl *_ICoreWebView2Profile6Vtbl
+	Vtbl *ICoreWebView2Profile6Vtbl
 }
 
 func (i *ICoreWebView2Profile6) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2Profile6) GetIsPasswordAutosaveEnabled() (bool, error) {
-	var err error
+func (i *ICoreWebView2) GetICoreWebView2Profile6() *ICoreWebView2Profile6 {
+	var result *ICoreWebView2Profile6
 
-	var value bool
-
-	_, _, err = i.vtbl.GetIsPasswordAutosaveEnabled.Call(
+	iidICoreWebView2Profile6 := NewGUID("{BD82FA6A-1D65-4C33-B2B4-0393020CC61B}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Profile6)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
+}
+
+func (i *ICoreWebView2Profile6) GetIsPasswordAutosaveEnabled() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
+
+	hr, _, err := i.Vtbl.GetIsPasswordAutosaveEnabled.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }
 
 func (i *ICoreWebView2Profile6) PutIsPasswordAutosaveEnabled(value bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutIsPasswordAutosaveEnabled.Call(
+	hr, _, err := i.Vtbl.PutIsPasswordAutosaveEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2Profile6) GetIsGeneralAutofillEnabled() (bool, error) {
-	var err error
+func (i *ICoreWebView2Profile6) GetIsGeneralAutofillEnabled() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
 
-	var value bool
-
-	_, _, err = i.vtbl.GetIsGeneralAutofillEnabled.Call(
+	hr, _, err := i.Vtbl.GetIsGeneralAutofillEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }
 
 func (i *ICoreWebView2Profile6) PutIsGeneralAutofillEnabled(value bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutIsGeneralAutofillEnabled.Call(
+	hr, _, err := i.Vtbl.PutIsGeneralAutofillEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

@@ -4,62 +4,73 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2_14Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2_14Vtbl struct {
+	IUnknownVtbl
 	AddServerCertificateErrorDetected    ComProc
 	RemoveServerCertificateErrorDetected ComProc
 	ClearServerCertificateErrorActions   ComProc
 }
 
 type ICoreWebView2_14 struct {
-	vtbl *_ICoreWebView2_14Vtbl
+	Vtbl *ICoreWebView2_14Vtbl
 }
 
 func (i *ICoreWebView2_14) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2_14() *ICoreWebView2_14 {
+	var result *ICoreWebView2_14
+
+	iidICoreWebView2_14 := NewGUID("{6DAA4F10-4A90-4753-8898-77C5DF534165}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2_14)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2_14) AddServerCertificateErrorDetected(eventHandler *ICoreWebView2ServerCertificateErrorDetectedEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddServerCertificateErrorDetected.Call(
+	hr, _, err := i.Vtbl.AddServerCertificateErrorDetected.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2_14) RemoveServerCertificateErrorDetected(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveServerCertificateErrorDetected.Call(
+	hr, _, err := i.Vtbl.RemoveServerCertificateErrorDetected.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2_14) ClearServerCertificateErrorActions(handler *ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler) error {
-	var err error
 
-	_, _, err = i.vtbl.ClearServerCertificateErrorActions.Call(
+	hr, _, err := i.Vtbl.ClearServerCertificateErrorActions.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(handler)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

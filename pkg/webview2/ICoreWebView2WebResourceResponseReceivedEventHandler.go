@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2WebResourceResponseReceivedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2WebResourceResponseReceivedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2WebResourceResponseReceivedEventHandler struct {
-	vtbl *_ICoreWebView2WebResourceResponseReceivedEventHandlerVtbl
-	impl _ICoreWebView2WebResourceResponseReceivedEventHandlerImpl
+	Vtbl *ICoreWebView2WebResourceResponseReceivedEventHandlerVtbl
+	impl ICoreWebView2WebResourceResponseReceivedEventHandlerImpl
 }
 
 func (i *ICoreWebView2WebResourceResponseReceivedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownQueryInterface(this *ICoreWebView2WebResourceResponseReceivedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownQueryInterface(this *ICoreWebView2WebResourceResponseReceivedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownAddRef(this *ICoreWebView2WebResourceResponseReceivedEventHandler) uintptr {
+func ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownAddRef(this *ICoreWebView2WebResourceResponseReceivedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownRelease(this *ICoreWebView2WebResourceResponseReceivedEventHandler) uintptr {
+func ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownRelease(this *ICoreWebView2WebResourceResponseReceivedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2WebResourceResponseReceivedEventHandlerInvoke(this *ICoreWebView2WebResourceResponseReceivedEventHandler, sender *ICoreWebView2, args *ICoreWebView2WebResourceResponseReceivedEventArgs) uintptr {
+func ICoreWebView2WebResourceResponseReceivedEventHandlerInvoke(this *ICoreWebView2WebResourceResponseReceivedEventHandler, sender *ICoreWebView2, args *ICoreWebView2WebResourceResponseReceivedEventArgs) uintptr {
 	return this.impl.WebResourceResponseReceived(sender, args)
 }
 
-type _ICoreWebView2WebResourceResponseReceivedEventHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2WebResourceResponseReceivedEventHandlerImpl interface {
+	IUnknownImpl
 	WebResourceResponseReceived(sender *ICoreWebView2, args *ICoreWebView2WebResourceResponseReceivedEventArgs) uintptr
 }
 
-var _ICoreWebView2WebResourceResponseReceivedEventHandlerFn = _ICoreWebView2WebResourceResponseReceivedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownRelease),
+var ICoreWebView2WebResourceResponseReceivedEventHandlerFn = ICoreWebView2WebResourceResponseReceivedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2WebResourceResponseReceivedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2WebResourceResponseReceivedEventHandlerInvoke),
+	NewComProc(ICoreWebView2WebResourceResponseReceivedEventHandlerInvoke),
 }
 
-func NewICoreWebView2WebResourceResponseReceivedEventHandler(impl _ICoreWebView2WebResourceResponseReceivedEventHandlerImpl) *ICoreWebView2WebResourceResponseReceivedEventHandler {
+func NewICoreWebView2WebResourceResponseReceivedEventHandler(impl ICoreWebView2WebResourceResponseReceivedEventHandlerImpl) *ICoreWebView2WebResourceResponseReceivedEventHandler {
 	return &ICoreWebView2WebResourceResponseReceivedEventHandler{
-		vtbl: &_ICoreWebView2WebResourceResponseReceivedEventHandlerFn,
+		Vtbl: &ICoreWebView2WebResourceResponseReceivedEventHandlerFn,
 		impl: impl,
 	}
 }

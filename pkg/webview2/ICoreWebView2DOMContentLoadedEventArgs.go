@@ -4,33 +4,34 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2DOMContentLoadedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2DOMContentLoadedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetNavigationId ComProc
 }
 
 type ICoreWebView2DOMContentLoadedEventArgs struct {
-	vtbl *_ICoreWebView2DOMContentLoadedEventArgsVtbl
+	Vtbl *ICoreWebView2DOMContentLoadedEventArgsVtbl
 }
 
 func (i *ICoreWebView2DOMContentLoadedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2DOMContentLoadedEventArgs) GetNavigationId() (*uint64, error) {
-	var err error
 
-	var navigationId *uint64
+	var navigationId uint64
 
-	_, _, err = i.vtbl.GetNavigationId.Call(
+	hr, _, err := i.Vtbl.GetNavigationId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&navigationId)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return navigationId, nil
+	return &navigationId, err
 }

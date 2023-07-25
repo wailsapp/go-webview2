@@ -4,65 +4,65 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2NavigationCompletedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2NavigationCompletedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetIsSuccess      ComProc
 	GetWebErrorStatus ComProc
 	GetNavigationId   ComProc
 }
 
 type ICoreWebView2NavigationCompletedEventArgs struct {
-	vtbl *_ICoreWebView2NavigationCompletedEventArgsVtbl
+	Vtbl *ICoreWebView2NavigationCompletedEventArgsVtbl
 }
 
 func (i *ICoreWebView2NavigationCompletedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2NavigationCompletedEventArgs) GetIsSuccess() (bool, error) {
-	var err error
+func (i *ICoreWebView2NavigationCompletedEventArgs) GetIsSuccess() (*bool, error) {
+	// Create int32 to hold bool result
+	var _isSuccess int32
 
-	var isSuccess bool
-
-	_, _, err = i.vtbl.GetIsSuccess.Call(
+	hr, _, err := i.Vtbl.GetIsSuccess.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isSuccess)),
+		uintptr(unsafe.Pointer(&_isSuccess)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return isSuccess, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	isSuccess := _isSuccess != 0
+	return &isSuccess, err
 }
 
 func (i *ICoreWebView2NavigationCompletedEventArgs) GetWebErrorStatus() (*COREWEBVIEW2_WEB_ERROR_STATUS, error) {
-	var err error
 
-	var webErrorStatus *COREWEBVIEW2_WEB_ERROR_STATUS
+	var webErrorStatus COREWEBVIEW2_WEB_ERROR_STATUS
 
-	_, _, err = i.vtbl.GetWebErrorStatus.Call(
+	hr, _, err := i.Vtbl.GetWebErrorStatus.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&webErrorStatus)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return webErrorStatus, nil
+	return &webErrorStatus, err
 }
 
 func (i *ICoreWebView2NavigationCompletedEventArgs) GetNavigationId() (*uint64, error) {
-	var err error
 
-	var navigationId *uint64
+	var navigationId uint64
 
-	_, _, err = i.vtbl.GetNavigationId.Call(
+	hr, _, err := i.Vtbl.GetNavigationId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&navigationId)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return navigationId, nil
+	return &navigationId, err
 }

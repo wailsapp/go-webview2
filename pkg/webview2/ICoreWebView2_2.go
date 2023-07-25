@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2_2Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2_2Vtbl struct {
+	IUnknownVtbl
 	AddWebResourceResponseReceived    ComProc
 	RemoveWebResourceResponseReceived ComProc
 	NavigateWithWebResourceRequest    ComProc
@@ -19,110 +20,116 @@ type _ICoreWebView2_2Vtbl struct {
 }
 
 type ICoreWebView2_2 struct {
-	vtbl *_ICoreWebView2_2Vtbl
+	Vtbl *ICoreWebView2_2Vtbl
 }
 
 func (i *ICoreWebView2_2) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2_2() *ICoreWebView2_2 {
+	var result *ICoreWebView2_2
+
+	iidICoreWebView2_2 := NewGUID("{9E8F0CF8-E670-4B5E-B2BC-73E061E3184C}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2_2)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2_2) AddWebResourceResponseReceived(eventHandler *ICoreWebView2WebResourceResponseReceivedEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddWebResourceResponseReceived.Call(
+	hr, _, err := i.Vtbl.AddWebResourceResponseReceived.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2_2) RemoveWebResourceResponseReceived(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveWebResourceResponseReceived.Call(
+	hr, _, err := i.Vtbl.RemoveWebResourceResponseReceived.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2_2) NavigateWithWebResourceRequest(request *ICoreWebView2WebResourceRequest) error {
-	var err error
 
-	_, _, err = i.vtbl.NavigateWithWebResourceRequest.Call(
+	hr, _, err := i.Vtbl.NavigateWithWebResourceRequest.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(request)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2_2) AddDOMContentLoaded(eventHandler *ICoreWebView2DOMContentLoadedEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddDOMContentLoaded.Call(
+	hr, _, err := i.Vtbl.AddDOMContentLoaded.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2_2) RemoveDOMContentLoaded(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveDOMContentLoaded.Call(
+	hr, _, err := i.Vtbl.RemoveDOMContentLoaded.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2_2) GetCookieManager() (*ICoreWebView2CookieManager, error) {
-	var err error
 
-	var cookieManager *ICoreWebView2CookieManager
+	var cookieManager ICoreWebView2CookieManager
 
-	_, _, err = i.vtbl.GetCookieManager.Call(
+	hr, _, err := i.Vtbl.GetCookieManager.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&cookieManager)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return cookieManager, nil
+	return &cookieManager, err
 }
 
 func (i *ICoreWebView2_2) GetEnvironment() (*ICoreWebView2Environment, error) {
-	var err error
 
-	var environment *ICoreWebView2Environment
+	var environment ICoreWebView2Environment
 
-	_, _, err = i.vtbl.GetEnvironment.Call(
+	hr, _, err := i.Vtbl.GetEnvironment.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&environment)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return environment, nil
+	return &environment, err
 }

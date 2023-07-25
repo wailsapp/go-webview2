@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2PermissionRequestedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2PermissionRequestedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetUri             ComProc
 	GetPermissionKind  ComProc
 	GetIsUserInitiated ComProc
@@ -18,99 +19,95 @@ type _ICoreWebView2PermissionRequestedEventArgsVtbl struct {
 }
 
 type ICoreWebView2PermissionRequestedEventArgs struct {
-	vtbl *_ICoreWebView2PermissionRequestedEventArgsVtbl
+	Vtbl *ICoreWebView2PermissionRequestedEventArgsVtbl
 }
 
 func (i *ICoreWebView2PermissionRequestedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2PermissionRequestedEventArgs) GetUri() (string, error) {
-	var err error
+func (i *ICoreWebView2PermissionRequestedEventArgs) GetUri() (*string, error) {
 	// Create *uint16 to hold result
 	var _uri *uint16
 
-	_, _, err = i.vtbl.GetUri.Call(
+	hr, _, err := i.Vtbl.GetUri.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_uri)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	uri := windows.UTF16PtrToString(_uri)
-	windows.CoTaskMemFree(unsafe.Pointer(_uri))
-	return uri, nil
+	uri := UTF16PtrToString(_uri)
+	CoTaskMemFree(unsafe.Pointer(_uri))
+	return &uri, err
 }
 
 func (i *ICoreWebView2PermissionRequestedEventArgs) GetPermissionKind() (*COREWEBVIEW2_PERMISSION_KIND, error) {
-	var err error
 
-	var permissionKind *COREWEBVIEW2_PERMISSION_KIND
+	var permissionKind COREWEBVIEW2_PERMISSION_KIND
 
-	_, _, err = i.vtbl.GetPermissionKind.Call(
+	hr, _, err := i.Vtbl.GetPermissionKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&permissionKind)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return permissionKind, nil
+	return &permissionKind, err
 }
 
-func (i *ICoreWebView2PermissionRequestedEventArgs) GetIsUserInitiated() (bool, error) {
-	var err error
+func (i *ICoreWebView2PermissionRequestedEventArgs) GetIsUserInitiated() (*bool, error) {
+	// Create int32 to hold bool result
+	var _isUserInitiated int32
 
-	var isUserInitiated bool
-
-	_, _, err = i.vtbl.GetIsUserInitiated.Call(
+	hr, _, err := i.Vtbl.GetIsUserInitiated.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isUserInitiated)),
+		uintptr(unsafe.Pointer(&_isUserInitiated)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return isUserInitiated, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	isUserInitiated := _isUserInitiated != 0
+	return &isUserInitiated, err
 }
 
 func (i *ICoreWebView2PermissionRequestedEventArgs) GetState() (*COREWEBVIEW2_PERMISSION_STATE, error) {
-	var err error
 
-	var state *COREWEBVIEW2_PERMISSION_STATE
+	var state COREWEBVIEW2_PERMISSION_STATE
 
-	_, _, err = i.vtbl.GetState.Call(
+	hr, _, err := i.Vtbl.GetState.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&state)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return state, nil
+	return &state, err
 }
 
 func (i *ICoreWebView2PermissionRequestedEventArgs) PutState(state COREWEBVIEW2_PERMISSION_STATE) error {
-	var err error
 
-	_, _, err = i.vtbl.PutState.Call(
+	hr, _, err := i.Vtbl.PutState.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(state),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2PermissionRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
-	var err error
 
-	var deferral *ICoreWebView2Deferral
+	var deferral ICoreWebView2Deferral
 
-	_, _, err = i.vtbl.GetDeferral.Call(
+	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&deferral)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return deferral, nil
+	return &deferral, err
 }

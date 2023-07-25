@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2SharedBufferVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2SharedBufferVtbl struct {
+	IUnknownVtbl
 	GetSize              ComProc
 	GetBuffer            ComProc
 	OpenStream           ComProc
@@ -17,81 +18,77 @@ type _ICoreWebView2SharedBufferVtbl struct {
 }
 
 type ICoreWebView2SharedBuffer struct {
-	vtbl *_ICoreWebView2SharedBufferVtbl
+	Vtbl *ICoreWebView2SharedBufferVtbl
 }
 
 func (i *ICoreWebView2SharedBuffer) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2SharedBuffer) GetSize() (*uint64, error) {
-	var err error
 
-	var value *uint64
+	var value uint64
 
-	_, _, err = i.vtbl.GetSize.Call(
+	hr, _, err := i.Vtbl.GetSize.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2SharedBuffer) GetBuffer() (*uint8, error) {
-	var err error
 
-	var value *uint8
+	var value uint8
 
-	_, _, err = i.vtbl.GetBuffer.Call(
+	hr, _, err := i.Vtbl.GetBuffer.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2SharedBuffer) OpenStream() (*IStream, error) {
-	var err error
 
-	var value *IStream
+	var value IStream
 
-	_, _, err = i.vtbl.OpenStream.Call(
+	hr, _, err := i.Vtbl.OpenStream.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2SharedBuffer) GetFileMappingHandle() (*HANDLE, error) {
-	var err error
 
-	var value *HANDLE
+	var value HANDLE
 
-	_, _, err = i.vtbl.GetFileMappingHandle.Call(
+	hr, _, err := i.Vtbl.GetFileMappingHandle.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2SharedBuffer) Close() error {
-	var err error
 
-	_, _, err = i.vtbl.Close.Call(
+	hr, _, err := i.Vtbl.Close.Call(
 		uintptr(unsafe.Pointer(i)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

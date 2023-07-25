@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2EnvironmentOptionsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2EnvironmentOptionsVtbl struct {
+	IUnknownVtbl
 	GetAdditionalBrowserArguments             ComProc
 	PutAdditionalBrowserArguments             ComProc
 	GetLanguage                               ComProc
@@ -20,145 +21,139 @@ type _ICoreWebView2EnvironmentOptionsVtbl struct {
 }
 
 type ICoreWebView2EnvironmentOptions struct {
-	vtbl *_ICoreWebView2EnvironmentOptionsVtbl
+	Vtbl *ICoreWebView2EnvironmentOptionsVtbl
 }
 
 func (i *ICoreWebView2EnvironmentOptions) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2EnvironmentOptions) GetAdditionalBrowserArguments() (string, error) {
-	var err error
+func (i *ICoreWebView2EnvironmentOptions) GetAdditionalBrowserArguments() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetAdditionalBrowserArguments.Call(
+	hr, _, err := i.Vtbl.GetAdditionalBrowserArguments.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
 func (i *ICoreWebView2EnvironmentOptions) PutAdditionalBrowserArguments(value string) error {
-	var err error
 
 	// Convert string 'value' to *uint16
-	_value, err := windows.UTF16PtrFromString(value)
+	_value, err := UTF16PtrFromString(value)
 	if err != nil {
 		return err
 	}
 
-	_, _, err = i.vtbl.PutAdditionalBrowserArguments.Call(
+	hr, _, err := i.Vtbl.PutAdditionalBrowserArguments.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2EnvironmentOptions) GetLanguage() (string, error) {
-	var err error
+func (i *ICoreWebView2EnvironmentOptions) GetLanguage() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetLanguage.Call(
+	hr, _, err := i.Vtbl.GetLanguage.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
 func (i *ICoreWebView2EnvironmentOptions) PutLanguage(value string) error {
-	var err error
 
 	// Convert string 'value' to *uint16
-	_value, err := windows.UTF16PtrFromString(value)
+	_value, err := UTF16PtrFromString(value)
 	if err != nil {
 		return err
 	}
 
-	_, _, err = i.vtbl.PutLanguage.Call(
+	hr, _, err := i.Vtbl.PutLanguage.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2EnvironmentOptions) GetTargetCompatibleBrowserVersion() (string, error) {
-	var err error
+func (i *ICoreWebView2EnvironmentOptions) GetTargetCompatibleBrowserVersion() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetTargetCompatibleBrowserVersion.Call(
+	hr, _, err := i.Vtbl.GetTargetCompatibleBrowserVersion.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
 func (i *ICoreWebView2EnvironmentOptions) PutTargetCompatibleBrowserVersion(value string) error {
-	var err error
 
 	// Convert string 'value' to *uint16
-	_value, err := windows.UTF16PtrFromString(value)
+	_value, err := UTF16PtrFromString(value)
 	if err != nil {
 		return err
 	}
 
-	_, _, err = i.vtbl.PutTargetCompatibleBrowserVersion.Call(
+	hr, _, err := i.Vtbl.PutTargetCompatibleBrowserVersion.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2EnvironmentOptions) GetAllowSingleSignOnUsingOSPrimaryAccount() (bool, error) {
-	var err error
+func (i *ICoreWebView2EnvironmentOptions) GetAllowSingleSignOnUsingOSPrimaryAccount() (*bool, error) {
+	// Create int32 to hold bool result
+	var _allow int32
 
-	var allow bool
-
-	_, _, err = i.vtbl.GetAllowSingleSignOnUsingOSPrimaryAccount.Call(
+	hr, _, err := i.Vtbl.GetAllowSingleSignOnUsingOSPrimaryAccount.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&allow)),
+		uintptr(unsafe.Pointer(&_allow)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return allow, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	allow := _allow != 0
+	return &allow, err
 }
 
 func (i *ICoreWebView2EnvironmentOptions) PutAllowSingleSignOnUsingOSPrimaryAccount(allow bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutAllowSingleSignOnUsingOSPrimaryAccount.Call(
+	hr, _, err := i.Vtbl.PutAllowSingleSignOnUsingOSPrimaryAccount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&allow)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

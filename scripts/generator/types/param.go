@@ -30,16 +30,23 @@ func (p *Param) IsOutputParam() bool {
 	return p.Direction.Dir == "out"
 }
 
+func (p *Param) OutputGoType() string {
+	if p.IsOutputParam() && p.isPointer() {
+		return p.GoType[1:]
+	}
+	return p.GoType
+}
+
 func (p *Param) Process(decl *InterfaceMethod) {
 	p.decl = decl
 	p.GoType = IdlTypeToGoType(p.Type)
-	switch p.GoType {
-	case "string", "uint", "int", "float64", "bool":
-		return
-	}
-	if p.Pointer != "" {
+	if p.isPointer() {
 		p.GoType = "*" + p.GoType
 	}
+}
+
+func (p *Param) isPointer() bool {
+	return p.Pointer != ""
 }
 
 func (p *Param) processSetup() {
@@ -108,10 +115,22 @@ func (p *Param) ClearLocalName() string {
 }
 
 func (p *Param) GetVariableName() string {
-	if p.LocalName != "" {
-		return p.LocalName
+	result := p.LocalName
+	if result == "" {
+		result = p.Name
 	}
-	return p.Name
+	return result
+}
+
+func (p *Param) GetReturnVariableName() string {
+	result := p.LocalName
+	if result == "" {
+		result = p.Name
+	}
+	if p.isPointer() {
+		result = "&" + result
+	}
+	return result
 }
 
 func (p *Param) IsEnum() bool {
@@ -127,7 +146,6 @@ func (p *Param) processSetupInputs() {
 		// We need to convert to *uint16
 		p.setupTemplate = "inputStringSetup.tmpl"
 		p.LocalName = "_" + p.Name
-		p.decl.decl.includes.AddUnique(`"golang.org/x/sys/windows"`)
 	}
 }
 
@@ -136,17 +154,37 @@ func (p *Param) processSetupOutputs() {
 		return
 	}
 	switch p.GoType {
-	case "string":
+	case "*string":
 		p.LocalName = "_" + p.Name
 		p.setupTemplate = "outputStringSetup.tmpl"
 		p.cleanupTemplate = "outputStringCleanup.tmpl"
-		p.decl.decl.includes.AddUnique(`"golang.org/x/sys/windows"`)
+	case "*bool":
+		p.LocalName = "_" + p.Name
+		p.setupTemplate = "outputBoolSetup.tmpl"
+		p.cleanupTemplate = "outputBoolCleanup.tmpl"
 	default:
 		p.setupTemplate = "outputDefaultSetup.tmpl"
 	}
 	if p.Pointer != "" {
 		p.decl.decl.includes.AddUnique(`"unsafe"`)
 	}
+}
+
+func (p *Param) defaultErrorValue() string {
+	if strings.HasPrefix(p.GoType, "uint") ||
+		strings.HasPrefix(p.GoType, "int") {
+		return "0"
+	}
+	if strings.HasPrefix(p.GoType, "float") {
+		return "0.0"
+	}
+	switch p.GoType {
+	case "string":
+		return `""`
+	case "bool":
+		return "false"
+	}
+	return "nil"
 }
 
 type Direction struct {

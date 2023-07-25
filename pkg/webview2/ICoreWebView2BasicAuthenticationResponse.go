@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2BasicAuthenticationResponseVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2BasicAuthenticationResponseVtbl struct {
+	IUnknownVtbl
 	GetUserName ComProc
 	PutUserName ComProc
 	GetPassword ComProc
@@ -16,81 +17,78 @@ type _ICoreWebView2BasicAuthenticationResponseVtbl struct {
 }
 
 type ICoreWebView2BasicAuthenticationResponse struct {
-	vtbl *_ICoreWebView2BasicAuthenticationResponseVtbl
+	Vtbl *ICoreWebView2BasicAuthenticationResponseVtbl
 }
 
 func (i *ICoreWebView2BasicAuthenticationResponse) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2BasicAuthenticationResponse) GetUserName() (string, error) {
-	var err error
+func (i *ICoreWebView2BasicAuthenticationResponse) GetUserName() (*string, error) {
 	// Create *uint16 to hold result
 	var _userName *uint16
 
-	_, _, err = i.vtbl.GetUserName.Call(
+	hr, _, err := i.Vtbl.GetUserName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_userName)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	userName := windows.UTF16PtrToString(_userName)
-	windows.CoTaskMemFree(unsafe.Pointer(_userName))
-	return userName, nil
+	userName := UTF16PtrToString(_userName)
+	CoTaskMemFree(unsafe.Pointer(_userName))
+	return &userName, err
 }
 
 func (i *ICoreWebView2BasicAuthenticationResponse) PutUserName(userName string) error {
-	var err error
 
 	// Convert string 'userName' to *uint16
-	_userName, err := windows.UTF16PtrFromString(userName)
+	_userName, err := UTF16PtrFromString(userName)
 	if err != nil {
 		return err
 	}
 
-	_, _, err = i.vtbl.PutUserName.Call(
+	hr, _, err := i.Vtbl.PutUserName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_userName)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2BasicAuthenticationResponse) GetPassword() (string, error) {
-	var err error
+func (i *ICoreWebView2BasicAuthenticationResponse) GetPassword() (*string, error) {
 	// Create *uint16 to hold result
 	var _password *uint16
 
-	_, _, err = i.vtbl.GetPassword.Call(
+	hr, _, err := i.Vtbl.GetPassword.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_password)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	password := windows.UTF16PtrToString(_password)
-	windows.CoTaskMemFree(unsafe.Pointer(_password))
-	return password, nil
+	password := UTF16PtrToString(_password)
+	CoTaskMemFree(unsafe.Pointer(_password))
+	return &password, err
 }
 
 func (i *ICoreWebView2BasicAuthenticationResponse) PutPassword(password string) error {
-	var err error
 
 	// Convert string 'password' to *uint16
-	_password, err := windows.UTF16PtrFromString(password)
+	_password, err := UTF16PtrFromString(password)
 	if err != nil {
 		return err
 	}
 
-	_, _, err = i.vtbl.PutPassword.Call(
+	hr, _, err := i.Vtbl.PutPassword.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_password)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

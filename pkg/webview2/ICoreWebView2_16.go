@@ -4,61 +4,72 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2_16Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2_16Vtbl struct {
+	IUnknownVtbl
 	Print            ComProc
 	ShowPrintUI      ComProc
 	PrintToPdfStream ComProc
 }
 
 type ICoreWebView2_16 struct {
-	vtbl *_ICoreWebView2_16Vtbl
+	Vtbl *ICoreWebView2_16Vtbl
 }
 
 func (i *ICoreWebView2_16) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2_16() *ICoreWebView2_16 {
+	var result *ICoreWebView2_16
+
+	iidICoreWebView2_16 := NewGUID("{0EB34DC9-9F91-41E1-8639-95CD5943906B}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2_16)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2_16) Print(printSettings *ICoreWebView2PrintSettings, handler *ICoreWebView2PrintCompletedHandler) error {
-	var err error
 
-	_, _, err = i.vtbl.Print.Call(
+	hr, _, err := i.Vtbl.Print.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(printSettings)),
 		uintptr(unsafe.Pointer(handler)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2_16) ShowPrintUI(printDialogKind COREWEBVIEW2_PRINT_DIALOG_KIND) error {
-	var err error
 
-	_, _, err = i.vtbl.ShowPrintUI.Call(
+	hr, _, err := i.Vtbl.ShowPrintUI.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(printDialogKind),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2_16) PrintToPdfStream(printSettings *ICoreWebView2PrintSettings, handler *ICoreWebView2PrintToPdfStreamCompletedHandler) error {
-	var err error
 
-	_, _, err = i.vtbl.PrintToPdfStream.Call(
+	hr, _, err := i.Vtbl.PrintToPdfStream.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(printSettings)),
 		uintptr(unsafe.Pointer(handler)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

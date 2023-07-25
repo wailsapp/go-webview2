@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2EnvironmentVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2EnvironmentVtbl struct {
+	IUnknownVtbl
 	CreateCoreWebView2Controller     ComProc
 	CreateWebResourceResponse        ComProc
 	GetBrowserVersionString          ComProc
@@ -17,45 +18,44 @@ type _ICoreWebView2EnvironmentVtbl struct {
 }
 
 type ICoreWebView2Environment struct {
-	vtbl *_ICoreWebView2EnvironmentVtbl
+	Vtbl *ICoreWebView2EnvironmentVtbl
 }
 
 func (i *ICoreWebView2Environment) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2Environment) CreateCoreWebView2Controller(parentWindow HWND, handler *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler) error {
-	var err error
 
-	_, _, err = i.vtbl.CreateCoreWebView2Controller.Call(
+	hr, _, err := i.Vtbl.CreateCoreWebView2Controller.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&parentWindow)),
 		uintptr(unsafe.Pointer(handler)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2Environment) CreateWebResourceResponse(content *IStream, statusCode int, reasonPhrase string, headers string) (*ICoreWebView2WebResourceResponse, error) {
-	var err error
 
 	// Convert string 'reasonPhrase' to *uint16
-	_reasonPhrase, err := windows.UTF16PtrFromString(reasonPhrase)
+	_reasonPhrase, err := UTF16PtrFromString(reasonPhrase)
 	if err != nil {
 		return nil, err
 	}
 
 	// Convert string 'headers' to *uint16
-	_headers, err := windows.UTF16PtrFromString(headers)
+	_headers, err := UTF16PtrFromString(headers)
 	if err != nil {
 		return nil, err
 	}
 
-	var response *ICoreWebView2WebResourceResponse
+	var response ICoreWebView2WebResourceResponse
 
-	_, _, err = i.vtbl.CreateWebResourceResponse.Call(
+	hr, _, err := i.Vtbl.CreateWebResourceResponse.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(content)),
 		uintptr(statusCode),
@@ -63,54 +63,51 @@ func (i *ICoreWebView2Environment) CreateWebResourceResponse(content *IStream, s
 		uintptr(unsafe.Pointer(_headers)),
 		uintptr(unsafe.Pointer(&response)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return response, nil
+	return &response, err
 }
 
-func (i *ICoreWebView2Environment) GetBrowserVersionString() (string, error) {
-	var err error
+func (i *ICoreWebView2Environment) GetBrowserVersionString() (*string, error) {
 	// Create *uint16 to hold result
 	var _versionInfo *uint16
 
-	_, _, err = i.vtbl.GetBrowserVersionString.Call(
+	hr, _, err := i.Vtbl.GetBrowserVersionString.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_versionInfo)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	versionInfo := windows.UTF16PtrToString(_versionInfo)
-	windows.CoTaskMemFree(unsafe.Pointer(_versionInfo))
-	return versionInfo, nil
+	versionInfo := UTF16PtrToString(_versionInfo)
+	CoTaskMemFree(unsafe.Pointer(_versionInfo))
+	return &versionInfo, err
 }
 
 func (i *ICoreWebView2Environment) AddNewBrowserVersionAvailable(eventHandler *ICoreWebView2NewBrowserVersionAvailableEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddNewBrowserVersionAvailable.Call(
+	hr, _, err := i.Vtbl.AddNewBrowserVersionAvailable.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2Environment) RemoveNewBrowserVersionAvailable(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveNewBrowserVersionAvailable.Call(
+	hr, _, err := i.Vtbl.RemoveNewBrowserVersionAvailable.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2_8Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2_8Vtbl struct {
+	IUnknownVtbl
 	AddIsMutedChanged                   ComProc
 	RemoveIsMutedChanged                ComProc
 	GetIsMuted                          ComProc
@@ -19,110 +20,118 @@ type _ICoreWebView2_8Vtbl struct {
 }
 
 type ICoreWebView2_8 struct {
-	vtbl *_ICoreWebView2_8Vtbl
+	Vtbl *ICoreWebView2_8Vtbl
 }
 
 func (i *ICoreWebView2_8) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2_8() *ICoreWebView2_8 {
+	var result *ICoreWebView2_8
+
+	iidICoreWebView2_8 := NewGUID("{E9632730-6E1E-43AB-B7B8-7B2C9E62E094}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2_8)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2_8) AddIsMutedChanged(eventHandler *ICoreWebView2IsMutedChangedEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddIsMutedChanged.Call(
+	hr, _, err := i.Vtbl.AddIsMutedChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2_8) RemoveIsMutedChanged(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveIsMutedChanged.Call(
+	hr, _, err := i.Vtbl.RemoveIsMutedChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2_8) GetIsMuted() (bool, error) {
-	var err error
+func (i *ICoreWebView2_8) GetIsMuted() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
 
-	var value bool
-
-	_, _, err = i.vtbl.GetIsMuted.Call(
+	hr, _, err := i.Vtbl.GetIsMuted.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }
 
 func (i *ICoreWebView2_8) PutIsMuted(value bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutIsMuted.Call(
+	hr, _, err := i.Vtbl.PutIsMuted.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2_8) AddIsDocumentPlayingAudioChanged(eventHandler *ICoreWebView2IsDocumentPlayingAudioChangedEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddIsDocumentPlayingAudioChanged.Call(
+	hr, _, err := i.Vtbl.AddIsDocumentPlayingAudioChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2_8) RemoveIsDocumentPlayingAudioChanged(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveIsDocumentPlayingAudioChanged.Call(
+	hr, _, err := i.Vtbl.RemoveIsDocumentPlayingAudioChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2_8) GetIsDocumentPlayingAudio() (bool, error) {
-	var err error
+func (i *ICoreWebView2_8) GetIsDocumentPlayingAudio() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
 
-	var value bool
-
-	_, _, err = i.vtbl.GetIsDocumentPlayingAudio.Call(
+	hr, _, err := i.Vtbl.GetIsDocumentPlayingAudio.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }

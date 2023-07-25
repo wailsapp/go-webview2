@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2ZoomFactorChangedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2ZoomFactorChangedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2ZoomFactorChangedEventHandler struct {
-	vtbl *_ICoreWebView2ZoomFactorChangedEventHandlerVtbl
-	impl _ICoreWebView2ZoomFactorChangedEventHandlerImpl
+	Vtbl *ICoreWebView2ZoomFactorChangedEventHandlerVtbl
+	impl ICoreWebView2ZoomFactorChangedEventHandlerImpl
 }
 
 func (i *ICoreWebView2ZoomFactorChangedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2ZoomFactorChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2ZoomFactorChangedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2ZoomFactorChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2ZoomFactorChangedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2ZoomFactorChangedEventHandlerIUnknownAddRef(this *ICoreWebView2ZoomFactorChangedEventHandler) uintptr {
+func ICoreWebView2ZoomFactorChangedEventHandlerIUnknownAddRef(this *ICoreWebView2ZoomFactorChangedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2ZoomFactorChangedEventHandlerIUnknownRelease(this *ICoreWebView2ZoomFactorChangedEventHandler) uintptr {
+func ICoreWebView2ZoomFactorChangedEventHandlerIUnknownRelease(this *ICoreWebView2ZoomFactorChangedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2ZoomFactorChangedEventHandlerInvoke(this *ICoreWebView2ZoomFactorChangedEventHandler, sender *ICoreWebView2Controller, args *_IUnknown) uintptr {
+func ICoreWebView2ZoomFactorChangedEventHandlerInvoke(this *ICoreWebView2ZoomFactorChangedEventHandler, sender *ICoreWebView2Controller, args *IUnknown) uintptr {
 	return this.impl.ZoomFactorChanged(sender, args)
 }
 
-type _ICoreWebView2ZoomFactorChangedEventHandlerImpl interface {
-	_IUnknownImpl
-	ZoomFactorChanged(sender *ICoreWebView2Controller, args *_IUnknown) uintptr
+type ICoreWebView2ZoomFactorChangedEventHandlerImpl interface {
+	IUnknownImpl
+	ZoomFactorChanged(sender *ICoreWebView2Controller, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2ZoomFactorChangedEventHandlerFn = _ICoreWebView2ZoomFactorChangedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2ZoomFactorChangedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2ZoomFactorChangedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2ZoomFactorChangedEventHandlerIUnknownRelease),
+var ICoreWebView2ZoomFactorChangedEventHandlerFn = ICoreWebView2ZoomFactorChangedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2ZoomFactorChangedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2ZoomFactorChangedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2ZoomFactorChangedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2ZoomFactorChangedEventHandlerInvoke),
+	NewComProc(ICoreWebView2ZoomFactorChangedEventHandlerInvoke),
 }
 
-func NewICoreWebView2ZoomFactorChangedEventHandler(impl _ICoreWebView2ZoomFactorChangedEventHandlerImpl) *ICoreWebView2ZoomFactorChangedEventHandler {
+func NewICoreWebView2ZoomFactorChangedEventHandler(impl ICoreWebView2ZoomFactorChangedEventHandlerImpl) *ICoreWebView2ZoomFactorChangedEventHandler {
 	return &ICoreWebView2ZoomFactorChangedEventHandler{
-		vtbl: &_ICoreWebView2ZoomFactorChangedEventHandlerFn,
+		Vtbl: &ICoreWebView2ZoomFactorChangedEventHandlerFn,
 		impl: impl,
 	}
 }

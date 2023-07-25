@@ -4,49 +4,49 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2BrowserProcessExitedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2BrowserProcessExitedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetBrowserProcessExitKind ComProc
 	GetBrowserProcessId       ComProc
 }
 
 type ICoreWebView2BrowserProcessExitedEventArgs struct {
-	vtbl *_ICoreWebView2BrowserProcessExitedEventArgsVtbl
+	Vtbl *ICoreWebView2BrowserProcessExitedEventArgsVtbl
 }
 
 func (i *ICoreWebView2BrowserProcessExitedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2BrowserProcessExitedEventArgs) GetBrowserProcessExitKind() (*COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND, error) {
-	var err error
 
-	var browserProcessExitKind *COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND
+	var browserProcessExitKind COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND
 
-	_, _, err = i.vtbl.GetBrowserProcessExitKind.Call(
+	hr, _, err := i.Vtbl.GetBrowserProcessExitKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&browserProcessExitKind)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return browserProcessExitKind, nil
+	return &browserProcessExitKind, err
 }
 
 func (i *ICoreWebView2BrowserProcessExitedEventArgs) GetBrowserProcessId() (*uint32, error) {
-	var err error
 
-	var value *uint32
+	var value uint32
 
-	_, _, err = i.vtbl.GetBrowserProcessId.Call(
+	hr, _, err := i.Vtbl.GetBrowserProcessId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }

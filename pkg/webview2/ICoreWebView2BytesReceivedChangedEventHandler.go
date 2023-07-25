@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2BytesReceivedChangedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2BytesReceivedChangedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2BytesReceivedChangedEventHandler struct {
-	vtbl *_ICoreWebView2BytesReceivedChangedEventHandlerVtbl
-	impl _ICoreWebView2BytesReceivedChangedEventHandlerImpl
+	Vtbl *ICoreWebView2BytesReceivedChangedEventHandlerVtbl
+	impl ICoreWebView2BytesReceivedChangedEventHandlerImpl
 }
 
 func (i *ICoreWebView2BytesReceivedChangedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2BytesReceivedChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2BytesReceivedChangedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2BytesReceivedChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2BytesReceivedChangedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2BytesReceivedChangedEventHandlerIUnknownAddRef(this *ICoreWebView2BytesReceivedChangedEventHandler) uintptr {
+func ICoreWebView2BytesReceivedChangedEventHandlerIUnknownAddRef(this *ICoreWebView2BytesReceivedChangedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2BytesReceivedChangedEventHandlerIUnknownRelease(this *ICoreWebView2BytesReceivedChangedEventHandler) uintptr {
+func ICoreWebView2BytesReceivedChangedEventHandlerIUnknownRelease(this *ICoreWebView2BytesReceivedChangedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2BytesReceivedChangedEventHandlerInvoke(this *ICoreWebView2BytesReceivedChangedEventHandler, sender *ICoreWebView2DownloadOperation, args *_IUnknown) uintptr {
+func ICoreWebView2BytesReceivedChangedEventHandlerInvoke(this *ICoreWebView2BytesReceivedChangedEventHandler, sender *ICoreWebView2DownloadOperation, args *IUnknown) uintptr {
 	return this.impl.BytesReceivedChanged(sender, args)
 }
 
-type _ICoreWebView2BytesReceivedChangedEventHandlerImpl interface {
-	_IUnknownImpl
-	BytesReceivedChanged(sender *ICoreWebView2DownloadOperation, args *_IUnknown) uintptr
+type ICoreWebView2BytesReceivedChangedEventHandlerImpl interface {
+	IUnknownImpl
+	BytesReceivedChanged(sender *ICoreWebView2DownloadOperation, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2BytesReceivedChangedEventHandlerFn = _ICoreWebView2BytesReceivedChangedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2BytesReceivedChangedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2BytesReceivedChangedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2BytesReceivedChangedEventHandlerIUnknownRelease),
+var ICoreWebView2BytesReceivedChangedEventHandlerFn = ICoreWebView2BytesReceivedChangedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2BytesReceivedChangedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2BytesReceivedChangedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2BytesReceivedChangedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2BytesReceivedChangedEventHandlerInvoke),
+	NewComProc(ICoreWebView2BytesReceivedChangedEventHandlerInvoke),
 }
 
-func NewICoreWebView2BytesReceivedChangedEventHandler(impl _ICoreWebView2BytesReceivedChangedEventHandlerImpl) *ICoreWebView2BytesReceivedChangedEventHandler {
+func NewICoreWebView2BytesReceivedChangedEventHandler(impl ICoreWebView2BytesReceivedChangedEventHandlerImpl) *ICoreWebView2BytesReceivedChangedEventHandler {
 	return &ICoreWebView2BytesReceivedChangedEventHandler{
-		vtbl: &_ICoreWebView2BytesReceivedChangedEventHandlerFn,
+		Vtbl: &ICoreWebView2BytesReceivedChangedEventHandlerFn,
 		impl: impl,
 	}
 }

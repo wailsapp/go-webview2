@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2CustomSchemeRegistrationVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2CustomSchemeRegistrationVtbl struct {
+	IUnknownVtbl
 	GetSchemeName            ComProc
 	GetTreatAsSecure         ComProc
 	PutTreatAsSecure         ComProc
@@ -19,121 +20,111 @@ type _ICoreWebView2CustomSchemeRegistrationVtbl struct {
 }
 
 type ICoreWebView2CustomSchemeRegistration struct {
-	vtbl *_ICoreWebView2CustomSchemeRegistrationVtbl
+	Vtbl *ICoreWebView2CustomSchemeRegistrationVtbl
 }
 
 func (i *ICoreWebView2CustomSchemeRegistration) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) GetSchemeName() (string, error) {
-	var err error
+func (i *ICoreWebView2CustomSchemeRegistration) GetSchemeName() (*string, error) {
 	// Create *uint16 to hold result
 	var _schemeName *uint16
 
-	_, _, err = i.vtbl.GetSchemeName.Call(
+	hr, _, err := i.Vtbl.GetSchemeName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_schemeName)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	schemeName := windows.UTF16PtrToString(_schemeName)
-	windows.CoTaskMemFree(unsafe.Pointer(_schemeName))
-	return schemeName, nil
+	schemeName := UTF16PtrToString(_schemeName)
+	CoTaskMemFree(unsafe.Pointer(_schemeName))
+	return &schemeName, err
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) GetTreatAsSecure() (bool, error) {
-	var err error
+func (i *ICoreWebView2CustomSchemeRegistration) GetTreatAsSecure() (*bool, error) {
+	// Create int32 to hold bool result
+	var _treatAsSecure int32
 
-	var treatAsSecure bool
-
-	_, _, err = i.vtbl.GetTreatAsSecure.Call(
+	hr, _, err := i.Vtbl.GetTreatAsSecure.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&treatAsSecure)),
+		uintptr(unsafe.Pointer(&_treatAsSecure)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return treatAsSecure, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	treatAsSecure := _treatAsSecure != 0
+	return &treatAsSecure, err
 }
 
 func (i *ICoreWebView2CustomSchemeRegistration) PutTreatAsSecure(value bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutTreatAsSecure.Call(
+	hr, _, err := i.Vtbl.PutTreatAsSecure.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) GetAllowedOrigins() (*uint32, string, error) {
-	var err error
+func (i *ICoreWebView2CustomSchemeRegistration) GetAllowedOrigins() (*uint32, *string, error) {
 
-	var allowedOriginsCount *uint32 // Create *uint16 to hold result
+	var allowedOriginsCount uint32 // Create *uint16 to hold result
 	var _allowedOrigins *uint16
 
-	_, _, err = i.vtbl.GetAllowedOrigins.Call(
+	hr, _, err := i.Vtbl.GetAllowedOrigins.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&allowedOriginsCount)),
 		uintptr(unsafe.Pointer(_allowedOrigins)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	allowedOrigins := windows.UTF16PtrToString(_allowedOrigins)
-	windows.CoTaskMemFree(unsafe.Pointer(_allowedOrigins))
-	return allowedOriginsCount, allowedOrigins, nil
+	allowedOrigins := UTF16PtrToString(_allowedOrigins)
+	CoTaskMemFree(unsafe.Pointer(_allowedOrigins))
+	return &allowedOriginsCount, &allowedOrigins, err
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) SetAllowedOrigins(allowedOriginsCount uint32, allowedOrigins string) error {
-	var err error
+func (i *ICoreWebView2CustomSchemeRegistration) SetAllowedOrigins(allowedOriginsCount uint32, allowedOrigins *string) error {
 
-	// Convert string 'allowedOrigins' to *uint16
-	_allowedOrigins, err := windows.UTF16PtrFromString(allowedOrigins)
-	if err != nil {
-		return err
-	}
-
-	_, _, err = i.vtbl.SetAllowedOrigins.Call(
+	hr, _, err := i.Vtbl.SetAllowedOrigins.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&allowedOriginsCount)),
-		uintptr(unsafe.Pointer(_allowedOrigins)),
+		uintptr(unsafe.Pointer(allowedOrigins)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) GetHasAuthorityComponent() (bool, error) {
-	var err error
+func (i *ICoreWebView2CustomSchemeRegistration) GetHasAuthorityComponent() (*bool, error) {
+	// Create int32 to hold bool result
+	var _hasAuthorityComponent int32
 
-	var hasAuthorityComponent bool
-
-	_, _, err = i.vtbl.GetHasAuthorityComponent.Call(
+	hr, _, err := i.Vtbl.GetHasAuthorityComponent.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&hasAuthorityComponent)),
+		uintptr(unsafe.Pointer(&_hasAuthorityComponent)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return hasAuthorityComponent, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	hasAuthorityComponent := _hasAuthorityComponent != 0
+	return &hasAuthorityComponent, err
 }
 
 func (i *ICoreWebView2CustomSchemeRegistration) PutHasAuthorityComponent(hasAuthorityComponent bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutHasAuthorityComponent.Call(
+	hr, _, err := i.Vtbl.PutHasAuthorityComponent.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&hasAuthorityComponent)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

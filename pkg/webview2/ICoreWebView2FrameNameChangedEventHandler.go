@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2FrameNameChangedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2FrameNameChangedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2FrameNameChangedEventHandler struct {
-	vtbl *_ICoreWebView2FrameNameChangedEventHandlerVtbl
-	impl _ICoreWebView2FrameNameChangedEventHandlerImpl
+	Vtbl *ICoreWebView2FrameNameChangedEventHandlerVtbl
+	impl ICoreWebView2FrameNameChangedEventHandlerImpl
 }
 
 func (i *ICoreWebView2FrameNameChangedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2FrameNameChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2FrameNameChangedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2FrameNameChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2FrameNameChangedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2FrameNameChangedEventHandlerIUnknownAddRef(this *ICoreWebView2FrameNameChangedEventHandler) uintptr {
+func ICoreWebView2FrameNameChangedEventHandlerIUnknownAddRef(this *ICoreWebView2FrameNameChangedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2FrameNameChangedEventHandlerIUnknownRelease(this *ICoreWebView2FrameNameChangedEventHandler) uintptr {
+func ICoreWebView2FrameNameChangedEventHandlerIUnknownRelease(this *ICoreWebView2FrameNameChangedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2FrameNameChangedEventHandlerInvoke(this *ICoreWebView2FrameNameChangedEventHandler, sender *ICoreWebView2Frame, args *_IUnknown) uintptr {
+func ICoreWebView2FrameNameChangedEventHandlerInvoke(this *ICoreWebView2FrameNameChangedEventHandler, sender *ICoreWebView2Frame, args *IUnknown) uintptr {
 	return this.impl.FrameNameChanged(sender, args)
 }
 
-type _ICoreWebView2FrameNameChangedEventHandlerImpl interface {
-	_IUnknownImpl
-	FrameNameChanged(sender *ICoreWebView2Frame, args *_IUnknown) uintptr
+type ICoreWebView2FrameNameChangedEventHandlerImpl interface {
+	IUnknownImpl
+	FrameNameChanged(sender *ICoreWebView2Frame, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2FrameNameChangedEventHandlerFn = _ICoreWebView2FrameNameChangedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2FrameNameChangedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2FrameNameChangedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2FrameNameChangedEventHandlerIUnknownRelease),
+var ICoreWebView2FrameNameChangedEventHandlerFn = ICoreWebView2FrameNameChangedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2FrameNameChangedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2FrameNameChangedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2FrameNameChangedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2FrameNameChangedEventHandlerInvoke),
+	NewComProc(ICoreWebView2FrameNameChangedEventHandlerInvoke),
 }
 
-func NewICoreWebView2FrameNameChangedEventHandler(impl _ICoreWebView2FrameNameChangedEventHandlerImpl) *ICoreWebView2FrameNameChangedEventHandler {
+func NewICoreWebView2FrameNameChangedEventHandler(impl ICoreWebView2FrameNameChangedEventHandlerImpl) *ICoreWebView2FrameNameChangedEventHandler {
 	return &ICoreWebView2FrameNameChangedEventHandler{
-		vtbl: &_ICoreWebView2FrameNameChangedEventHandlerFn,
+		Vtbl: &ICoreWebView2FrameNameChangedEventHandlerFn,
 		impl: impl,
 	}
 }

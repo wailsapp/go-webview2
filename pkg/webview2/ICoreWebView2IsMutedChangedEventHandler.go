@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2IsMutedChangedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2IsMutedChangedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2IsMutedChangedEventHandler struct {
-	vtbl *_ICoreWebView2IsMutedChangedEventHandlerVtbl
-	impl _ICoreWebView2IsMutedChangedEventHandlerImpl
+	Vtbl *ICoreWebView2IsMutedChangedEventHandlerVtbl
+	impl ICoreWebView2IsMutedChangedEventHandlerImpl
 }
 
 func (i *ICoreWebView2IsMutedChangedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2IsMutedChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2IsMutedChangedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2IsMutedChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2IsMutedChangedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2IsMutedChangedEventHandlerIUnknownAddRef(this *ICoreWebView2IsMutedChangedEventHandler) uintptr {
+func ICoreWebView2IsMutedChangedEventHandlerIUnknownAddRef(this *ICoreWebView2IsMutedChangedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2IsMutedChangedEventHandlerIUnknownRelease(this *ICoreWebView2IsMutedChangedEventHandler) uintptr {
+func ICoreWebView2IsMutedChangedEventHandlerIUnknownRelease(this *ICoreWebView2IsMutedChangedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2IsMutedChangedEventHandlerInvoke(this *ICoreWebView2IsMutedChangedEventHandler, sender *ICoreWebView2, args *_IUnknown) uintptr {
+func ICoreWebView2IsMutedChangedEventHandlerInvoke(this *ICoreWebView2IsMutedChangedEventHandler, sender *ICoreWebView2, args *IUnknown) uintptr {
 	return this.impl.IsMutedChanged(sender, args)
 }
 
-type _ICoreWebView2IsMutedChangedEventHandlerImpl interface {
-	_IUnknownImpl
-	IsMutedChanged(sender *ICoreWebView2, args *_IUnknown) uintptr
+type ICoreWebView2IsMutedChangedEventHandlerImpl interface {
+	IUnknownImpl
+	IsMutedChanged(sender *ICoreWebView2, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2IsMutedChangedEventHandlerFn = _ICoreWebView2IsMutedChangedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2IsMutedChangedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2IsMutedChangedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2IsMutedChangedEventHandlerIUnknownRelease),
+var ICoreWebView2IsMutedChangedEventHandlerFn = ICoreWebView2IsMutedChangedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2IsMutedChangedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2IsMutedChangedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2IsMutedChangedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2IsMutedChangedEventHandlerInvoke),
+	NewComProc(ICoreWebView2IsMutedChangedEventHandlerInvoke),
 }
 
-func NewICoreWebView2IsMutedChangedEventHandler(impl _ICoreWebView2IsMutedChangedEventHandlerImpl) *ICoreWebView2IsMutedChangedEventHandler {
+func NewICoreWebView2IsMutedChangedEventHandler(impl ICoreWebView2IsMutedChangedEventHandlerImpl) *ICoreWebView2IsMutedChangedEventHandler {
 	return &ICoreWebView2IsMutedChangedEventHandler{
-		vtbl: &_ICoreWebView2IsMutedChangedEventHandlerFn,
+		Vtbl: &ICoreWebView2IsMutedChangedEventHandlerFn,
 		impl: impl,
 	}
 }

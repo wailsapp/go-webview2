@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2NewBrowserVersionAvailableEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2NewBrowserVersionAvailableEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2NewBrowserVersionAvailableEventHandler struct {
-	vtbl *_ICoreWebView2NewBrowserVersionAvailableEventHandlerVtbl
-	impl _ICoreWebView2NewBrowserVersionAvailableEventHandlerImpl
+	Vtbl *ICoreWebView2NewBrowserVersionAvailableEventHandlerVtbl
+	impl ICoreWebView2NewBrowserVersionAvailableEventHandlerImpl
 }
 
 func (i *ICoreWebView2NewBrowserVersionAvailableEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownQueryInterface(this *ICoreWebView2NewBrowserVersionAvailableEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownQueryInterface(this *ICoreWebView2NewBrowserVersionAvailableEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownAddRef(this *ICoreWebView2NewBrowserVersionAvailableEventHandler) uintptr {
+func ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownAddRef(this *ICoreWebView2NewBrowserVersionAvailableEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownRelease(this *ICoreWebView2NewBrowserVersionAvailableEventHandler) uintptr {
+func ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownRelease(this *ICoreWebView2NewBrowserVersionAvailableEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2NewBrowserVersionAvailableEventHandlerInvoke(this *ICoreWebView2NewBrowserVersionAvailableEventHandler, sender *ICoreWebView2Environment, args *_IUnknown) uintptr {
+func ICoreWebView2NewBrowserVersionAvailableEventHandlerInvoke(this *ICoreWebView2NewBrowserVersionAvailableEventHandler, sender *ICoreWebView2Environment, args *IUnknown) uintptr {
 	return this.impl.NewBrowserVersionAvailable(sender, args)
 }
 
-type _ICoreWebView2NewBrowserVersionAvailableEventHandlerImpl interface {
-	_IUnknownImpl
-	NewBrowserVersionAvailable(sender *ICoreWebView2Environment, args *_IUnknown) uintptr
+type ICoreWebView2NewBrowserVersionAvailableEventHandlerImpl interface {
+	IUnknownImpl
+	NewBrowserVersionAvailable(sender *ICoreWebView2Environment, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2NewBrowserVersionAvailableEventHandlerFn = _ICoreWebView2NewBrowserVersionAvailableEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownRelease),
+var ICoreWebView2NewBrowserVersionAvailableEventHandlerFn = ICoreWebView2NewBrowserVersionAvailableEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2NewBrowserVersionAvailableEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2NewBrowserVersionAvailableEventHandlerInvoke),
+	NewComProc(ICoreWebView2NewBrowserVersionAvailableEventHandlerInvoke),
 }
 
-func NewICoreWebView2NewBrowserVersionAvailableEventHandler(impl _ICoreWebView2NewBrowserVersionAvailableEventHandlerImpl) *ICoreWebView2NewBrowserVersionAvailableEventHandler {
+func NewICoreWebView2NewBrowserVersionAvailableEventHandler(impl ICoreWebView2NewBrowserVersionAvailableEventHandlerImpl) *ICoreWebView2NewBrowserVersionAvailableEventHandler {
 	return &ICoreWebView2NewBrowserVersionAvailableEventHandler{
-		vtbl: &_ICoreWebView2NewBrowserVersionAvailableEventHandlerFn,
+		Vtbl: &ICoreWebView2NewBrowserVersionAvailableEventHandlerFn,
 		impl: impl,
 	}
 }

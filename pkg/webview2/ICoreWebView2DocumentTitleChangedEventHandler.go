@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2DocumentTitleChangedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2DocumentTitleChangedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2DocumentTitleChangedEventHandler struct {
-	vtbl *_ICoreWebView2DocumentTitleChangedEventHandlerVtbl
-	impl _ICoreWebView2DocumentTitleChangedEventHandlerImpl
+	Vtbl *ICoreWebView2DocumentTitleChangedEventHandlerVtbl
+	impl ICoreWebView2DocumentTitleChangedEventHandlerImpl
 }
 
 func (i *ICoreWebView2DocumentTitleChangedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2DocumentTitleChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2DocumentTitleChangedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2DocumentTitleChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2DocumentTitleChangedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2DocumentTitleChangedEventHandlerIUnknownAddRef(this *ICoreWebView2DocumentTitleChangedEventHandler) uintptr {
+func ICoreWebView2DocumentTitleChangedEventHandlerIUnknownAddRef(this *ICoreWebView2DocumentTitleChangedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2DocumentTitleChangedEventHandlerIUnknownRelease(this *ICoreWebView2DocumentTitleChangedEventHandler) uintptr {
+func ICoreWebView2DocumentTitleChangedEventHandlerIUnknownRelease(this *ICoreWebView2DocumentTitleChangedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2DocumentTitleChangedEventHandlerInvoke(this *ICoreWebView2DocumentTitleChangedEventHandler, sender *ICoreWebView2, args *_IUnknown) uintptr {
+func ICoreWebView2DocumentTitleChangedEventHandlerInvoke(this *ICoreWebView2DocumentTitleChangedEventHandler, sender *ICoreWebView2, args *IUnknown) uintptr {
 	return this.impl.DocumentTitleChanged(sender, args)
 }
 
-type _ICoreWebView2DocumentTitleChangedEventHandlerImpl interface {
-	_IUnknownImpl
-	DocumentTitleChanged(sender *ICoreWebView2, args *_IUnknown) uintptr
+type ICoreWebView2DocumentTitleChangedEventHandlerImpl interface {
+	IUnknownImpl
+	DocumentTitleChanged(sender *ICoreWebView2, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2DocumentTitleChangedEventHandlerFn = _ICoreWebView2DocumentTitleChangedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2DocumentTitleChangedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2DocumentTitleChangedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2DocumentTitleChangedEventHandlerIUnknownRelease),
+var ICoreWebView2DocumentTitleChangedEventHandlerFn = ICoreWebView2DocumentTitleChangedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2DocumentTitleChangedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2DocumentTitleChangedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2DocumentTitleChangedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2DocumentTitleChangedEventHandlerInvoke),
+	NewComProc(ICoreWebView2DocumentTitleChangedEventHandlerInvoke),
 }
 
-func NewICoreWebView2DocumentTitleChangedEventHandler(impl _ICoreWebView2DocumentTitleChangedEventHandlerImpl) *ICoreWebView2DocumentTitleChangedEventHandler {
+func NewICoreWebView2DocumentTitleChangedEventHandler(impl ICoreWebView2DocumentTitleChangedEventHandlerImpl) *ICoreWebView2DocumentTitleChangedEventHandler {
 	return &ICoreWebView2DocumentTitleChangedEventHandler{
-		vtbl: &_ICoreWebView2DocumentTitleChangedEventHandlerFn,
+		Vtbl: &ICoreWebView2DocumentTitleChangedEventHandlerFn,
 		impl: impl,
 	}
 }

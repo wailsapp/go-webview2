@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2WebMessageReceivedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2WebMessageReceivedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2WebMessageReceivedEventHandler struct {
-	vtbl *_ICoreWebView2WebMessageReceivedEventHandlerVtbl
-	impl _ICoreWebView2WebMessageReceivedEventHandlerImpl
+	Vtbl *ICoreWebView2WebMessageReceivedEventHandlerVtbl
+	impl ICoreWebView2WebMessageReceivedEventHandlerImpl
 }
 
 func (i *ICoreWebView2WebMessageReceivedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2WebMessageReceivedEventHandlerIUnknownQueryInterface(this *ICoreWebView2WebMessageReceivedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2WebMessageReceivedEventHandlerIUnknownQueryInterface(this *ICoreWebView2WebMessageReceivedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2WebMessageReceivedEventHandlerIUnknownAddRef(this *ICoreWebView2WebMessageReceivedEventHandler) uintptr {
+func ICoreWebView2WebMessageReceivedEventHandlerIUnknownAddRef(this *ICoreWebView2WebMessageReceivedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2WebMessageReceivedEventHandlerIUnknownRelease(this *ICoreWebView2WebMessageReceivedEventHandler) uintptr {
+func ICoreWebView2WebMessageReceivedEventHandlerIUnknownRelease(this *ICoreWebView2WebMessageReceivedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2WebMessageReceivedEventHandlerInvoke(this *ICoreWebView2WebMessageReceivedEventHandler, sender *ICoreWebView2, args *ICoreWebView2WebMessageReceivedEventArgs) uintptr {
+func ICoreWebView2WebMessageReceivedEventHandlerInvoke(this *ICoreWebView2WebMessageReceivedEventHandler, sender *ICoreWebView2, args *ICoreWebView2WebMessageReceivedEventArgs) uintptr {
 	return this.impl.WebMessageReceived(sender, args)
 }
 
-type _ICoreWebView2WebMessageReceivedEventHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2WebMessageReceivedEventHandlerImpl interface {
+	IUnknownImpl
 	WebMessageReceived(sender *ICoreWebView2, args *ICoreWebView2WebMessageReceivedEventArgs) uintptr
 }
 
-var _ICoreWebView2WebMessageReceivedEventHandlerFn = _ICoreWebView2WebMessageReceivedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2WebMessageReceivedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2WebMessageReceivedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2WebMessageReceivedEventHandlerIUnknownRelease),
+var ICoreWebView2WebMessageReceivedEventHandlerFn = ICoreWebView2WebMessageReceivedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2WebMessageReceivedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2WebMessageReceivedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2WebMessageReceivedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2WebMessageReceivedEventHandlerInvoke),
+	NewComProc(ICoreWebView2WebMessageReceivedEventHandlerInvoke),
 }
 
-func NewICoreWebView2WebMessageReceivedEventHandler(impl _ICoreWebView2WebMessageReceivedEventHandlerImpl) *ICoreWebView2WebMessageReceivedEventHandler {
+func NewICoreWebView2WebMessageReceivedEventHandler(impl ICoreWebView2WebMessageReceivedEventHandlerImpl) *ICoreWebView2WebMessageReceivedEventHandler {
 	return &ICoreWebView2WebMessageReceivedEventHandler{
-		vtbl: &_ICoreWebView2WebMessageReceivedEventHandlerFn,
+		Vtbl: &ICoreWebView2WebMessageReceivedEventHandlerFn,
 		impl: impl,
 	}
 }

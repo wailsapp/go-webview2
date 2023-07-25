@@ -4,64 +4,75 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2Environment8Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2Environment8Vtbl struct {
+	IUnknownVtbl
 	AddProcessInfosChanged    ComProc
 	RemoveProcessInfosChanged ComProc
 	GetProcessInfos           ComProc
 }
 
 type ICoreWebView2Environment8 struct {
-	vtbl *_ICoreWebView2Environment8Vtbl
+	Vtbl *ICoreWebView2Environment8Vtbl
 }
 
 func (i *ICoreWebView2Environment8) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2Environment8() *ICoreWebView2Environment8 {
+	var result *ICoreWebView2Environment8
+
+	iidICoreWebView2Environment8 := NewGUID("{D6EB91DD-C3D2-45E5-BD29-6DC2BC4DE9CF}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Environment8)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2Environment8) AddProcessInfosChanged(eventHandler *ICoreWebView2ProcessInfosChangedEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddProcessInfosChanged.Call(
+	hr, _, err := i.Vtbl.AddProcessInfosChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2Environment8) RemoveProcessInfosChanged(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveProcessInfosChanged.Call(
+	hr, _, err := i.Vtbl.RemoveProcessInfosChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2Environment8) GetProcessInfos() (*ICoreWebView2ProcessInfoCollection, error) {
-	var err error
 
-	var value *ICoreWebView2ProcessInfoCollection
+	var value ICoreWebView2ProcessInfoCollection
 
-	_, _, err = i.vtbl.GetProcessInfos.Call(
+	hr, _, err := i.Vtbl.GetProcessInfos.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }

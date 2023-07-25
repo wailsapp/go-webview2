@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2StatusBarTextChangedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2StatusBarTextChangedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2StatusBarTextChangedEventHandler struct {
-	vtbl *_ICoreWebView2StatusBarTextChangedEventHandlerVtbl
-	impl _ICoreWebView2StatusBarTextChangedEventHandlerImpl
+	Vtbl *ICoreWebView2StatusBarTextChangedEventHandlerVtbl
+	impl ICoreWebView2StatusBarTextChangedEventHandlerImpl
 }
 
 func (i *ICoreWebView2StatusBarTextChangedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2StatusBarTextChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2StatusBarTextChangedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2StatusBarTextChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2StatusBarTextChangedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2StatusBarTextChangedEventHandlerIUnknownAddRef(this *ICoreWebView2StatusBarTextChangedEventHandler) uintptr {
+func ICoreWebView2StatusBarTextChangedEventHandlerIUnknownAddRef(this *ICoreWebView2StatusBarTextChangedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2StatusBarTextChangedEventHandlerIUnknownRelease(this *ICoreWebView2StatusBarTextChangedEventHandler) uintptr {
+func ICoreWebView2StatusBarTextChangedEventHandlerIUnknownRelease(this *ICoreWebView2StatusBarTextChangedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2StatusBarTextChangedEventHandlerInvoke(this *ICoreWebView2StatusBarTextChangedEventHandler, sender *ICoreWebView2, args *_IUnknown) uintptr {
+func ICoreWebView2StatusBarTextChangedEventHandlerInvoke(this *ICoreWebView2StatusBarTextChangedEventHandler, sender *ICoreWebView2, args *IUnknown) uintptr {
 	return this.impl.StatusBarTextChanged(sender, args)
 }
 
-type _ICoreWebView2StatusBarTextChangedEventHandlerImpl interface {
-	_IUnknownImpl
-	StatusBarTextChanged(sender *ICoreWebView2, args *_IUnknown) uintptr
+type ICoreWebView2StatusBarTextChangedEventHandlerImpl interface {
+	IUnknownImpl
+	StatusBarTextChanged(sender *ICoreWebView2, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2StatusBarTextChangedEventHandlerFn = _ICoreWebView2StatusBarTextChangedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2StatusBarTextChangedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2StatusBarTextChangedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2StatusBarTextChangedEventHandlerIUnknownRelease),
+var ICoreWebView2StatusBarTextChangedEventHandlerFn = ICoreWebView2StatusBarTextChangedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2StatusBarTextChangedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2StatusBarTextChangedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2StatusBarTextChangedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2StatusBarTextChangedEventHandlerInvoke),
+	NewComProc(ICoreWebView2StatusBarTextChangedEventHandlerInvoke),
 }
 
-func NewICoreWebView2StatusBarTextChangedEventHandler(impl _ICoreWebView2StatusBarTextChangedEventHandlerImpl) *ICoreWebView2StatusBarTextChangedEventHandler {
+func NewICoreWebView2StatusBarTextChangedEventHandler(impl ICoreWebView2StatusBarTextChangedEventHandlerImpl) *ICoreWebView2StatusBarTextChangedEventHandler {
 	return &ICoreWebView2StatusBarTextChangedEventHandler{
-		vtbl: &_ICoreWebView2StatusBarTextChangedEventHandlerFn,
+		Vtbl: &ICoreWebView2StatusBarTextChangedEventHandlerFn,
 		impl: impl,
 	}
 }

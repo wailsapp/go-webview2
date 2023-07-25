@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2CustomItemSelectedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2CustomItemSelectedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2CustomItemSelectedEventHandler struct {
-	vtbl *_ICoreWebView2CustomItemSelectedEventHandlerVtbl
-	impl _ICoreWebView2CustomItemSelectedEventHandlerImpl
+	Vtbl *ICoreWebView2CustomItemSelectedEventHandlerVtbl
+	impl ICoreWebView2CustomItemSelectedEventHandlerImpl
 }
 
 func (i *ICoreWebView2CustomItemSelectedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2CustomItemSelectedEventHandlerIUnknownQueryInterface(this *ICoreWebView2CustomItemSelectedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2CustomItemSelectedEventHandlerIUnknownQueryInterface(this *ICoreWebView2CustomItemSelectedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2CustomItemSelectedEventHandlerIUnknownAddRef(this *ICoreWebView2CustomItemSelectedEventHandler) uintptr {
+func ICoreWebView2CustomItemSelectedEventHandlerIUnknownAddRef(this *ICoreWebView2CustomItemSelectedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2CustomItemSelectedEventHandlerIUnknownRelease(this *ICoreWebView2CustomItemSelectedEventHandler) uintptr {
+func ICoreWebView2CustomItemSelectedEventHandlerIUnknownRelease(this *ICoreWebView2CustomItemSelectedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2CustomItemSelectedEventHandlerInvoke(this *ICoreWebView2CustomItemSelectedEventHandler, sender *ICoreWebView2ContextMenuItem, args *_IUnknown) uintptr {
+func ICoreWebView2CustomItemSelectedEventHandlerInvoke(this *ICoreWebView2CustomItemSelectedEventHandler, sender *ICoreWebView2ContextMenuItem, args *IUnknown) uintptr {
 	return this.impl.CustomItemSelected(sender, args)
 }
 
-type _ICoreWebView2CustomItemSelectedEventHandlerImpl interface {
-	_IUnknownImpl
-	CustomItemSelected(sender *ICoreWebView2ContextMenuItem, args *_IUnknown) uintptr
+type ICoreWebView2CustomItemSelectedEventHandlerImpl interface {
+	IUnknownImpl
+	CustomItemSelected(sender *ICoreWebView2ContextMenuItem, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2CustomItemSelectedEventHandlerFn = _ICoreWebView2CustomItemSelectedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2CustomItemSelectedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2CustomItemSelectedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2CustomItemSelectedEventHandlerIUnknownRelease),
+var ICoreWebView2CustomItemSelectedEventHandlerFn = ICoreWebView2CustomItemSelectedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2CustomItemSelectedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2CustomItemSelectedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2CustomItemSelectedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2CustomItemSelectedEventHandlerInvoke),
+	NewComProc(ICoreWebView2CustomItemSelectedEventHandlerInvoke),
 }
 
-func NewICoreWebView2CustomItemSelectedEventHandler(impl _ICoreWebView2CustomItemSelectedEventHandlerImpl) *ICoreWebView2CustomItemSelectedEventHandler {
+func NewICoreWebView2CustomItemSelectedEventHandler(impl ICoreWebView2CustomItemSelectedEventHandlerImpl) *ICoreWebView2CustomItemSelectedEventHandler {
 	return &ICoreWebView2CustomItemSelectedEventHandler{
-		vtbl: &_ICoreWebView2CustomItemSelectedEventHandlerFn,
+		Vtbl: &ICoreWebView2CustomItemSelectedEventHandlerFn,
 		impl: impl,
 	}
 }

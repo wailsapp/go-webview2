@@ -21,3 +21,9 @@ tasks:
       - task: gofmt
 #      - task: commit
 
+  update:forced:
+    dir: scripts
+    cmds:
+      - go run update_version_mapping.go -forced
+      - task: gofmt
+#      - task: commit

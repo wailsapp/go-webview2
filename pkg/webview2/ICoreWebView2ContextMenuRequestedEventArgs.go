@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2ContextMenuRequestedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2ContextMenuRequestedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetMenuItems         ComProc
 	GetContextMenuTarget ComProc
 	GetLocation          ComProc
@@ -20,125 +21,119 @@ type _ICoreWebView2ContextMenuRequestedEventArgsVtbl struct {
 }
 
 type ICoreWebView2ContextMenuRequestedEventArgs struct {
-	vtbl *_ICoreWebView2ContextMenuRequestedEventArgsVtbl
+	Vtbl *ICoreWebView2ContextMenuRequestedEventArgsVtbl
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetMenuItems() (*ICoreWebView2ContextMenuItemCollection, error) {
-	var err error
 
-	var value *ICoreWebView2ContextMenuItemCollection
+	var value ICoreWebView2ContextMenuItemCollection
 
-	_, _, err = i.vtbl.GetMenuItems.Call(
+	hr, _, err := i.Vtbl.GetMenuItems.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetContextMenuTarget() (*ICoreWebView2ContextMenuTarget, error) {
-	var err error
 
-	var value *ICoreWebView2ContextMenuTarget
+	var value ICoreWebView2ContextMenuTarget
 
-	_, _, err = i.vtbl.GetContextMenuTarget.Call(
+	hr, _, err := i.Vtbl.GetContextMenuTarget.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetLocation() (*POINT, error) {
-	var err error
 
-	var value *POINT
+	var value POINT
 
-	_, _, err = i.vtbl.GetLocation.Call(
+	hr, _, err := i.Vtbl.GetLocation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
-func (i *ICoreWebView2ContextMenuRequestedEventArgs) PutSelectedCommandId(value INT32) error {
-	var err error
+func (i *ICoreWebView2ContextMenuRequestedEventArgs) PutSelectedCommandId(value int32) error {
 
-	_, _, err = i.vtbl.PutSelectedCommandId.Call(
+	hr, _, err := i.Vtbl.PutSelectedCommandId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetSelectedCommandId() (*INT32, error) {
-	var err error
+func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetSelectedCommandId() (*int32, error) {
 
-	var value *INT32
+	var value int32
 
-	_, _, err = i.vtbl.GetSelectedCommandId.Call(
+	hr, _, err := i.Vtbl.GetSelectedCommandId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) PutHandled(value bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutHandled.Call(
+	hr, _, err := i.Vtbl.PutHandled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
-func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetHandled() (bool, error) {
-	var err error
+func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetHandled() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
 
-	var value bool
-
-	_, _, err = i.vtbl.GetHandled.Call(
+	hr, _, err := i.Vtbl.GetHandled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
-	var err error
 
-	var deferral *ICoreWebView2Deferral
+	var deferral ICoreWebView2Deferral
 
-	_, _, err = i.vtbl.GetDeferral.Call(
+	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&deferral)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return deferral, nil
+	return &deferral, err
 }

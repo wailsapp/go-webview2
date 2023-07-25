@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2FrameDestroyedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2FrameDestroyedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2FrameDestroyedEventHandler struct {
-	vtbl *_ICoreWebView2FrameDestroyedEventHandlerVtbl
-	impl _ICoreWebView2FrameDestroyedEventHandlerImpl
+	Vtbl *ICoreWebView2FrameDestroyedEventHandlerVtbl
+	impl ICoreWebView2FrameDestroyedEventHandlerImpl
 }
 
 func (i *ICoreWebView2FrameDestroyedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2FrameDestroyedEventHandlerIUnknownQueryInterface(this *ICoreWebView2FrameDestroyedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2FrameDestroyedEventHandlerIUnknownQueryInterface(this *ICoreWebView2FrameDestroyedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2FrameDestroyedEventHandlerIUnknownAddRef(this *ICoreWebView2FrameDestroyedEventHandler) uintptr {
+func ICoreWebView2FrameDestroyedEventHandlerIUnknownAddRef(this *ICoreWebView2FrameDestroyedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2FrameDestroyedEventHandlerIUnknownRelease(this *ICoreWebView2FrameDestroyedEventHandler) uintptr {
+func ICoreWebView2FrameDestroyedEventHandlerIUnknownRelease(this *ICoreWebView2FrameDestroyedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2FrameDestroyedEventHandlerInvoke(this *ICoreWebView2FrameDestroyedEventHandler, sender *ICoreWebView2Frame, args *_IUnknown) uintptr {
+func ICoreWebView2FrameDestroyedEventHandlerInvoke(this *ICoreWebView2FrameDestroyedEventHandler, sender *ICoreWebView2Frame, args *IUnknown) uintptr {
 	return this.impl.FrameDestroyed(sender, args)
 }
 
-type _ICoreWebView2FrameDestroyedEventHandlerImpl interface {
-	_IUnknownImpl
-	FrameDestroyed(sender *ICoreWebView2Frame, args *_IUnknown) uintptr
+type ICoreWebView2FrameDestroyedEventHandlerImpl interface {
+	IUnknownImpl
+	FrameDestroyed(sender *ICoreWebView2Frame, args *IUnknown) uintptr
 }
 
-var _ICoreWebView2FrameDestroyedEventHandlerFn = _ICoreWebView2FrameDestroyedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2FrameDestroyedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2FrameDestroyedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2FrameDestroyedEventHandlerIUnknownRelease),
+var ICoreWebView2FrameDestroyedEventHandlerFn = ICoreWebView2FrameDestroyedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2FrameDestroyedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2FrameDestroyedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2FrameDestroyedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2FrameDestroyedEventHandlerInvoke),
+	NewComProc(ICoreWebView2FrameDestroyedEventHandlerInvoke),
 }
 
-func NewICoreWebView2FrameDestroyedEventHandler(impl _ICoreWebView2FrameDestroyedEventHandlerImpl) *ICoreWebView2FrameDestroyedEventHandler {
+func NewICoreWebView2FrameDestroyedEventHandler(impl ICoreWebView2FrameDestroyedEventHandlerImpl) *ICoreWebView2FrameDestroyedEventHandler {
 	return &ICoreWebView2FrameDestroyedEventHandler{
-		vtbl: &_ICoreWebView2FrameDestroyedEventHandlerFn,
+		Vtbl: &ICoreWebView2FrameDestroyedEventHandlerFn,
 		impl: impl,
 	}
 }

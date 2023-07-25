@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2ProcessFailedEventArgs2Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2ProcessFailedEventArgs2Vtbl struct {
+	IUnknownVtbl
 	GetReason                     ComProc
 	GetExitCode                   ComProc
 	GetProcessDescription         ComProc
@@ -16,71 +17,80 @@ type _ICoreWebView2ProcessFailedEventArgs2Vtbl struct {
 }
 
 type ICoreWebView2ProcessFailedEventArgs2 struct {
-	vtbl *_ICoreWebView2ProcessFailedEventArgs2Vtbl
+	Vtbl *ICoreWebView2ProcessFailedEventArgs2Vtbl
 }
 
 func (i *ICoreWebView2ProcessFailedEventArgs2) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
+func (i *ICoreWebView2) GetICoreWebView2ProcessFailedEventArgs2() *ICoreWebView2ProcessFailedEventArgs2 {
+	var result *ICoreWebView2ProcessFailedEventArgs2
+
+	iidICoreWebView2ProcessFailedEventArgs2 := NewGUID("{4dab9422-46fa-4c3e-a5d2-41d2071d3680}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2ProcessFailedEventArgs2)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
 }
 
 func (i *ICoreWebView2ProcessFailedEventArgs2) GetReason() (*COREWEBVIEW2_PROCESS_FAILED_REASON, error) {
-	var err error
 
-	var reason *COREWEBVIEW2_PROCESS_FAILED_REASON
+	var reason COREWEBVIEW2_PROCESS_FAILED_REASON
 
-	_, _, err = i.vtbl.GetReason.Call(
+	hr, _, err := i.Vtbl.GetReason.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&reason)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return reason, nil
+	return &reason, err
 }
 
-func (i *ICoreWebView2ProcessFailedEventArgs2) GetExitCode() (int, error) {
-	var err error
+func (i *ICoreWebView2ProcessFailedEventArgs2) GetExitCode() (*int, error) {
 
 	var exitCode int
 
-	_, _, err = i.vtbl.GetExitCode.Call(
+	hr, _, err := i.Vtbl.GetExitCode.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(exitCode),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return 0, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return exitCode, nil
+	return &exitCode, err
 }
 
-func (i *ICoreWebView2ProcessFailedEventArgs2) GetProcessDescription() (string, error) {
-	var err error
+func (i *ICoreWebView2ProcessFailedEventArgs2) GetProcessDescription() (*string, error) {
 	// Create *uint16 to hold result
 	var _processDescription *uint16
 
-	_, _, err = i.vtbl.GetProcessDescription.Call(
+	hr, _, err := i.Vtbl.GetProcessDescription.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_processDescription)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	processDescription := windows.UTF16PtrToString(_processDescription)
-	windows.CoTaskMemFree(unsafe.Pointer(_processDescription))
-	return processDescription, nil
+	processDescription := UTF16PtrToString(_processDescription)
+	CoTaskMemFree(unsafe.Pointer(_processDescription))
+	return &processDescription, err
 }
 
 func (i *ICoreWebView2ProcessFailedEventArgs2) GetFrameInfosForFailedProcess() (*ICoreWebView2FrameInfoCollection, error) {
-	var err error
 
-	var frames *ICoreWebView2FrameInfoCollection
+	var frames ICoreWebView2FrameInfoCollection
 
-	_, _, err = i.vtbl.GetFrameInfosForFailedProcess.Call(
+	hr, _, err := i.Vtbl.GetFrameInfosForFailedProcess.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&frames)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return frames, nil
+	return &frames, err
 }

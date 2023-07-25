@@ -5,6 +5,16 @@ as a standalone package.
 
 ----------------
 
+To update this package, run the following commands:
+
+```bash
+task run update
+```
+
+----------------
+
+Original README.md follows:
+
 # go-webview2
 
 This is a proof of concept for embedding Webview2 into Go without CGo. It is based

@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2CertificateVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2CertificateVtbl struct {
+	IUnknownVtbl
 	GetSubject                          ComProc
 	GetIssuer                           ComProc
 	GetValidFrom                        ComProc
@@ -20,139 +21,132 @@ type _ICoreWebView2CertificateVtbl struct {
 }
 
 type ICoreWebView2Certificate struct {
-	vtbl *_ICoreWebView2CertificateVtbl
+	Vtbl *ICoreWebView2CertificateVtbl
 }
 
 func (i *ICoreWebView2Certificate) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2Certificate) GetSubject() (string, error) {
-	var err error
+func (i *ICoreWebView2Certificate) GetSubject() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetSubject.Call(
+	hr, _, err := i.Vtbl.GetSubject.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
-func (i *ICoreWebView2Certificate) GetIssuer() (string, error) {
-	var err error
+func (i *ICoreWebView2Certificate) GetIssuer() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetIssuer.Call(
+	hr, _, err := i.Vtbl.GetIssuer.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
-func (i *ICoreWebView2Certificate) GetValidFrom() (float64, error) {
-	var err error
+func (i *ICoreWebView2Certificate) GetValidFrom() (*float64, error) {
 
 	var value float64
 
-	_, _, err = i.vtbl.GetValidFrom.Call(
+	hr, _, err := i.Vtbl.GetValidFrom.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return 0.0, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
-func (i *ICoreWebView2Certificate) GetValidTo() (float64, error) {
-	var err error
+func (i *ICoreWebView2Certificate) GetValidTo() (*float64, error) {
 
 	var value float64
 
-	_, _, err = i.vtbl.GetValidTo.Call(
+	hr, _, err := i.Vtbl.GetValidTo.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return 0.0, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
-func (i *ICoreWebView2Certificate) GetDerEncodedSerialNumber() (string, error) {
-	var err error
+func (i *ICoreWebView2Certificate) GetDerEncodedSerialNumber() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetDerEncodedSerialNumber.Call(
+	hr, _, err := i.Vtbl.GetDerEncodedSerialNumber.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
-func (i *ICoreWebView2Certificate) GetDisplayName() (string, error) {
-	var err error
+func (i *ICoreWebView2Certificate) GetDisplayName() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetDisplayName.Call(
+	hr, _, err := i.Vtbl.GetDisplayName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
-func (i *ICoreWebView2Certificate) ToPemEncoding() (string, error) {
-	var err error
+func (i *ICoreWebView2Certificate) ToPemEncoding() (*string, error) {
 	// Create *uint16 to hold result
 	var _pemEncodedData *uint16
 
-	_, _, err = i.vtbl.ToPemEncoding.Call(
+	hr, _, err := i.Vtbl.ToPemEncoding.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_pemEncodedData)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	pemEncodedData := windows.UTF16PtrToString(_pemEncodedData)
-	windows.CoTaskMemFree(unsafe.Pointer(_pemEncodedData))
-	return pemEncodedData, nil
+	pemEncodedData := UTF16PtrToString(_pemEncodedData)
+	CoTaskMemFree(unsafe.Pointer(_pemEncodedData))
+	return &pemEncodedData, err
 }
 
 func (i *ICoreWebView2Certificate) GetPemEncodedIssuerCertificateChain() (*ICoreWebView2StringCollection, error) {
-	var err error
 
-	var value *ICoreWebView2StringCollection
+	var value ICoreWebView2StringCollection
 
-	_, _, err = i.vtbl.GetPemEncodedIssuerCertificateChain.Call(
+	hr, _, err := i.Vtbl.GetPemEncodedIssuerCertificateChain.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }

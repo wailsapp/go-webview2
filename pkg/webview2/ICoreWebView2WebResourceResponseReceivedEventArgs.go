@@ -4,49 +4,49 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2WebResourceResponseReceivedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2WebResourceResponseReceivedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetRequest  ComProc
 	GetResponse ComProc
 }
 
 type ICoreWebView2WebResourceResponseReceivedEventArgs struct {
-	vtbl *_ICoreWebView2WebResourceResponseReceivedEventArgsVtbl
+	Vtbl *ICoreWebView2WebResourceResponseReceivedEventArgsVtbl
 }
 
 func (i *ICoreWebView2WebResourceResponseReceivedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2WebResourceResponseReceivedEventArgs) GetRequest() (*ICoreWebView2WebResourceRequest, error) {
-	var err error
 
-	var request *ICoreWebView2WebResourceRequest
+	var request ICoreWebView2WebResourceRequest
 
-	_, _, err = i.vtbl.GetRequest.Call(
+	hr, _, err := i.Vtbl.GetRequest.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&request)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return request, nil
+	return &request, err
 }
 
 func (i *ICoreWebView2WebResourceResponseReceivedEventArgs) GetResponse() (*ICoreWebView2WebResourceResponseView, error) {
-	var err error
 
-	var response *ICoreWebView2WebResourceResponseView
+	var response ICoreWebView2WebResourceResponseView
 
-	_, _, err = i.vtbl.GetResponse.Call(
+	hr, _, err := i.Vtbl.GetResponse.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&response)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return response, nil
+	return &response, err
 }

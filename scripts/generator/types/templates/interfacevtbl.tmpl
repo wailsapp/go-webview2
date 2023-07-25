@@ -10,20 +10,36 @@ import (
 )
 {{- end}}
 
-type _{{.Name}}Vtbl struct {
-	_IUnknownVtbl
+type {{.Name}}Vtbl struct {
+	IUnknownVtbl
 	{{- range .Methods}}
 	{{.ProcessedName}} ComProc
 	{{- end}}
 }
 
 type {{.Name}} struct {
-	vtbl *_{{.Name}}Vtbl
+	Vtbl *{{.Name}}Vtbl
 	{{- if .HasInvokeMethod }}
-	impl _{{.Name}}Impl
+	impl {{.Name}}Impl
 	{{- end}}
 }
 
 func (i *{{.Name}}) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
+
+{{if .BaseClass }}
+func (i *ICoreWebView2) Get{{.Name}}() *{{.Name}} {
+	var result *{{.Name}}
+
+	iid{{.Name}} := NewGUID({{.Header.AsString}})
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iid{{.Name}})),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
+}
+
+{{end}}

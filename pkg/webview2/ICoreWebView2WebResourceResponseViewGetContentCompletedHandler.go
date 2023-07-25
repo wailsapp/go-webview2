@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2WebResourceResponseViewGetContentCompletedHandler struct {
-	vtbl *_ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerVtbl
-	impl _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerImpl
+	Vtbl *ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerVtbl
+	impl ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerImpl
 }
 
 func (i *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownQueryInterface(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownQueryInterface(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownAddRef(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler) uintptr {
+func ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownAddRef(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownRelease(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler) uintptr {
+func ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownRelease(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerInvoke(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler, errorCode uintptr, content *IStream) uintptr {
+func ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerInvoke(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler, errorCode uintptr, content *IStream) uintptr {
 	return this.impl.WebResourceResponseViewGetContentCompleted(errorCode, content)
 }
 
-type _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerImpl interface {
+	IUnknownImpl
 	WebResourceResponseViewGetContentCompleted(errorCode uintptr, content *IStream) uintptr
 }
 
-var _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerFn = _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownRelease),
+var ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerFn = ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerInvoke),
+	NewComProc(ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerInvoke),
 }
 
-func NewICoreWebView2WebResourceResponseViewGetContentCompletedHandler(impl _ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerImpl) *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler {
+func NewICoreWebView2WebResourceResponseViewGetContentCompletedHandler(impl ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerImpl) *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler {
 	return &ICoreWebView2WebResourceResponseViewGetContentCompletedHandler{
-		vtbl: &_ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerFn,
+		Vtbl: &ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerFn,
 		impl: impl,
 	}
 }

@@ -4,33 +4,34 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2ProcessFailedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2ProcessFailedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetProcessFailedKind ComProc
 }
 
 type ICoreWebView2ProcessFailedEventArgs struct {
-	vtbl *_ICoreWebView2ProcessFailedEventArgsVtbl
+	Vtbl *ICoreWebView2ProcessFailedEventArgsVtbl
 }
 
 func (i *ICoreWebView2ProcessFailedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2ProcessFailedEventArgs) GetProcessFailedKind() (*COREWEBVIEW2_PROCESS_FAILED_KIND, error) {
-	var err error
 
-	var processFailedKind *COREWEBVIEW2_PROCESS_FAILED_KIND
+	var processFailedKind COREWEBVIEW2_PROCESS_FAILED_KIND
 
-	_, _, err = i.vtbl.GetProcessFailedKind.Call(
+	hr, _, err := i.Vtbl.GetProcessFailedKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&processFailedKind)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return processFailedKind, nil
+	return &processFailedKind, err
 }

@@ -4,33 +4,35 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2SourceChangedEventArgsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2SourceChangedEventArgsVtbl struct {
+	IUnknownVtbl
 	GetIsNewDocument ComProc
 }
 
 type ICoreWebView2SourceChangedEventArgs struct {
-	vtbl *_ICoreWebView2SourceChangedEventArgsVtbl
+	Vtbl *ICoreWebView2SourceChangedEventArgsVtbl
 }
 
 func (i *ICoreWebView2SourceChangedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2SourceChangedEventArgs) GetIsNewDocument() (bool, error) {
-	var err error
+func (i *ICoreWebView2SourceChangedEventArgs) GetIsNewDocument() (*bool, error) {
+	// Create int32 to hold bool result
+	var _isNewDocument int32
 
-	var isNewDocument bool
-
-	_, _, err = i.vtbl.GetIsNewDocument.Call(
+	hr, _, err := i.Vtbl.GetIsNewDocument.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isNewDocument)),
+		uintptr(unsafe.Pointer(&_isNewDocument)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return isNewDocument, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	isNewDocument := _isNewDocument != 0
+	return &isNewDocument, err
 }

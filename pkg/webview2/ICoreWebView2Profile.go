@@ -4,11 +4,12 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2ProfileVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2ProfileVtbl struct {
+	IUnknownVtbl
 	GetProfileName               ComProc
 	GetIsInPrivateModeEnabled    ComProc
 	GetProfilePath               ComProc
@@ -19,122 +20,117 @@ type _ICoreWebView2ProfileVtbl struct {
 }
 
 type ICoreWebView2Profile struct {
-	vtbl *_ICoreWebView2ProfileVtbl
+	Vtbl *ICoreWebView2ProfileVtbl
 }
 
 func (i *ICoreWebView2Profile) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2Profile) GetProfileName() (string, error) {
-	var err error
+func (i *ICoreWebView2Profile) GetProfileName() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetProfileName.Call(
+	hr, _, err := i.Vtbl.GetProfileName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
-func (i *ICoreWebView2Profile) GetIsInPrivateModeEnabled() (bool, error) {
-	var err error
+func (i *ICoreWebView2Profile) GetIsInPrivateModeEnabled() (*bool, error) {
+	// Create int32 to hold bool result
+	var _value int32
 
-	var value bool
-
-	_, _, err = i.vtbl.GetIsInPrivateModeEnabled.Call(
+	hr, _, err := i.Vtbl.GetIsInPrivateModeEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return value, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	value := _value != 0
+	return &value, err
 }
 
-func (i *ICoreWebView2Profile) GetProfilePath() (string, error) {
-	var err error
+func (i *ICoreWebView2Profile) GetProfilePath() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetProfilePath.Call(
+	hr, _, err := i.Vtbl.GetProfilePath.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
-func (i *ICoreWebView2Profile) GetDefaultDownloadFolderPath() (string, error) {
-	var err error
+func (i *ICoreWebView2Profile) GetDefaultDownloadFolderPath() (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetDefaultDownloadFolderPath.Call(
+	hr, _, err := i.Vtbl.GetDefaultDownloadFolderPath.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }
 
 func (i *ICoreWebView2Profile) PutDefaultDownloadFolderPath(value string) error {
-	var err error
 
 	// Convert string 'value' to *uint16
-	_value, err := windows.UTF16PtrFromString(value)
+	_value, err := UTF16PtrFromString(value)
 	if err != nil {
 		return err
 	}
 
-	_, _, err = i.vtbl.PutDefaultDownloadFolderPath.Call(
+	hr, _, err := i.Vtbl.PutDefaultDownloadFolderPath.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
 
 func (i *ICoreWebView2Profile) GetPreferredColorScheme() (*COREWEBVIEW2_PREFERRED_COLOR_SCHEME, error) {
-	var err error
 
-	var value *COREWEBVIEW2_PREFERRED_COLOR_SCHEME
+	var value COREWEBVIEW2_PREFERRED_COLOR_SCHEME
 
-	_, _, err = i.vtbl.GetPreferredColorScheme.Call(
+	hr, _, err := i.Vtbl.GetPreferredColorScheme.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
 func (i *ICoreWebView2Profile) PutPreferredColorScheme(value COREWEBVIEW2_PREFERRED_COLOR_SCHEME) error {
-	var err error
 
-	_, _, err = i.vtbl.PutPreferredColorScheme.Call(
+	hr, _, err := i.Vtbl.PutPreferredColorScheme.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(value),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

@@ -2,52 +2,58 @@
 
 package webview2
 
-type _ICoreWebView2AcceleratorKeyPressedEventHandlerVtbl struct {
-	_IUnknownVtbl
+import (
+	"unsafe"
+)
+
+type ICoreWebView2AcceleratorKeyPressedEventHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
 type ICoreWebView2AcceleratorKeyPressedEventHandler struct {
-	vtbl *_ICoreWebView2AcceleratorKeyPressedEventHandlerVtbl
-	impl _ICoreWebView2AcceleratorKeyPressedEventHandlerImpl
+	Vtbl *ICoreWebView2AcceleratorKeyPressedEventHandlerVtbl
+	impl ICoreWebView2AcceleratorKeyPressedEventHandlerImpl
 }
 
 func (i *ICoreWebView2AcceleratorKeyPressedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
-func _ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownQueryInterface(this *ICoreWebView2AcceleratorKeyPressedEventHandler, refiid, object uintptr) uintptr {
+
+func ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownQueryInterface(this *ICoreWebView2AcceleratorKeyPressedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownAddRef(this *ICoreWebView2AcceleratorKeyPressedEventHandler) uintptr {
+func ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownAddRef(this *ICoreWebView2AcceleratorKeyPressedEventHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownRelease(this *ICoreWebView2AcceleratorKeyPressedEventHandler) uintptr {
+func ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownRelease(this *ICoreWebView2AcceleratorKeyPressedEventHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2AcceleratorKeyPressedEventHandlerInvoke(this *ICoreWebView2AcceleratorKeyPressedEventHandler, sender *ICoreWebView2Controller, args *ICoreWebView2AcceleratorKeyPressedEventArgs) uintptr {
+func ICoreWebView2AcceleratorKeyPressedEventHandlerInvoke(this *ICoreWebView2AcceleratorKeyPressedEventHandler, sender *ICoreWebView2Controller, args *ICoreWebView2AcceleratorKeyPressedEventArgs) uintptr {
 	return this.impl.AcceleratorKeyPressed(sender, args)
 }
 
-type _ICoreWebView2AcceleratorKeyPressedEventHandlerImpl interface {
-	_IUnknownImpl
+type ICoreWebView2AcceleratorKeyPressedEventHandlerImpl interface {
+	IUnknownImpl
 	AcceleratorKeyPressed(sender *ICoreWebView2Controller, args *ICoreWebView2AcceleratorKeyPressedEventArgs) uintptr
 }
 
-var _ICoreWebView2AcceleratorKeyPressedEventHandlerFn = _ICoreWebView2AcceleratorKeyPressedEventHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownRelease),
+var ICoreWebView2AcceleratorKeyPressedEventHandlerFn = ICoreWebView2AcceleratorKeyPressedEventHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2AcceleratorKeyPressedEventHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2AcceleratorKeyPressedEventHandlerInvoke),
+	NewComProc(ICoreWebView2AcceleratorKeyPressedEventHandlerInvoke),
 }
 
-func NewICoreWebView2AcceleratorKeyPressedEventHandler(impl _ICoreWebView2AcceleratorKeyPressedEventHandlerImpl) *ICoreWebView2AcceleratorKeyPressedEventHandler {
+func NewICoreWebView2AcceleratorKeyPressedEventHandler(impl ICoreWebView2AcceleratorKeyPressedEventHandlerImpl) *ICoreWebView2AcceleratorKeyPressedEventHandler {
 	return &ICoreWebView2AcceleratorKeyPressedEventHandler{
-		vtbl: &_ICoreWebView2AcceleratorKeyPressedEventHandlerFn,
+		Vtbl: &ICoreWebView2AcceleratorKeyPressedEventHandlerFn,
 		impl: impl,
 	}
 }

@@ -4,52 +4,52 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2StringCollectionVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2StringCollectionVtbl struct {
+	IUnknownVtbl
 	GetCount        ComProc
 	GetValueAtIndex ComProc
 }
 
 type ICoreWebView2StringCollection struct {
-	vtbl *_ICoreWebView2StringCollectionVtbl
+	Vtbl *ICoreWebView2StringCollectionVtbl
 }
 
 func (i *ICoreWebView2StringCollection) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2StringCollection) GetCount() (uint, error) {
-	var err error
+func (i *ICoreWebView2StringCollection) GetCount() (*uint, error) {
 
 	var value uint
 
-	_, _, err = i.vtbl.GetCount.Call(
+	hr, _, err := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return 0, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return value, nil
+	return &value, err
 }
 
-func (i *ICoreWebView2StringCollection) GetValueAtIndex(index uint) (string, error) {
-	var err error
+func (i *ICoreWebView2StringCollection) GetValueAtIndex(index uint) (*string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	_, _, err = i.vtbl.GetValueAtIndex.Call(
+	hr, _, err := i.Vtbl.GetValueAtIndex.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&index)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	} // Get result and cleanup
-	value := windows.UTF16PtrToString(_value)
-	windows.CoTaskMemFree(unsafe.Pointer(_value))
-	return value, nil
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return &value, err
 }

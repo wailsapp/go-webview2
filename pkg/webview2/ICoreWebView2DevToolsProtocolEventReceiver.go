@@ -4,48 +4,48 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2DevToolsProtocolEventReceiverVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2DevToolsProtocolEventReceiverVtbl struct {
+	IUnknownVtbl
 	AddDevToolsProtocolEventReceived    ComProc
 	RemoveDevToolsProtocolEventReceived ComProc
 }
 
 type ICoreWebView2DevToolsProtocolEventReceiver struct {
-	vtbl *_ICoreWebView2DevToolsProtocolEventReceiverVtbl
+	Vtbl *ICoreWebView2DevToolsProtocolEventReceiverVtbl
 }
 
 func (i *ICoreWebView2DevToolsProtocolEventReceiver) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2DevToolsProtocolEventReceiver) AddDevToolsProtocolEventReceived(handler *ICoreWebView2DevToolsProtocolEventReceivedEventHandler) (*EventRegistrationToken, error) {
-	var err error
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
-	_, _, err = i.vtbl.AddDevToolsProtocolEventReceived.Call(
+	hr, _, err := i.Vtbl.AddDevToolsProtocolEventReceived.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(handler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return token, nil
+	return &token, err
 }
 
 func (i *ICoreWebView2DevToolsProtocolEventReceiver) RemoveDevToolsProtocolEventReceived(token EventRegistrationToken) error {
-	var err error
 
-	_, _, err = i.vtbl.RemoveDevToolsProtocolEventReceived.Call(
+	hr, _, err := i.Vtbl.RemoveDevToolsProtocolEventReceived.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }

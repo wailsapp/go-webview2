@@ -4,65 +4,66 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2FrameInfoCollectionIteratorVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2FrameInfoCollectionIteratorVtbl struct {
+	IUnknownVtbl
 	GetHasCurrent ComProc
 	GetCurrent    ComProc
 	MoveNext      ComProc
 }
 
 type ICoreWebView2FrameInfoCollectionIterator struct {
-	vtbl *_ICoreWebView2FrameInfoCollectionIteratorVtbl
+	Vtbl *ICoreWebView2FrameInfoCollectionIteratorVtbl
 }
 
 func (i *ICoreWebView2FrameInfoCollectionIterator) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2FrameInfoCollectionIterator) GetHasCurrent() (bool, error) {
-	var err error
+func (i *ICoreWebView2FrameInfoCollectionIterator) GetHasCurrent() (*bool, error) {
+	// Create int32 to hold bool result
+	var _hasCurrent int32
 
-	var hasCurrent bool
-
-	_, _, err = i.vtbl.GetHasCurrent.Call(
+	hr, _, err := i.Vtbl.GetHasCurrent.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&hasCurrent)),
+		uintptr(unsafe.Pointer(&_hasCurrent)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return hasCurrent, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	hasCurrent := _hasCurrent != 0
+	return &hasCurrent, err
 }
 
 func (i *ICoreWebView2FrameInfoCollectionIterator) GetCurrent() (*ICoreWebView2FrameInfo, error) {
-	var err error
 
-	var frameInfo *ICoreWebView2FrameInfo
+	var frameInfo ICoreWebView2FrameInfo
 
-	_, _, err = i.vtbl.GetCurrent.Call(
+	hr, _, err := i.Vtbl.GetCurrent.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&frameInfo)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
-	return frameInfo, nil
+	return &frameInfo, err
 }
 
-func (i *ICoreWebView2FrameInfoCollectionIterator) MoveNext() (bool, error) {
-	var err error
+func (i *ICoreWebView2FrameInfoCollectionIterator) MoveNext() (*bool, error) {
+	// Create int32 to hold bool result
+	var _hasNext int32
 
-	var hasNext bool
-
-	_, _, err = i.vtbl.MoveNext.Call(
+	hr, _, err := i.Vtbl.MoveNext.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&hasNext)),
+		uintptr(unsafe.Pointer(&_hasNext)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
-	}
-	return hasNext, nil
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	} // Get result and cleanup
+	hasNext := _hasNext != 0
+	return &hasNext, err
 }

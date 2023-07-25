@@ -4,50 +4,50 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"syscall"
 	"unsafe"
 )
 
-type _ICoreWebView2EnvironmentOptions4Vtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2EnvironmentOptions4Vtbl struct {
+	IUnknownVtbl
 	GetCustomSchemeRegistrations ComProc
 	SetCustomSchemeRegistrations ComProc
 }
 
 type ICoreWebView2EnvironmentOptions4 struct {
-	vtbl *_ICoreWebView2EnvironmentOptions4Vtbl
+	Vtbl *ICoreWebView2EnvironmentOptions4Vtbl
 }
 
 func (i *ICoreWebView2EnvironmentOptions4) AddRef() uintptr {
-	return i.AddRef()
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2EnvironmentOptions4) GetCustomSchemeRegistrations() (*uint32, *ICoreWebView2CustomSchemeRegistration, error) {
-	var err error
 
-	var count *uint32
-	var schemeRegistrations *ICoreWebView2CustomSchemeRegistration
+	var count uint32
+	var schemeRegistrations ICoreWebView2CustomSchemeRegistration
 
-	_, _, err = i.vtbl.GetCustomSchemeRegistrations.Call(
+	hr, _, err := i.Vtbl.GetCustomSchemeRegistrations.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&count)),
 		uintptr(unsafe.Pointer(&schemeRegistrations)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, nil, syscall.Errno(hr)
 	}
-	return count, schemeRegistrations, nil
+	return &count, &schemeRegistrations, err
 }
 
 func (i *ICoreWebView2EnvironmentOptions4) SetCustomSchemeRegistrations(count uint32, schemeRegistrations *ICoreWebView2CustomSchemeRegistration) error {
-	var err error
 
-	_, _, err = i.vtbl.SetCustomSchemeRegistrations.Call(
+	hr, _, err := i.Vtbl.SetCustomSchemeRegistrations.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&count)),
 		uintptr(unsafe.Pointer(&schemeRegistrations)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
-	return nil
+	return err
 }
