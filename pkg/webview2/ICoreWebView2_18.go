@@ -37,7 +37,7 @@ func (i *ICoreWebView2) GetICoreWebView2_18() *ICoreWebView2_18 {
 
 func (i *ICoreWebView2_18) AddLaunchingExternalUriScheme(eventHandler *ICoreWebView2LaunchingExternalUriSchemeEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddLaunchingExternalUriScheme.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -47,7 +47,7 @@ func (i *ICoreWebView2_18) AddLaunchingExternalUriScheme(eventHandler *ICoreWebV
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2_18) RemoveLaunchingExternalUriScheme(token EventRegistrationToken) error {

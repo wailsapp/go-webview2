@@ -38,10 +38,11 @@ func (i *ICoreWebView2WebResourceRequest) GetUri() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	uri := UTF16PtrToString(_uri)
+	}
+	// Get result and cleanup
+	uri := ptr(UTF16PtrToString(_uri))
 	CoTaskMemFree(unsafe.Pointer(_uri))
-	return &uri, err
+	return uri, err
 }
 
 func (i *ICoreWebView2WebResourceRequest) PutUri(uri string) error {
@@ -72,10 +73,11 @@ func (i *ICoreWebView2WebResourceRequest) GetMethod() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	method := UTF16PtrToString(_method)
+	}
+	// Get result and cleanup
+	method := ptr(UTF16PtrToString(_method))
 	CoTaskMemFree(unsafe.Pointer(_method))
-	return &method, err
+	return method, err
 }
 
 func (i *ICoreWebView2WebResourceRequest) PutMethod(method string) error {
@@ -98,7 +100,7 @@ func (i *ICoreWebView2WebResourceRequest) PutMethod(method string) error {
 
 func (i *ICoreWebView2WebResourceRequest) GetContent() (*IStream, error) {
 
-	var content IStream
+	var content *IStream
 
 	hr, _, err := i.Vtbl.GetContent.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -107,7 +109,7 @@ func (i *ICoreWebView2WebResourceRequest) GetContent() (*IStream, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &content, err
+	return content, err
 }
 
 func (i *ICoreWebView2WebResourceRequest) PutContent(content *IStream) error {
@@ -124,7 +126,7 @@ func (i *ICoreWebView2WebResourceRequest) PutContent(content *IStream) error {
 
 func (i *ICoreWebView2WebResourceRequest) GetHeaders() (*ICoreWebView2HttpRequestHeaders, error) {
 
-	var headers ICoreWebView2HttpRequestHeaders
+	var headers *ICoreWebView2HttpRequestHeaders
 
 	hr, _, err := i.Vtbl.GetHeaders.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -133,5 +135,5 @@ func (i *ICoreWebView2WebResourceRequest) GetHeaders() (*ICoreWebView2HttpReques
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &headers, err
+	return headers, err
 }

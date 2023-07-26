@@ -37,7 +37,7 @@ func (i *ICoreWebView2) GetICoreWebView2_10() *ICoreWebView2_10 {
 
 func (i *ICoreWebView2_10) AddBasicAuthenticationRequested(eventHandler *ICoreWebView2BasicAuthenticationRequestedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddBasicAuthenticationRequested.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -47,7 +47,7 @@ func (i *ICoreWebView2_10) AddBasicAuthenticationRequested(eventHandler *ICoreWe
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2_10) RemoveBasicAuthenticationRequested(token EventRegistrationToken) error {

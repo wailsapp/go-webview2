@@ -33,9 +33,10 @@ func (i *ICoreWebView2EnvironmentOptions2) GetExclusiveUserDataFolderAccess() (*
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2EnvironmentOptions2) PutExclusiveUserDataFolderAccess(value bool) error {

@@ -38,7 +38,7 @@ func (i *ICoreWebView2) GetICoreWebView2_12() *ICoreWebView2_12 {
 
 func (i *ICoreWebView2_12) AddStatusBarTextChanged(eventHandler *ICoreWebView2StatusBarTextChangedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddStatusBarTextChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -48,7 +48,7 @@ func (i *ICoreWebView2_12) AddStatusBarTextChanged(eventHandler *ICoreWebView2St
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2_12) RemoveStatusBarTextChanged(token EventRegistrationToken) error {
@@ -73,8 +73,9 @@ func (i *ICoreWebView2_12) GetStatusBarText() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }

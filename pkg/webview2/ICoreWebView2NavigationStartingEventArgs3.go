@@ -36,7 +36,7 @@ func (i *ICoreWebView2) GetICoreWebView2NavigationStartingEventArgs3() *ICoreWeb
 
 func (i *ICoreWebView2NavigationStartingEventArgs3) GetNavigationKind() (*COREWEBVIEW2_NAVIGATION_KIND, error) {
 
-	var navigation_kind COREWEBVIEW2_NAVIGATION_KIND
+	var navigation_kind *COREWEBVIEW2_NAVIGATION_KIND
 
 	hr, _, err := i.Vtbl.GetNavigationKind.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -45,5 +45,5 @@ func (i *ICoreWebView2NavigationStartingEventArgs3) GetNavigationKind() (*COREWE
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &navigation_kind, err
+	return navigation_kind, err
 }

@@ -30,6 +30,13 @@ func (p *Param) IsOutputParam() bool {
 	return p.Direction.Dir == "out"
 }
 
+func (p *Param) LocalVariableType() string {
+	//if p.IsOutputParam() && p.isDoublePointer() {
+	//	return p.GoType[1:]
+	//}
+	return p.GoType
+}
+
 func (p *Param) OutputGoType() string {
 	if p.IsOutputParam() && p.isPointer() {
 		return p.GoType[1:]
@@ -47,6 +54,10 @@ func (p *Param) Process(decl *InterfaceMethod) {
 
 func (p *Param) isPointer() bool {
 	return p.Pointer != ""
+}
+
+func (p *Param) isDoublePointer() bool {
+	return p.Pointer == "**"
 }
 
 func (p *Param) processSetup() {
@@ -127,7 +138,7 @@ func (p *Param) GetReturnVariableName() string {
 	if result == "" {
 		result = p.Name
 	}
-	if p.isPointer() {
+	if p.OutputGoType()[0] == '*' {
 		result = "&" + result
 	}
 	return result

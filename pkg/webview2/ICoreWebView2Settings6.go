@@ -45,9 +45,10 @@ func (i *ICoreWebView2Settings6) GetIsSwipeNavigationEnabled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	enabled := _enabled != 0
-	return &enabled, err
+	}
+	// Get result and cleanup
+	enabled := ptr(_enabled != 0)
+	return enabled, err
 }
 
 func (i *ICoreWebView2Settings6) PutIsSwipeNavigationEnabled(enabled bool) error {

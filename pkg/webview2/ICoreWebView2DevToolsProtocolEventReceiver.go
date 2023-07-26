@@ -25,7 +25,7 @@ func (i *ICoreWebView2DevToolsProtocolEventReceiver) AddRef() uintptr {
 
 func (i *ICoreWebView2DevToolsProtocolEventReceiver) AddDevToolsProtocolEventReceived(handler *ICoreWebView2DevToolsProtocolEventReceivedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddDevToolsProtocolEventReceived.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -35,7 +35,7 @@ func (i *ICoreWebView2DevToolsProtocolEventReceiver) AddDevToolsProtocolEventRec
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2DevToolsProtocolEventReceiver) RemoveDevToolsProtocolEventReceived(token EventRegistrationToken) error {

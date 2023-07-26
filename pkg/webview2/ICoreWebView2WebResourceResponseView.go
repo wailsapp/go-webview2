@@ -27,7 +27,7 @@ func (i *ICoreWebView2WebResourceResponseView) AddRef() uintptr {
 
 func (i *ICoreWebView2WebResourceResponseView) GetHeaders() (*ICoreWebView2HttpResponseHeaders, error) {
 
-	var headers ICoreWebView2HttpResponseHeaders
+	var headers *ICoreWebView2HttpResponseHeaders
 
 	hr, _, err := i.Vtbl.GetHeaders.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -36,12 +36,12 @@ func (i *ICoreWebView2WebResourceResponseView) GetHeaders() (*ICoreWebView2HttpR
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &headers, err
+	return headers, err
 }
 
 func (i *ICoreWebView2WebResourceResponseView) GetStatusCode() (*int, error) {
 
-	var statusCode int
+	var statusCode *int
 
 	hr, _, err := i.Vtbl.GetStatusCode.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -50,7 +50,7 @@ func (i *ICoreWebView2WebResourceResponseView) GetStatusCode() (*int, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &statusCode, err
+	return statusCode, err
 }
 
 func (i *ICoreWebView2WebResourceResponseView) GetReasonPhrase() (*string, error) {
@@ -63,10 +63,11 @@ func (i *ICoreWebView2WebResourceResponseView) GetReasonPhrase() (*string, error
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	reasonPhrase := UTF16PtrToString(_reasonPhrase)
+	}
+	// Get result and cleanup
+	reasonPhrase := ptr(UTF16PtrToString(_reasonPhrase))
 	CoTaskMemFree(unsafe.Pointer(_reasonPhrase))
-	return &reasonPhrase, err
+	return reasonPhrase, err
 }
 
 func (i *ICoreWebView2WebResourceResponseView) GetContent(handler *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler) error {

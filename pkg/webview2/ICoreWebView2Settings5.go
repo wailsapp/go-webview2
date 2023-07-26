@@ -45,9 +45,10 @@ func (i *ICoreWebView2Settings5) GetIsPinchZoomEnabled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	enabled := _enabled != 0
-	return &enabled, err
+	}
+	// Get result and cleanup
+	enabled := ptr(_enabled != 0)
+	return enabled, err
 }
 
 func (i *ICoreWebView2Settings5) PutIsPinchZoomEnabled(enabled bool) error {

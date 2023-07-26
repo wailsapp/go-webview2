@@ -43,7 +43,7 @@ func (i *ICoreWebView2) GetICoreWebView2Controller3() *ICoreWebView2Controller3 
 
 func (i *ICoreWebView2Controller3) GetRasterizationScale() (*float64, error) {
 
-	var scale float64
+	var scale *float64
 
 	hr, _, err := i.Vtbl.GetRasterizationScale.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -52,7 +52,7 @@ func (i *ICoreWebView2Controller3) GetRasterizationScale() (*float64, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &scale, err
+	return scale, err
 }
 
 func (i *ICoreWebView2Controller3) PutRasterizationScale(scale float64) error {
@@ -77,9 +77,10 @@ func (i *ICoreWebView2Controller3) GetShouldDetectMonitorScaleChanges() (*bool, 
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2Controller3) PutShouldDetectMonitorScaleChanges(value bool) error {
@@ -96,7 +97,7 @@ func (i *ICoreWebView2Controller3) PutShouldDetectMonitorScaleChanges(value bool
 
 func (i *ICoreWebView2Controller3) AddRasterizationScaleChanged(eventHandler *ICoreWebView2RasterizationScaleChangedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddRasterizationScaleChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -106,7 +107,7 @@ func (i *ICoreWebView2Controller3) AddRasterizationScaleChanged(eventHandler *IC
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2Controller3) RemoveRasterizationScaleChanged(token EventRegistrationToken) error {
@@ -123,7 +124,7 @@ func (i *ICoreWebView2Controller3) RemoveRasterizationScaleChanged(token EventRe
 
 func (i *ICoreWebView2Controller3) GetBoundsMode() (*COREWEBVIEW2_BOUNDS_MODE, error) {
 
-	var boundsMode COREWEBVIEW2_BOUNDS_MODE
+	var boundsMode *COREWEBVIEW2_BOUNDS_MODE
 
 	hr, _, err := i.Vtbl.GetBoundsMode.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -132,7 +133,7 @@ func (i *ICoreWebView2Controller3) GetBoundsMode() (*COREWEBVIEW2_BOUNDS_MODE, e
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &boundsMode, err
+	return boundsMode, err
 }
 
 func (i *ICoreWebView2Controller3) PutBoundsMode(boundsMode COREWEBVIEW2_BOUNDS_MODE) error {

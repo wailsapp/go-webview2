@@ -26,7 +26,7 @@ func (i *ICoreWebView2MoveFocusRequestedEventArgs) AddRef() uintptr {
 
 func (i *ICoreWebView2MoveFocusRequestedEventArgs) GetReason() (*COREWEBVIEW2_MOVE_FOCUS_REASON, error) {
 
-	var reason COREWEBVIEW2_MOVE_FOCUS_REASON
+	var reason *COREWEBVIEW2_MOVE_FOCUS_REASON
 
 	hr, _, err := i.Vtbl.GetReason.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -35,7 +35,7 @@ func (i *ICoreWebView2MoveFocusRequestedEventArgs) GetReason() (*COREWEBVIEW2_MO
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &reason, err
+	return reason, err
 }
 
 func (i *ICoreWebView2MoveFocusRequestedEventArgs) GetHandled() (*bool, error) {
@@ -48,9 +48,10 @@ func (i *ICoreWebView2MoveFocusRequestedEventArgs) GetHandled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2MoveFocusRequestedEventArgs) PutHandled(value bool) error {

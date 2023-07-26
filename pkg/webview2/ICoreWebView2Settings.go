@@ -49,9 +49,10 @@ func (i *ICoreWebView2Settings) GetIsScriptEnabled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	isScriptEnabled := _isScriptEnabled != 0
-	return &isScriptEnabled, err
+	}
+	// Get result and cleanup
+	isScriptEnabled := ptr(_isScriptEnabled != 0)
+	return isScriptEnabled, err
 }
 
 func (i *ICoreWebView2Settings) PutIsScriptEnabled(isScriptEnabled bool) error {
@@ -76,9 +77,10 @@ func (i *ICoreWebView2Settings) GetIsWebMessageEnabled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	isWebMessageEnabled := _isWebMessageEnabled != 0
-	return &isWebMessageEnabled, err
+	}
+	// Get result and cleanup
+	isWebMessageEnabled := ptr(_isWebMessageEnabled != 0)
+	return isWebMessageEnabled, err
 }
 
 func (i *ICoreWebView2Settings) PutIsWebMessageEnabled(isWebMessageEnabled bool) error {
@@ -103,9 +105,10 @@ func (i *ICoreWebView2Settings) GetAreDefaultScriptDialogsEnabled() (*bool, erro
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	areDefaultScriptDialogsEnabled := _areDefaultScriptDialogsEnabled != 0
-	return &areDefaultScriptDialogsEnabled, err
+	}
+	// Get result and cleanup
+	areDefaultScriptDialogsEnabled := ptr(_areDefaultScriptDialogsEnabled != 0)
+	return areDefaultScriptDialogsEnabled, err
 }
 
 func (i *ICoreWebView2Settings) PutAreDefaultScriptDialogsEnabled(areDefaultScriptDialogsEnabled bool) error {
@@ -130,9 +133,10 @@ func (i *ICoreWebView2Settings) GetIsStatusBarEnabled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	isStatusBarEnabled := _isStatusBarEnabled != 0
-	return &isStatusBarEnabled, err
+	}
+	// Get result and cleanup
+	isStatusBarEnabled := ptr(_isStatusBarEnabled != 0)
+	return isStatusBarEnabled, err
 }
 
 func (i *ICoreWebView2Settings) PutIsStatusBarEnabled(isStatusBarEnabled bool) error {
@@ -157,9 +161,10 @@ func (i *ICoreWebView2Settings) GetAreDevToolsEnabled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	areDevToolsEnabled := _areDevToolsEnabled != 0
-	return &areDevToolsEnabled, err
+	}
+	// Get result and cleanup
+	areDevToolsEnabled := ptr(_areDevToolsEnabled != 0)
+	return areDevToolsEnabled, err
 }
 
 func (i *ICoreWebView2Settings) PutAreDevToolsEnabled(areDevToolsEnabled bool) error {
@@ -184,9 +189,10 @@ func (i *ICoreWebView2Settings) GetAreDefaultContextMenusEnabled() (*bool, error
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	enabled := _enabled != 0
-	return &enabled, err
+	}
+	// Get result and cleanup
+	enabled := ptr(_enabled != 0)
+	return enabled, err
 }
 
 func (i *ICoreWebView2Settings) PutAreDefaultContextMenusEnabled(enabled bool) error {
@@ -211,9 +217,10 @@ func (i *ICoreWebView2Settings) GetAreHostObjectsAllowed() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	allowed := _allowed != 0
-	return &allowed, err
+	}
+	// Get result and cleanup
+	allowed := ptr(_allowed != 0)
+	return allowed, err
 }
 
 func (i *ICoreWebView2Settings) PutAreHostObjectsAllowed(allowed bool) error {
@@ -238,9 +245,10 @@ func (i *ICoreWebView2Settings) GetIsZoomControlEnabled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	enabled := _enabled != 0
-	return &enabled, err
+	}
+	// Get result and cleanup
+	enabled := ptr(_enabled != 0)
+	return enabled, err
 }
 
 func (i *ICoreWebView2Settings) PutIsZoomControlEnabled(enabled bool) error {
@@ -265,9 +273,10 @@ func (i *ICoreWebView2Settings) GetIsBuiltInErrorPageEnabled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	enabled := _enabled != 0
-	return &enabled, err
+	}
+	// Get result and cleanup
+	enabled := ptr(_enabled != 0)
+	return enabled, err
 }
 
 func (i *ICoreWebView2Settings) PutIsBuiltInErrorPageEnabled(enabled bool) error {

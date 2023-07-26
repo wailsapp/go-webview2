@@ -45,10 +45,11 @@ func (i *ICoreWebView2ControllerOptions2) GetScriptLocale() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	locale := UTF16PtrToString(_locale)
+	}
+	// Get result and cleanup
+	locale := ptr(UTF16PtrToString(_locale))
 	CoTaskMemFree(unsafe.Pointer(_locale))
-	return &locale, err
+	return locale, err
 }
 
 func (i *ICoreWebView2ControllerOptions2) PutScriptLocale(locale string) error {

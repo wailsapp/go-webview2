@@ -35,10 +35,11 @@ func (i *ICoreWebView2ControllerOptions) GetProfileName() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ControllerOptions) PutProfileName(value string) error {
@@ -69,9 +70,10 @@ func (i *ICoreWebView2ControllerOptions) GetIsInPrivateModeEnabled() (*bool, err
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2ControllerOptions) PutIsInPrivateModeEnabled(value bool) error {

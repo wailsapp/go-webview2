@@ -31,6 +31,16 @@ type IUnknownVtbl struct {
 	Release        ComProc
 }
 
+func (i *IUnknownVtbl) CallRelease(this unsafe.Pointer) error {
+	_, _, err := i.Release.Call(
+		uintptr(this),
+	)
+	if err != windows.ERROR_SUCCESS {
+		return err
+	}
+	return nil
+}
+
 type IUnknownImpl interface {
 	QueryInterface(refiid, object uintptr) uintptr
 	AddRef() uintptr
@@ -38,6 +48,8 @@ type IUnknownImpl interface {
 }
 
 // Call calls a COM procedure.
+//
+//go:uintptrescapes
 func (p ComProc) Call(a ...uintptr) (r1, r2 uintptr, lastErr error) {
 	return syscall.SyscallN(uintptr(p), a...)
 }
@@ -61,11 +73,14 @@ type HMODULE uintptr
 type HWND uintptr
 
 // NOTE: For sure, this is wrong!
-type IStream uintptr
 type VARIANT uintptr
 
 type IDataObject struct {
 	IUnknown
+}
+
+func ptr[T any](p T) *T {
+	return &p
 }
 
 const ERROR_SUCCESS = windows.ERROR_SUCCESS
@@ -302,4 +317,47 @@ func IsEqualGUID(guid1 *GUID, guid2 *GUID) bool {
 		guid1.Data4[5] == guid2.Data4[5] &&
 		guid1.Data4[6] == guid2.Data4[6] &&
 		guid1.Data4[7] == guid2.Data4[7]
+}
+
+type IStreamVtbl struct {
+	IUnknownVtbl
+	Read  ComProc
+	Write ComProc
+}
+
+type IStream struct {
+	Vtbl *IStreamVtbl
+}
+
+func (i *IStream) Release() error {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
+func (i *IStream) Read(p []byte) (int, error) {
+	bufLen := len(p)
+	if bufLen == 0 {
+		return 0, nil
+	}
+
+	var n int
+	res, _, err := i.Vtbl.Read.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&p[0])),
+		uintptr(bufLen),
+		uintptr(unsafe.Pointer(&n)),
+	)
+	if err != windows.ERROR_SUCCESS {
+		return 0, err
+	}
+
+	switch windows.Handle(res) {
+	case windows.S_OK:
+		// The buffer has been completely filled
+		return n, nil
+	case windows.S_FALSE:
+		// The buffer has been filled with less than len data and the stream is EOF
+		return n, io.EOF
+	default:
+		return 0, syscall.Errno(res)
+	}
 }

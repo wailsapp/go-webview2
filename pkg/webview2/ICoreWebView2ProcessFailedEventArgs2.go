@@ -39,7 +39,7 @@ func (i *ICoreWebView2) GetICoreWebView2ProcessFailedEventArgs2() *ICoreWebView2
 
 func (i *ICoreWebView2ProcessFailedEventArgs2) GetReason() (*COREWEBVIEW2_PROCESS_FAILED_REASON, error) {
 
-	var reason COREWEBVIEW2_PROCESS_FAILED_REASON
+	var reason *COREWEBVIEW2_PROCESS_FAILED_REASON
 
 	hr, _, err := i.Vtbl.GetReason.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -48,12 +48,12 @@ func (i *ICoreWebView2ProcessFailedEventArgs2) GetReason() (*COREWEBVIEW2_PROCES
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &reason, err
+	return reason, err
 }
 
 func (i *ICoreWebView2ProcessFailedEventArgs2) GetExitCode() (*int, error) {
 
-	var exitCode int
+	var exitCode *int
 
 	hr, _, err := i.Vtbl.GetExitCode.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -62,7 +62,7 @@ func (i *ICoreWebView2ProcessFailedEventArgs2) GetExitCode() (*int, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &exitCode, err
+	return exitCode, err
 }
 
 func (i *ICoreWebView2ProcessFailedEventArgs2) GetProcessDescription() (*string, error) {
@@ -75,15 +75,16 @@ func (i *ICoreWebView2ProcessFailedEventArgs2) GetProcessDescription() (*string,
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	processDescription := UTF16PtrToString(_processDescription)
+	}
+	// Get result and cleanup
+	processDescription := ptr(UTF16PtrToString(_processDescription))
 	CoTaskMemFree(unsafe.Pointer(_processDescription))
-	return &processDescription, err
+	return processDescription, err
 }
 
 func (i *ICoreWebView2ProcessFailedEventArgs2) GetFrameInfosForFailedProcess() (*ICoreWebView2FrameInfoCollection, error) {
 
-	var frames ICoreWebView2FrameInfoCollection
+	var frames *ICoreWebView2FrameInfoCollection
 
 	hr, _, err := i.Vtbl.GetFrameInfosForFailedProcess.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -92,5 +93,5 @@ func (i *ICoreWebView2ProcessFailedEventArgs2) GetFrameInfosForFailedProcess() (
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &frames, err
+	return frames, err
 }

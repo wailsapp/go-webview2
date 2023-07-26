@@ -44,8 +44,9 @@ func (i *ICoreWebView2DevToolsProtocolEventReceivedEventArgs2) GetSessionId() (*
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	sessionId := UTF16PtrToString(_sessionId)
+	}
+	// Get result and cleanup
+	sessionId := ptr(UTF16PtrToString(_sessionId))
 	CoTaskMemFree(unsafe.Pointer(_sessionId))
-	return &sessionId, err
+	return sessionId, err
 }

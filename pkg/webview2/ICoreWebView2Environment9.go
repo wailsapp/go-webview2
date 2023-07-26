@@ -41,8 +41,7 @@ func (i *ICoreWebView2Environment9) CreateContextMenuItem(label string, iconStre
 	if err != nil {
 		return nil, err
 	}
-
-	var item ICoreWebView2ContextMenuItem
+	var item *ICoreWebView2ContextMenuItem
 
 	hr, _, err := i.Vtbl.CreateContextMenuItem.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -54,5 +53,5 @@ func (i *ICoreWebView2Environment9) CreateContextMenuItem(label string, iconStre
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &item, err
+	return item, err
 }

@@ -38,7 +38,7 @@ func (i *ICoreWebView2) GetICoreWebView2Environment10() *ICoreWebView2Environmen
 
 func (i *ICoreWebView2Environment10) CreateCoreWebView2ControllerOptions() (*ICoreWebView2ControllerOptions, error) {
 
-	var options ICoreWebView2ControllerOptions
+	var options *ICoreWebView2ControllerOptions
 
 	hr, _, err := i.Vtbl.CreateCoreWebView2ControllerOptions.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -47,7 +47,7 @@ func (i *ICoreWebView2Environment10) CreateCoreWebView2ControllerOptions() (*ICo
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &options, err
+	return options, err
 }
 
 func (i *ICoreWebView2Environment10) CreateCoreWebView2ControllerWithOptions(parentWindow HWND, options *ICoreWebView2ControllerOptions, handler *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler) error {

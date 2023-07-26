@@ -38,7 +38,7 @@ func (i *ICoreWebView2) GetICoreWebView2Environment8() *ICoreWebView2Environment
 
 func (i *ICoreWebView2Environment8) AddProcessInfosChanged(eventHandler *ICoreWebView2ProcessInfosChangedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddProcessInfosChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -48,7 +48,7 @@ func (i *ICoreWebView2Environment8) AddProcessInfosChanged(eventHandler *ICoreWe
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2Environment8) RemoveProcessInfosChanged(token EventRegistrationToken) error {
@@ -65,7 +65,7 @@ func (i *ICoreWebView2Environment8) RemoveProcessInfosChanged(token EventRegistr
 
 func (i *ICoreWebView2Environment8) GetProcessInfos() (*ICoreWebView2ProcessInfoCollection, error) {
 
-	var value ICoreWebView2ProcessInfoCollection
+	var value *ICoreWebView2ProcessInfoCollection
 
 	hr, _, err := i.Vtbl.GetProcessInfos.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -74,5 +74,5 @@ func (i *ICoreWebView2Environment8) GetProcessInfos() (*ICoreWebView2ProcessInfo
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }

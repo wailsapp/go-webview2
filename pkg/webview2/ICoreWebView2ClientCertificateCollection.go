@@ -25,7 +25,7 @@ func (i *ICoreWebView2ClientCertificateCollection) AddRef() uintptr {
 
 func (i *ICoreWebView2ClientCertificateCollection) GetCount() (*uint, error) {
 
-	var value uint
+	var value *uint
 
 	hr, _, err := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -34,12 +34,12 @@ func (i *ICoreWebView2ClientCertificateCollection) GetCount() (*uint, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ClientCertificateCollection) GetValueAtIndex(index uint) (*ICoreWebView2ClientCertificate, error) {
 
-	var certificate ICoreWebView2ClientCertificate
+	var certificate *ICoreWebView2ClientCertificate
 
 	hr, _, err := i.Vtbl.GetValueAtIndex.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -49,5 +49,5 @@ func (i *ICoreWebView2ClientCertificateCollection) GetValueAtIndex(index uint) (
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &certificate, err
+	return certificate, err
 }

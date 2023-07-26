@@ -38,7 +38,7 @@ func (i *ICoreWebView2) GetICoreWebView2_14() *ICoreWebView2_14 {
 
 func (i *ICoreWebView2_14) AddServerCertificateErrorDetected(eventHandler *ICoreWebView2ServerCertificateErrorDetectedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddServerCertificateErrorDetected.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -48,7 +48,7 @@ func (i *ICoreWebView2_14) AddServerCertificateErrorDetected(eventHandler *ICore
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2_14) RemoveServerCertificateErrorDetected(token EventRegistrationToken) error {

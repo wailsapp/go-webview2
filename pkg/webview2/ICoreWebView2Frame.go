@@ -39,15 +39,16 @@ func (i *ICoreWebView2Frame) GetName() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	name := UTF16PtrToString(_name)
+	}
+	// Get result and cleanup
+	name := ptr(UTF16PtrToString(_name))
 	CoTaskMemFree(unsafe.Pointer(_name))
-	return &name, err
+	return name, err
 }
 
 func (i *ICoreWebView2Frame) AddNameChanged(eventHandler *ICoreWebView2FrameNameChangedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddNameChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -57,7 +58,7 @@ func (i *ICoreWebView2Frame) AddNameChanged(eventHandler *ICoreWebView2FrameName
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2Frame) RemoveNameChanged(token EventRegistrationToken) error {
@@ -113,7 +114,7 @@ func (i *ICoreWebView2Frame) RemoveHostObjectFromScript(name string) error {
 
 func (i *ICoreWebView2Frame) AddDestroyed(eventHandler *ICoreWebView2FrameDestroyedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddDestroyed.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -123,7 +124,7 @@ func (i *ICoreWebView2Frame) AddDestroyed(eventHandler *ICoreWebView2FrameDestro
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2Frame) RemoveDestroyed(token EventRegistrationToken) error {
@@ -148,7 +149,8 @@ func (i *ICoreWebView2Frame) IsDestroyed() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	destroyed := _destroyed != 0
-	return &destroyed, err
+	}
+	// Get result and cleanup
+	destroyed := ptr(_destroyed != 0)
+	return destroyed, err
 }

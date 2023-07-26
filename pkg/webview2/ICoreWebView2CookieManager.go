@@ -36,26 +36,22 @@ func (i *ICoreWebView2CookieManager) CreateCookie(name string, value string, dom
 	if err != nil {
 		return nil, err
 	}
-
 	// Convert string 'value' to *uint16
 	_value, err := UTF16PtrFromString(value)
 	if err != nil {
 		return nil, err
 	}
-
 	// Convert string 'domain' to *uint16
 	_domain, err := UTF16PtrFromString(domain)
 	if err != nil {
 		return nil, err
 	}
-
 	// Convert string 'path' to *uint16
 	_path, err := UTF16PtrFromString(path)
 	if err != nil {
 		return nil, err
 	}
-
-	var cookie ICoreWebView2Cookie
+	var cookie *ICoreWebView2Cookie
 
 	hr, _, err := i.Vtbl.CreateCookie.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -68,12 +64,12 @@ func (i *ICoreWebView2CookieManager) CreateCookie(name string, value string, dom
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &cookie, err
+	return cookie, err
 }
 
 func (i *ICoreWebView2CookieManager) CopyCookie(cookieParam *ICoreWebView2Cookie) (*ICoreWebView2Cookie, error) {
 
-	var cookie ICoreWebView2Cookie
+	var cookie *ICoreWebView2Cookie
 
 	hr, _, err := i.Vtbl.CopyCookie.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -83,7 +79,7 @@ func (i *ICoreWebView2CookieManager) CopyCookie(cookieParam *ICoreWebView2Cookie
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &cookie, err
+	return cookie, err
 }
 
 func (i *ICoreWebView2CookieManager) GetCookies(uri string, handler *ICoreWebView2GetCookiesCompletedHandler) error {
@@ -136,7 +132,6 @@ func (i *ICoreWebView2CookieManager) DeleteCookies(name string, uri string) erro
 	if err != nil {
 		return err
 	}
-
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
 	if err != nil {
@@ -161,13 +156,11 @@ func (i *ICoreWebView2CookieManager) DeleteCookiesWithDomainAndPath(name string,
 	if err != nil {
 		return err
 	}
-
 	// Convert string 'domain' to *uint16
 	_domain, err := UTF16PtrFromString(domain)
 	if err != nil {
 		return err
 	}
-
 	// Convert string 'path' to *uint16
 	_path, err := UTF16PtrFromString(path)
 	if err != nil {

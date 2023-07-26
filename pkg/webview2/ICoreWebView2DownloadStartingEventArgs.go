@@ -31,7 +31,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) AddRef() uintptr {
 
 func (i *ICoreWebView2DownloadStartingEventArgs) GetDownloadOperation() (*ICoreWebView2DownloadOperation, error) {
 
-	var downloadOperation ICoreWebView2DownloadOperation
+	var downloadOperation *ICoreWebView2DownloadOperation
 
 	hr, _, err := i.Vtbl.GetDownloadOperation.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -40,7 +40,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetDownloadOperation() (*ICoreW
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &downloadOperation, err
+	return downloadOperation, err
 }
 
 func (i *ICoreWebView2DownloadStartingEventArgs) GetCancel() (*bool, error) {
@@ -53,9 +53,10 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetCancel() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	cancel := _cancel != 0
-	return &cancel, err
+	}
+	// Get result and cleanup
+	cancel := ptr(_cancel != 0)
+	return cancel, err
 }
 
 func (i *ICoreWebView2DownloadStartingEventArgs) PutCancel(cancel bool) error {
@@ -80,10 +81,11 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetResultFilePath() (*string, e
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	resultFilePath := UTF16PtrToString(_resultFilePath)
+	}
+	// Get result and cleanup
+	resultFilePath := ptr(UTF16PtrToString(_resultFilePath))
 	CoTaskMemFree(unsafe.Pointer(_resultFilePath))
-	return &resultFilePath, err
+	return resultFilePath, err
 }
 
 func (i *ICoreWebView2DownloadStartingEventArgs) PutResultFilePath(resultFilePath string) error {
@@ -114,9 +116,10 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetHandled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	handled := _handled != 0
-	return &handled, err
+	}
+	// Get result and cleanup
+	handled := ptr(_handled != 0)
+	return handled, err
 }
 
 func (i *ICoreWebView2DownloadStartingEventArgs) PutHandled(handled bool) error {
@@ -133,7 +136,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) PutHandled(handled bool) error 
 
 func (i *ICoreWebView2DownloadStartingEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
 
-	var deferral ICoreWebView2Deferral
+	var deferral *ICoreWebView2Deferral
 
 	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -142,5 +145,5 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetDeferral() (*ICoreWebView2De
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &deferral, err
+	return deferral, err
 }

@@ -33,10 +33,11 @@ func (i *ICoreWebView2FrameInfo) GetName() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	name := UTF16PtrToString(_name)
+	}
+	// Get result and cleanup
+	name := ptr(UTF16PtrToString(_name))
 	CoTaskMemFree(unsafe.Pointer(_name))
-	return &name, err
+	return name, err
 }
 
 func (i *ICoreWebView2FrameInfo) GetSource() (*string, error) {
@@ -49,8 +50,9 @@ func (i *ICoreWebView2FrameInfo) GetSource() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	source := UTF16PtrToString(_source)
+	}
+	// Get result and cleanup
+	source := ptr(UTF16PtrToString(_source))
 	CoTaskMemFree(unsafe.Pointer(_source))
-	return &source, err
+	return source, err
 }

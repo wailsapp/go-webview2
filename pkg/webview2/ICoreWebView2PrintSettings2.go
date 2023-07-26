@@ -59,10 +59,11 @@ func (i *ICoreWebView2PrintSettings2) GetPageRanges() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PrintSettings2) PutPageRanges(value string) error {
@@ -85,7 +86,7 @@ func (i *ICoreWebView2PrintSettings2) PutPageRanges(value string) error {
 
 func (i *ICoreWebView2PrintSettings2) GetPagesPerSide() (*int32, error) {
 
-	var value int32
+	var value *int32
 
 	hr, _, err := i.Vtbl.GetPagesPerSide.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -94,7 +95,7 @@ func (i *ICoreWebView2PrintSettings2) GetPagesPerSide() (*int32, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PrintSettings2) PutPagesPerSide(value int32) error {
@@ -111,7 +112,7 @@ func (i *ICoreWebView2PrintSettings2) PutPagesPerSide(value int32) error {
 
 func (i *ICoreWebView2PrintSettings2) GetCopies() (*int32, error) {
 
-	var value int32
+	var value *int32
 
 	hr, _, err := i.Vtbl.GetCopies.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -120,7 +121,7 @@ func (i *ICoreWebView2PrintSettings2) GetCopies() (*int32, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PrintSettings2) PutCopies(value int32) error {
@@ -137,7 +138,7 @@ func (i *ICoreWebView2PrintSettings2) PutCopies(value int32) error {
 
 func (i *ICoreWebView2PrintSettings2) GetCollation() (*COREWEBVIEW2_PRINT_COLLATION, error) {
 
-	var value COREWEBVIEW2_PRINT_COLLATION
+	var value *COREWEBVIEW2_PRINT_COLLATION
 
 	hr, _, err := i.Vtbl.GetCollation.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -146,7 +147,7 @@ func (i *ICoreWebView2PrintSettings2) GetCollation() (*COREWEBVIEW2_PRINT_COLLAT
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PrintSettings2) PutCollation(value COREWEBVIEW2_PRINT_COLLATION) error {
@@ -163,7 +164,7 @@ func (i *ICoreWebView2PrintSettings2) PutCollation(value COREWEBVIEW2_PRINT_COLL
 
 func (i *ICoreWebView2PrintSettings2) GetColorMode() (*COREWEBVIEW2_PRINT_COLOR_MODE, error) {
 
-	var value COREWEBVIEW2_PRINT_COLOR_MODE
+	var value *COREWEBVIEW2_PRINT_COLOR_MODE
 
 	hr, _, err := i.Vtbl.GetColorMode.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -172,7 +173,7 @@ func (i *ICoreWebView2PrintSettings2) GetColorMode() (*COREWEBVIEW2_PRINT_COLOR_
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PrintSettings2) PutColorMode(value COREWEBVIEW2_PRINT_COLOR_MODE) error {
@@ -189,7 +190,7 @@ func (i *ICoreWebView2PrintSettings2) PutColorMode(value COREWEBVIEW2_PRINT_COLO
 
 func (i *ICoreWebView2PrintSettings2) GetDuplex() (*COREWEBVIEW2_PRINT_DUPLEX, error) {
 
-	var value COREWEBVIEW2_PRINT_DUPLEX
+	var value *COREWEBVIEW2_PRINT_DUPLEX
 
 	hr, _, err := i.Vtbl.GetDuplex.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -198,7 +199,7 @@ func (i *ICoreWebView2PrintSettings2) GetDuplex() (*COREWEBVIEW2_PRINT_DUPLEX, e
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PrintSettings2) PutDuplex(value COREWEBVIEW2_PRINT_DUPLEX) error {
@@ -215,7 +216,7 @@ func (i *ICoreWebView2PrintSettings2) PutDuplex(value COREWEBVIEW2_PRINT_DUPLEX)
 
 func (i *ICoreWebView2PrintSettings2) GetMediaSize() (*COREWEBVIEW2_PRINT_MEDIA_SIZE, error) {
 
-	var value COREWEBVIEW2_PRINT_MEDIA_SIZE
+	var value *COREWEBVIEW2_PRINT_MEDIA_SIZE
 
 	hr, _, err := i.Vtbl.GetMediaSize.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -224,7 +225,7 @@ func (i *ICoreWebView2PrintSettings2) GetMediaSize() (*COREWEBVIEW2_PRINT_MEDIA_
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PrintSettings2) PutMediaSize(value COREWEBVIEW2_PRINT_MEDIA_SIZE) error {
@@ -249,10 +250,11 @@ func (i *ICoreWebView2PrintSettings2) GetPrinterName() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PrintSettings2) PutPrinterName(value string) error {

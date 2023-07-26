@@ -30,7 +30,7 @@ func (i *ICoreWebView2WebResourceResponse) AddRef() uintptr {
 
 func (i *ICoreWebView2WebResourceResponse) GetContent() (*IStream, error) {
 
-	var content IStream
+	var content *IStream
 
 	hr, _, err := i.Vtbl.GetContent.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -39,7 +39,7 @@ func (i *ICoreWebView2WebResourceResponse) GetContent() (*IStream, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &content, err
+	return content, err
 }
 
 func (i *ICoreWebView2WebResourceResponse) PutContent(content *IStream) error {
@@ -56,7 +56,7 @@ func (i *ICoreWebView2WebResourceResponse) PutContent(content *IStream) error {
 
 func (i *ICoreWebView2WebResourceResponse) GetHeaders() (*ICoreWebView2HttpResponseHeaders, error) {
 
-	var headers ICoreWebView2HttpResponseHeaders
+	var headers *ICoreWebView2HttpResponseHeaders
 
 	hr, _, err := i.Vtbl.GetHeaders.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -65,12 +65,12 @@ func (i *ICoreWebView2WebResourceResponse) GetHeaders() (*ICoreWebView2HttpRespo
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &headers, err
+	return headers, err
 }
 
 func (i *ICoreWebView2WebResourceResponse) GetStatusCode() (*int, error) {
 
-	var statusCode int
+	var statusCode *int
 
 	hr, _, err := i.Vtbl.GetStatusCode.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -79,7 +79,7 @@ func (i *ICoreWebView2WebResourceResponse) GetStatusCode() (*int, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &statusCode, err
+	return statusCode, err
 }
 
 func (i *ICoreWebView2WebResourceResponse) PutStatusCode(statusCode int) error {
@@ -104,10 +104,11 @@ func (i *ICoreWebView2WebResourceResponse) GetReasonPhrase() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	reasonPhrase := UTF16PtrToString(_reasonPhrase)
+	}
+	// Get result and cleanup
+	reasonPhrase := ptr(UTF16PtrToString(_reasonPhrase))
 	CoTaskMemFree(unsafe.Pointer(_reasonPhrase))
-	return &reasonPhrase, err
+	return reasonPhrase, err
 }
 
 func (i *ICoreWebView2WebResourceResponse) PutReasonPhrase(reasonPhrase string) error {

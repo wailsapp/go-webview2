@@ -37,7 +37,7 @@ func (i *ICoreWebView2) GetICoreWebView2Profile3() *ICoreWebView2Profile3 {
 
 func (i *ICoreWebView2Profile3) GetPreferredTrackingPreventionLevel() (*COREWEBVIEW2_TRACKING_PREVENTION_LEVEL, error) {
 
-	var value COREWEBVIEW2_TRACKING_PREVENTION_LEVEL
+	var value *COREWEBVIEW2_TRACKING_PREVENTION_LEVEL
 
 	hr, _, err := i.Vtbl.GetPreferredTrackingPreventionLevel.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -46,7 +46,7 @@ func (i *ICoreWebView2Profile3) GetPreferredTrackingPreventionLevel() (*COREWEBV
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2Profile3) PutPreferredTrackingPreventionLevel(value COREWEBVIEW2_TRACKING_PREVENTION_LEVEL) error {

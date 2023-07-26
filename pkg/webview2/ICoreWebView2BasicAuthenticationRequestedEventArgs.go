@@ -37,10 +37,11 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetUri() (*string, 
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetChallenge() (*string, error) {
@@ -53,15 +54,16 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetChallenge() (*st
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	challenge := UTF16PtrToString(_challenge)
+	}
+	// Get result and cleanup
+	challenge := ptr(UTF16PtrToString(_challenge))
 	CoTaskMemFree(unsafe.Pointer(_challenge))
-	return &challenge, err
+	return challenge, err
 }
 
 func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetResponse() (*ICoreWebView2BasicAuthenticationResponse, error) {
 
-	var response ICoreWebView2BasicAuthenticationResponse
+	var response *ICoreWebView2BasicAuthenticationResponse
 
 	hr, _, err := i.Vtbl.GetResponse.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -70,7 +72,7 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetResponse() (*ICo
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &response, err
+	return response, err
 }
 
 func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetCancel() (*bool, error) {
@@ -83,9 +85,10 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetCancel() (*bool,
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	cancel := _cancel != 0
-	return &cancel, err
+	}
+	// Get result and cleanup
+	cancel := ptr(_cancel != 0)
+	return cancel, err
 }
 
 func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) PutCancel(cancel bool) error {
@@ -102,7 +105,7 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) PutCancel(cancel bo
 
 func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
 
-	var deferral ICoreWebView2Deferral
+	var deferral *ICoreWebView2Deferral
 
 	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -111,5 +114,5 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetDeferral() (*ICo
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &deferral, err
+	return deferral, err
 }

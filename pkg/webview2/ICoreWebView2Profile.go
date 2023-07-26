@@ -38,10 +38,11 @@ func (i *ICoreWebView2Profile) GetProfileName() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2Profile) GetIsInPrivateModeEnabled() (*bool, error) {
@@ -54,9 +55,10 @@ func (i *ICoreWebView2Profile) GetIsInPrivateModeEnabled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2Profile) GetProfilePath() (*string, error) {
@@ -69,10 +71,11 @@ func (i *ICoreWebView2Profile) GetProfilePath() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2Profile) GetDefaultDownloadFolderPath() (*string, error) {
@@ -85,10 +88,11 @@ func (i *ICoreWebView2Profile) GetDefaultDownloadFolderPath() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2Profile) PutDefaultDownloadFolderPath(value string) error {
@@ -111,7 +115,7 @@ func (i *ICoreWebView2Profile) PutDefaultDownloadFolderPath(value string) error 
 
 func (i *ICoreWebView2Profile) GetPreferredColorScheme() (*COREWEBVIEW2_PREFERRED_COLOR_SCHEME, error) {
 
-	var value COREWEBVIEW2_PREFERRED_COLOR_SCHEME
+	var value *COREWEBVIEW2_PREFERRED_COLOR_SCHEME
 
 	hr, _, err := i.Vtbl.GetPreferredColorScheme.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -120,7 +124,7 @@ func (i *ICoreWebView2Profile) GetPreferredColorScheme() (*COREWEBVIEW2_PREFERRE
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2Profile) PutPreferredColorScheme(value COREWEBVIEW2_PREFERRED_COLOR_SCHEME) error {

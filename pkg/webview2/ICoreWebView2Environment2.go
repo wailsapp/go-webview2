@@ -41,20 +41,17 @@ func (i *ICoreWebView2Environment2) CreateWebResourceRequest(uri string, method 
 	if err != nil {
 		return nil, err
 	}
-
 	// Convert string 'method' to *uint16
 	_method, err := UTF16PtrFromString(method)
 	if err != nil {
 		return nil, err
 	}
-
 	// Convert string 'headers' to *uint16
 	_headers, err := UTF16PtrFromString(headers)
 	if err != nil {
 		return nil, err
 	}
-
-	var request ICoreWebView2WebResourceRequest
+	var request *ICoreWebView2WebResourceRequest
 
 	hr, _, err := i.Vtbl.CreateWebResourceRequest.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -67,5 +64,5 @@ func (i *ICoreWebView2Environment2) CreateWebResourceRequest(uri string, method 
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &request, err
+	return request, err
 }

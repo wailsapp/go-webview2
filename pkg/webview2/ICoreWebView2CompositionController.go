@@ -31,7 +31,7 @@ func (i *ICoreWebView2CompositionController) AddRef() uintptr {
 
 func (i *ICoreWebView2CompositionController) GetRootVisualTarget() (*IUnknown, error) {
 
-	var target IUnknown
+	var target *IUnknown
 
 	hr, _, err := i.Vtbl.GetRootVisualTarget.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -40,7 +40,7 @@ func (i *ICoreWebView2CompositionController) GetRootVisualTarget() (*IUnknown, e
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &target, err
+	return target, err
 }
 
 func (i *ICoreWebView2CompositionController) PutRootVisualTarget(target *IUnknown) error {
@@ -85,7 +85,7 @@ func (i *ICoreWebView2CompositionController) SendPointerInput(eventKind COREWEBV
 
 func (i *ICoreWebView2CompositionController) GetCursor() (*HCURSOR, error) {
 
-	var cursor HCURSOR
+	var cursor *HCURSOR
 
 	hr, _, err := i.Vtbl.GetCursor.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -94,12 +94,12 @@ func (i *ICoreWebView2CompositionController) GetCursor() (*HCURSOR, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &cursor, err
+	return cursor, err
 }
 
 func (i *ICoreWebView2CompositionController) GetSystemCursorId() (*uint32, error) {
 
-	var systemCursorId uint32
+	var systemCursorId *uint32
 
 	hr, _, err := i.Vtbl.GetSystemCursorId.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -108,12 +108,12 @@ func (i *ICoreWebView2CompositionController) GetSystemCursorId() (*uint32, error
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &systemCursorId, err
+	return systemCursorId, err
 }
 
 func (i *ICoreWebView2CompositionController) AddCursorChanged(eventHandler *ICoreWebView2CursorChangedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddCursorChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -123,7 +123,7 @@ func (i *ICoreWebView2CompositionController) AddCursorChanged(eventHandler *ICor
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2CompositionController) RemoveCursorChanged(token EventRegistrationToken) error {

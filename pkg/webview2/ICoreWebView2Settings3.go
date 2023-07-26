@@ -45,9 +45,10 @@ func (i *ICoreWebView2Settings3) GetAreBrowserAcceleratorKeysEnabled() (*bool, e
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	areBrowserAcceleratorKeysEnabled := _areBrowserAcceleratorKeysEnabled != 0
-	return &areBrowserAcceleratorKeysEnabled, err
+	}
+	// Get result and cleanup
+	areBrowserAcceleratorKeysEnabled := ptr(_areBrowserAcceleratorKeysEnabled != 0)
+	return areBrowserAcceleratorKeysEnabled, err
 }
 
 func (i *ICoreWebView2Settings3) PutAreBrowserAcceleratorKeysEnabled(areBrowserAcceleratorKeysEnabled bool) error {

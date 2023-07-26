@@ -25,7 +25,7 @@ func (i *ICoreWebView2PermissionSettingCollectionView) AddRef() uintptr {
 
 func (i *ICoreWebView2PermissionSettingCollectionView) GetValueAtIndex(index uint32) (*ICoreWebView2PermissionSetting, error) {
 
-	var permissionSetting ICoreWebView2PermissionSetting
+	var permissionSetting *ICoreWebView2PermissionSetting
 
 	hr, _, err := i.Vtbl.GetValueAtIndex.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -35,12 +35,12 @@ func (i *ICoreWebView2PermissionSettingCollectionView) GetValueAtIndex(index uin
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &permissionSetting, err
+	return permissionSetting, err
 }
 
 func (i *ICoreWebView2PermissionSettingCollectionView) GetCount() (*uint32, error) {
 
-	var value uint32
+	var value *uint32
 
 	hr, _, err := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -49,5 +49,5 @@ func (i *ICoreWebView2PermissionSettingCollectionView) GetCount() (*uint32, erro
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }

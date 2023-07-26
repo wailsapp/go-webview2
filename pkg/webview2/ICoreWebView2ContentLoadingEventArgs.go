@@ -33,14 +33,15 @@ func (i *ICoreWebView2ContentLoadingEventArgs) GetIsErrorPage() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	isErrorPage := _isErrorPage != 0
-	return &isErrorPage, err
+	}
+	// Get result and cleanup
+	isErrorPage := ptr(_isErrorPage != 0)
+	return isErrorPage, err
 }
 
 func (i *ICoreWebView2ContentLoadingEventArgs) GetNavigationId() (*uint64, error) {
 
-	var navigationId uint64
+	var navigationId *uint64
 
 	hr, _, err := i.Vtbl.GetNavigationId.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -49,5 +50,5 @@ func (i *ICoreWebView2ContentLoadingEventArgs) GetNavigationId() (*uint64, error
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &navigationId, err
+	return navigationId, err
 }

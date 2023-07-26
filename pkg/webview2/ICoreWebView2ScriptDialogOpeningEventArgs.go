@@ -39,15 +39,16 @@ func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetUri() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	uri := UTF16PtrToString(_uri)
+	}
+	// Get result and cleanup
+	uri := ptr(UTF16PtrToString(_uri))
 	CoTaskMemFree(unsafe.Pointer(_uri))
-	return &uri, err
+	return uri, err
 }
 
 func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetKind() (*COREWEBVIEW2_SCRIPT_DIALOG_KIND, error) {
 
-	var kind COREWEBVIEW2_SCRIPT_DIALOG_KIND
+	var kind *COREWEBVIEW2_SCRIPT_DIALOG_KIND
 
 	hr, _, err := i.Vtbl.GetKind.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -56,7 +57,7 @@ func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetKind() (*COREWEBVIEW2_SCR
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &kind, err
+	return kind, err
 }
 
 func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetMessage() (*string, error) {
@@ -69,10 +70,11 @@ func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetMessage() (*string, error
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	message := UTF16PtrToString(_message)
+	}
+	// Get result and cleanup
+	message := ptr(UTF16PtrToString(_message))
 	CoTaskMemFree(unsafe.Pointer(_message))
-	return &message, err
+	return message, err
 }
 
 func (i *ICoreWebView2ScriptDialogOpeningEventArgs) Accept() error {
@@ -96,10 +98,11 @@ func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetDefaultText() (*string, e
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	defaultText := UTF16PtrToString(_defaultText)
+	}
+	// Get result and cleanup
+	defaultText := ptr(UTF16PtrToString(_defaultText))
 	CoTaskMemFree(unsafe.Pointer(_defaultText))
-	return &defaultText, err
+	return defaultText, err
 }
 
 func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetResultText() (*string, error) {
@@ -112,10 +115,11 @@ func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetResultText() (*string, er
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	resultText := UTF16PtrToString(_resultText)
+	}
+	// Get result and cleanup
+	resultText := ptr(UTF16PtrToString(_resultText))
 	CoTaskMemFree(unsafe.Pointer(_resultText))
-	return &resultText, err
+	return resultText, err
 }
 
 func (i *ICoreWebView2ScriptDialogOpeningEventArgs) PutResultText(resultText string) error {
@@ -138,7 +142,7 @@ func (i *ICoreWebView2ScriptDialogOpeningEventArgs) PutResultText(resultText str
 
 func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
 
-	var deferral ICoreWebView2Deferral
+	var deferral *ICoreWebView2Deferral
 
 	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -147,5 +151,5 @@ func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetDeferral() (*ICoreWebView
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &deferral, err
+	return deferral, err
 }

@@ -26,7 +26,7 @@ func (i *ICoreWebView2PermissionSetting) AddRef() uintptr {
 
 func (i *ICoreWebView2PermissionSetting) GetPermissionKind() (*COREWEBVIEW2_PERMISSION_KIND, error) {
 
-	var value COREWEBVIEW2_PERMISSION_KIND
+	var value *COREWEBVIEW2_PERMISSION_KIND
 
 	hr, _, err := i.Vtbl.GetPermissionKind.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -35,7 +35,7 @@ func (i *ICoreWebView2PermissionSetting) GetPermissionKind() (*COREWEBVIEW2_PERM
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PermissionSetting) GetPermissionOrigin() (*string, error) {
@@ -48,15 +48,16 @@ func (i *ICoreWebView2PermissionSetting) GetPermissionOrigin() (*string, error) 
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2PermissionSetting) GetPermissionState() (*COREWEBVIEW2_PERMISSION_STATE, error) {
 
-	var value COREWEBVIEW2_PERMISSION_STATE
+	var value *COREWEBVIEW2_PERMISSION_STATE
 
 	hr, _, err := i.Vtbl.GetPermissionState.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -65,5 +66,5 @@ func (i *ICoreWebView2PermissionSetting) GetPermissionState() (*COREWEBVIEW2_PER
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }

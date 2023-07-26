@@ -24,7 +24,7 @@ func (i *ICoreWebView2DOMContentLoadedEventArgs) AddRef() uintptr {
 
 func (i *ICoreWebView2DOMContentLoadedEventArgs) GetNavigationId() (*uint64, error) {
 
-	var navigationId uint64
+	var navigationId *uint64
 
 	hr, _, err := i.Vtbl.GetNavigationId.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -33,5 +33,5 @@ func (i *ICoreWebView2DOMContentLoadedEventArgs) GetNavigationId() (*uint64, err
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &navigationId, err
+	return navigationId, err
 }

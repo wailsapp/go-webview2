@@ -36,7 +36,7 @@ func (i *ICoreWebView2) GetICoreWebView2_13() *ICoreWebView2_13 {
 
 func (i *ICoreWebView2_13) GetProfile() (*ICoreWebView2Profile, error) {
 
-	var value ICoreWebView2Profile
+	var value *ICoreWebView2Profile
 
 	hr, _, err := i.Vtbl.GetProfile.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -45,5 +45,5 @@ func (i *ICoreWebView2_13) GetProfile() (*ICoreWebView2Profile, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }

@@ -50,7 +50,7 @@ func (i *ICoreWebView2Environment3) CreateCoreWebView2CompositionController(pare
 
 func (i *ICoreWebView2Environment3) CreateCoreWebView2PointerInfo() (*ICoreWebView2PointerInfo, error) {
 
-	var pointerInfo ICoreWebView2PointerInfo
+	var pointerInfo *ICoreWebView2PointerInfo
 
 	hr, _, err := i.Vtbl.CreateCoreWebView2PointerInfo.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -59,5 +59,5 @@ func (i *ICoreWebView2Environment3) CreateCoreWebView2PointerInfo() (*ICoreWebVi
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &pointerInfo, err
+	return pointerInfo, err
 }

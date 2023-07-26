@@ -36,7 +36,7 @@ func (i *ICoreWebView2) GetICoreWebView2Environment6() *ICoreWebView2Environment
 
 func (i *ICoreWebView2Environment6) CreatePrintSettings() (*ICoreWebView2PrintSettings, error) {
 
-	var printSettings ICoreWebView2PrintSettings
+	var printSettings *ICoreWebView2PrintSettings
 
 	hr, _, err := i.Vtbl.CreatePrintSettings.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -45,5 +45,5 @@ func (i *ICoreWebView2Environment6) CreatePrintSettings() (*ICoreWebView2PrintSe
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &printSettings, err
+	return printSettings, err
 }

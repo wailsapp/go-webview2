@@ -36,7 +36,7 @@ func (i *ICoreWebView2) GetICoreWebView2Environment12() *ICoreWebView2Environmen
 
 func (i *ICoreWebView2Environment12) CreateSharedBuffer(size uint64) (*ICoreWebView2SharedBuffer, error) {
 
-	var shared_buffer ICoreWebView2SharedBuffer
+	var shared_buffer *ICoreWebView2SharedBuffer
 
 	hr, _, err := i.Vtbl.CreateSharedBuffer.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -46,5 +46,5 @@ func (i *ICoreWebView2Environment12) CreateSharedBuffer(size uint64) (*ICoreWebV
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &shared_buffer, err
+	return shared_buffer, err
 }

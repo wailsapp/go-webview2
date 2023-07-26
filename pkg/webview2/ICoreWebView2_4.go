@@ -39,7 +39,7 @@ func (i *ICoreWebView2) GetICoreWebView2_4() *ICoreWebView2_4 {
 
 func (i *ICoreWebView2_4) AddFrameCreated(eventHandler *ICoreWebView2FrameCreatedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddFrameCreated.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -49,7 +49,7 @@ func (i *ICoreWebView2_4) AddFrameCreated(eventHandler *ICoreWebView2FrameCreate
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2_4) RemoveFrameCreated(token EventRegistrationToken) error {
@@ -66,7 +66,7 @@ func (i *ICoreWebView2_4) RemoveFrameCreated(token EventRegistrationToken) error
 
 func (i *ICoreWebView2_4) AddDownloadStarting(eventHandler *ICoreWebView2DownloadStartingEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddDownloadStarting.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -76,7 +76,7 @@ func (i *ICoreWebView2_4) AddDownloadStarting(eventHandler *ICoreWebView2Downloa
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2_4) RemoveDownloadStarting(token EventRegistrationToken) error {

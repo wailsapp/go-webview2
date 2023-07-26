@@ -45,9 +45,10 @@ func (i *ICoreWebView2Controller4) GetAllowExternalDrop() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2Controller4) PutAllowExternalDrop(value bool) error {

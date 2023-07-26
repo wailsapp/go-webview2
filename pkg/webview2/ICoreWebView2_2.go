@@ -42,7 +42,7 @@ func (i *ICoreWebView2) GetICoreWebView2_2() *ICoreWebView2_2 {
 
 func (i *ICoreWebView2_2) AddWebResourceResponseReceived(eventHandler *ICoreWebView2WebResourceResponseReceivedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddWebResourceResponseReceived.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -52,7 +52,7 @@ func (i *ICoreWebView2_2) AddWebResourceResponseReceived(eventHandler *ICoreWebV
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2_2) RemoveWebResourceResponseReceived(token EventRegistrationToken) error {
@@ -81,7 +81,7 @@ func (i *ICoreWebView2_2) NavigateWithWebResourceRequest(request *ICoreWebView2W
 
 func (i *ICoreWebView2_2) AddDOMContentLoaded(eventHandler *ICoreWebView2DOMContentLoadedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddDOMContentLoaded.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -91,7 +91,7 @@ func (i *ICoreWebView2_2) AddDOMContentLoaded(eventHandler *ICoreWebView2DOMCont
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2_2) RemoveDOMContentLoaded(token EventRegistrationToken) error {
@@ -108,7 +108,7 @@ func (i *ICoreWebView2_2) RemoveDOMContentLoaded(token EventRegistrationToken) e
 
 func (i *ICoreWebView2_2) GetCookieManager() (*ICoreWebView2CookieManager, error) {
 
-	var cookieManager ICoreWebView2CookieManager
+	var cookieManager *ICoreWebView2CookieManager
 
 	hr, _, err := i.Vtbl.GetCookieManager.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -117,12 +117,12 @@ func (i *ICoreWebView2_2) GetCookieManager() (*ICoreWebView2CookieManager, error
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &cookieManager, err
+	return cookieManager, err
 }
 
 func (i *ICoreWebView2_2) GetEnvironment() (*ICoreWebView2Environment, error) {
 
-	var environment ICoreWebView2Environment
+	var environment *ICoreWebView2Environment
 
 	hr, _, err := i.Vtbl.GetEnvironment.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -131,5 +131,5 @@ func (i *ICoreWebView2_2) GetEnvironment() (*ICoreWebView2Environment, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &environment, err
+	return environment, err
 }

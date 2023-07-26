@@ -43,13 +43,11 @@ func (i *ICoreWebView2_11) CallDevToolsProtocolMethodForSession(sessionId string
 	if err != nil {
 		return err
 	}
-
 	// Convert string 'methodName' to *uint16
 	_methodName, err := UTF16PtrFromString(methodName)
 	if err != nil {
 		return err
 	}
-
 	// Convert string 'parametersAsJson' to *uint16
 	_parametersAsJson, err := UTF16PtrFromString(parametersAsJson)
 	if err != nil {
@@ -71,7 +69,7 @@ func (i *ICoreWebView2_11) CallDevToolsProtocolMethodForSession(sessionId string
 
 func (i *ICoreWebView2_11) AddContextMenuRequested(eventHandler *ICoreWebView2ContextMenuRequestedEventHandler) (*EventRegistrationToken, error) {
 
-	var token EventRegistrationToken
+	var token *EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddContextMenuRequested.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -81,7 +79,7 @@ func (i *ICoreWebView2_11) AddContextMenuRequested(eventHandler *ICoreWebView2Co
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &token, err
+	return token, err
 }
 
 func (i *ICoreWebView2_11) RemoveContextMenuRequested(token EventRegistrationToken) error {

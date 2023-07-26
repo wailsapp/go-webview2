@@ -35,10 +35,11 @@ func (i *ICoreWebView2BasicAuthenticationResponse) GetUserName() (*string, error
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	userName := UTF16PtrToString(_userName)
+	}
+	// Get result and cleanup
+	userName := ptr(UTF16PtrToString(_userName))
 	CoTaskMemFree(unsafe.Pointer(_userName))
-	return &userName, err
+	return userName, err
 }
 
 func (i *ICoreWebView2BasicAuthenticationResponse) PutUserName(userName string) error {
@@ -69,10 +70,11 @@ func (i *ICoreWebView2BasicAuthenticationResponse) GetPassword() (*string, error
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	password := UTF16PtrToString(_password)
+	}
+	// Get result and cleanup
+	password := ptr(UTF16PtrToString(_password))
 	CoTaskMemFree(unsafe.Pointer(_password))
-	return &password, err
+	return password, err
 }
 
 func (i *ICoreWebView2BasicAuthenticationResponse) PutPassword(password string) error {

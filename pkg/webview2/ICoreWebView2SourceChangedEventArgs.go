@@ -32,7 +32,8 @@ func (i *ICoreWebView2SourceChangedEventArgs) GetIsNewDocument() (*bool, error) 
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	isNewDocument := _isNewDocument != 0
-	return &isNewDocument, err
+	}
+	// Get result and cleanup
+	isNewDocument := ptr(_isNewDocument != 0)
+	return isNewDocument, err
 }

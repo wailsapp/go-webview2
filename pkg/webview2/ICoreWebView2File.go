@@ -32,8 +32,9 @@ func (i *ICoreWebView2File) GetPath() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	path := UTF16PtrToString(_path)
+	}
+	// Get result and cleanup
+	path := ptr(UTF16PtrToString(_path))
 	CoTaskMemFree(unsafe.Pointer(_path))
-	return &path, err
+	return path, err
 }

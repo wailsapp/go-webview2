@@ -45,9 +45,10 @@ func (i *ICoreWebView2PermissionRequestedEventArgs3) GetSavesInProfile() (*bool,
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2PermissionRequestedEventArgs3) PutSavesInProfile(value bool) error {

@@ -25,8 +25,8 @@ func (i *ICoreWebView2EnvironmentOptions4) AddRef() uintptr {
 
 func (i *ICoreWebView2EnvironmentOptions4) GetCustomSchemeRegistrations() (*uint32, *ICoreWebView2CustomSchemeRegistration, error) {
 
-	var count uint32
-	var schemeRegistrations ICoreWebView2CustomSchemeRegistration
+	var count *uint32
+	var schemeRegistrations *ICoreWebView2CustomSchemeRegistration
 
 	hr, _, err := i.Vtbl.GetCustomSchemeRegistrations.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -36,7 +36,7 @@ func (i *ICoreWebView2EnvironmentOptions4) GetCustomSchemeRegistrations() (*uint
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, nil, syscall.Errno(hr)
 	}
-	return &count, &schemeRegistrations, err
+	return count, schemeRegistrations, err
 }
 
 func (i *ICoreWebView2EnvironmentOptions4) SetCustomSchemeRegistrations(count uint32, schemeRegistrations *ICoreWebView2CustomSchemeRegistration) error {

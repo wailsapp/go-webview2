@@ -71,9 +71,10 @@ func (i *ICoreWebView2_3) GetIsSuspended() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	isSuspended := _isSuspended != 0
-	return &isSuspended, err
+	}
+	// Get result and cleanup
+	isSuspended := ptr(_isSuspended != 0)
+	return isSuspended, err
 }
 
 func (i *ICoreWebView2_3) SetVirtualHostNameToFolderMapping(hostName string, folderPath string, accessKind COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND) error {
@@ -83,7 +84,6 @@ func (i *ICoreWebView2_3) SetVirtualHostNameToFolderMapping(hostName string, fol
 	if err != nil {
 		return err
 	}
-
 	// Convert string 'folderPath' to *uint16
 	_folderPath, err := UTF16PtrFromString(folderPath)
 	if err != nil {

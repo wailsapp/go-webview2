@@ -38,10 +38,11 @@ func (i *ICoreWebView2CustomSchemeRegistration) GetSchemeName() (*string, error)
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	schemeName := UTF16PtrToString(_schemeName)
+	}
+	// Get result and cleanup
+	schemeName := ptr(UTF16PtrToString(_schemeName))
 	CoTaskMemFree(unsafe.Pointer(_schemeName))
-	return &schemeName, err
+	return schemeName, err
 }
 
 func (i *ICoreWebView2CustomSchemeRegistration) GetTreatAsSecure() (*bool, error) {
@@ -54,9 +55,10 @@ func (i *ICoreWebView2CustomSchemeRegistration) GetTreatAsSecure() (*bool, error
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	treatAsSecure := _treatAsSecure != 0
-	return &treatAsSecure, err
+	}
+	// Get result and cleanup
+	treatAsSecure := ptr(_treatAsSecure != 0)
+	return treatAsSecure, err
 }
 
 func (i *ICoreWebView2CustomSchemeRegistration) PutTreatAsSecure(value bool) error {
@@ -73,7 +75,7 @@ func (i *ICoreWebView2CustomSchemeRegistration) PutTreatAsSecure(value bool) err
 
 func (i *ICoreWebView2CustomSchemeRegistration) GetAllowedOrigins() (*uint32, *string, error) {
 
-	var allowedOriginsCount uint32 // Create *uint16 to hold result
+	var allowedOriginsCount *uint32 // Create *uint16 to hold result
 	var _allowedOrigins *uint16
 
 	hr, _, err := i.Vtbl.GetAllowedOrigins.Call(
@@ -83,10 +85,11 @@ func (i *ICoreWebView2CustomSchemeRegistration) GetAllowedOrigins() (*uint32, *s
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	allowedOrigins := UTF16PtrToString(_allowedOrigins)
+	}
+	// Get result and cleanup
+	allowedOrigins := ptr(UTF16PtrToString(_allowedOrigins))
 	CoTaskMemFree(unsafe.Pointer(_allowedOrigins))
-	return &allowedOriginsCount, &allowedOrigins, err
+	return allowedOriginsCount, allowedOrigins, err
 }
 
 func (i *ICoreWebView2CustomSchemeRegistration) SetAllowedOrigins(allowedOriginsCount uint32, allowedOrigins *string) error {
@@ -112,9 +115,10 @@ func (i *ICoreWebView2CustomSchemeRegistration) GetHasAuthorityComponent() (*boo
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	hasAuthorityComponent := _hasAuthorityComponent != 0
-	return &hasAuthorityComponent, err
+	}
+	// Get result and cleanup
+	hasAuthorityComponent := ptr(_hasAuthorityComponent != 0)
+	return hasAuthorityComponent, err
 }
 
 func (i *ICoreWebView2CustomSchemeRegistration) PutHasAuthorityComponent(hasAuthorityComponent bool) error {

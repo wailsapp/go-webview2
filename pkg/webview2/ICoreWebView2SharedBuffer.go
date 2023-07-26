@@ -28,7 +28,7 @@ func (i *ICoreWebView2SharedBuffer) AddRef() uintptr {
 
 func (i *ICoreWebView2SharedBuffer) GetSize() (*uint64, error) {
 
-	var value uint64
+	var value *uint64
 
 	hr, _, err := i.Vtbl.GetSize.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -37,12 +37,12 @@ func (i *ICoreWebView2SharedBuffer) GetSize() (*uint64, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2SharedBuffer) GetBuffer() (*uint8, error) {
 
-	var value uint8
+	var value *uint8
 
 	hr, _, err := i.Vtbl.GetBuffer.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -51,12 +51,12 @@ func (i *ICoreWebView2SharedBuffer) GetBuffer() (*uint8, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2SharedBuffer) OpenStream() (*IStream, error) {
 
-	var value IStream
+	var value *IStream
 
 	hr, _, err := i.Vtbl.OpenStream.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -65,12 +65,12 @@ func (i *ICoreWebView2SharedBuffer) OpenStream() (*IStream, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2SharedBuffer) GetFileMappingHandle() (*HANDLE, error) {
 
-	var value HANDLE
+	var value *HANDLE
 
 	hr, _, err := i.Vtbl.GetFileMappingHandle.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -79,7 +79,7 @@ func (i *ICoreWebView2SharedBuffer) GetFileMappingHandle() (*HANDLE, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2SharedBuffer) Close() error {

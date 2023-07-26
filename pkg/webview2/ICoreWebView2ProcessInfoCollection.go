@@ -25,7 +25,7 @@ func (i *ICoreWebView2ProcessInfoCollection) AddRef() uintptr {
 
 func (i *ICoreWebView2ProcessInfoCollection) GetCount() (*uint, error) {
 
-	var count uint
+	var count *uint
 
 	hr, _, err := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -34,12 +34,12 @@ func (i *ICoreWebView2ProcessInfoCollection) GetCount() (*uint, error) {
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &count, err
+	return count, err
 }
 
 func (i *ICoreWebView2ProcessInfoCollection) GetValueAtIndex(index uint32) (*ICoreWebView2ProcessInfo, error) {
 
-	var processInfo ICoreWebView2ProcessInfo
+	var processInfo *ICoreWebView2ProcessInfo
 
 	hr, _, err := i.Vtbl.GetValueAtIndex.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -49,5 +49,5 @@ func (i *ICoreWebView2ProcessInfoCollection) GetValueAtIndex(index uint32) (*ICo
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &processInfo, err
+	return processInfo, err
 }

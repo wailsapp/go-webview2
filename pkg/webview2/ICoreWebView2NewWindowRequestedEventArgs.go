@@ -39,10 +39,11 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) GetUri() (*string, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	uri := UTF16PtrToString(_uri)
+	}
+	// Get result and cleanup
+	uri := ptr(UTF16PtrToString(_uri))
 	CoTaskMemFree(unsafe.Pointer(_uri))
-	return &uri, err
+	return uri, err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) PutNewWindow(newWindow *ICoreWebView2) error {
@@ -59,7 +60,7 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) PutNewWindow(newWindow *ICore
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) GetNewWindow() (*ICoreWebView2, error) {
 
-	var newWindow ICoreWebView2
+	var newWindow *ICoreWebView2
 
 	hr, _, err := i.Vtbl.GetNewWindow.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -68,7 +69,7 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) GetNewWindow() (*ICoreWebView
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &newWindow, err
+	return newWindow, err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) PutHandled(handled bool) error {
@@ -93,9 +94,10 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) GetHandled() (*bool, error) {
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	handled := _handled != 0
-	return &handled, err
+	}
+	// Get result and cleanup
+	handled := ptr(_handled != 0)
+	return handled, err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) GetIsUserInitiated() (*bool, error) {
@@ -108,14 +110,15 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) GetIsUserInitiated() (*bool, 
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	isUserInitiated := _isUserInitiated != 0
-	return &isUserInitiated, err
+	}
+	// Get result and cleanup
+	isUserInitiated := ptr(_isUserInitiated != 0)
+	return isUserInitiated, err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
 
-	var deferral ICoreWebView2Deferral
+	var deferral *ICoreWebView2Deferral
 
 	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -124,12 +127,12 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) GetDeferral() (*ICoreWebView2
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &deferral, err
+	return deferral, err
 }
 
 func (i *ICoreWebView2NewWindowRequestedEventArgs) GetWindowFeatures() (*ICoreWebView2WindowFeatures, error) {
 
-	var value ICoreWebView2WindowFeatures
+	var value *ICoreWebView2WindowFeatures
 
 	hr, _, err := i.Vtbl.GetWindowFeatures.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -138,5 +141,5 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) GetWindowFeatures() (*ICoreWe
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }

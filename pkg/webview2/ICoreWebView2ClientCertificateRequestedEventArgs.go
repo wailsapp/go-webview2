@@ -43,15 +43,16 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetHost() (*string, e
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := UTF16PtrToString(_value)
+	}
+	// Get result and cleanup
+	value := ptr(UTF16PtrToString(_value))
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetPort() (*int, error) {
 
-	var value int
+	var value *int
 
 	hr, _, err := i.Vtbl.GetPort.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -60,7 +61,7 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetPort() (*int, erro
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetIsProxy() (*bool, error) {
@@ -73,14 +74,15 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetIsProxy() (*bool, 
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetAllowedCertificateAuthorities() (*ICoreWebView2StringCollection, error) {
 
-	var value ICoreWebView2StringCollection
+	var value *ICoreWebView2StringCollection
 
 	hr, _, err := i.Vtbl.GetAllowedCertificateAuthorities.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -89,12 +91,12 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetAllowedCertificate
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetMutuallyTrustedCertificates() (*ICoreWebView2ClientCertificateCollection, error) {
 
-	var value ICoreWebView2ClientCertificateCollection
+	var value *ICoreWebView2ClientCertificateCollection
 
 	hr, _, err := i.Vtbl.GetMutuallyTrustedCertificates.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -103,12 +105,12 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetMutuallyTrustedCer
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetSelectedCertificate() (*ICoreWebView2ClientCertificate, error) {
 
-	var value ICoreWebView2ClientCertificate
+	var value *ICoreWebView2ClientCertificate
 
 	hr, _, err := i.Vtbl.GetSelectedCertificate.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -117,7 +119,7 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetSelectedCertificat
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ClientCertificateRequestedEventArgs) PutSelectedCertificate(value *ICoreWebView2ClientCertificate) error {
@@ -142,9 +144,10 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetCancel() (*bool, e
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2ClientCertificateRequestedEventArgs) PutCancel(value bool) error {
@@ -169,9 +172,10 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetHandled() (*bool, 
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2ClientCertificateRequestedEventArgs) PutHandled(value bool) error {
@@ -188,7 +192,7 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) PutHandled(value bool
 
 func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
 
-	var deferral ICoreWebView2Deferral
+	var deferral *ICoreWebView2Deferral
 
 	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -197,5 +201,5 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetDeferral() (*ICore
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &deferral, err
+	return deferral, err
 }

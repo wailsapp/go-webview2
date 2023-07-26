@@ -45,9 +45,10 @@ func (i *ICoreWebView2PermissionRequestedEventArgs2) GetHandled() (*bool, error)
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	handled := _handled != 0
-	return &handled, err
+	}
+	// Get result and cleanup
+	handled := ptr(_handled != 0)
+	return handled, err
 }
 
 func (i *ICoreWebView2PermissionRequestedEventArgs2) PutHandled(handled bool) error {

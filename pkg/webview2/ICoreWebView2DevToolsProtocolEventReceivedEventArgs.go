@@ -32,8 +32,9 @@ func (i *ICoreWebView2DevToolsProtocolEventReceivedEventArgs) GetParameterObject
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	parameterObjectAsJson := UTF16PtrToString(_parameterObjectAsJson)
+	}
+	// Get result and cleanup
+	parameterObjectAsJson := ptr(UTF16PtrToString(_parameterObjectAsJson))
 	CoTaskMemFree(unsafe.Pointer(_parameterObjectAsJson))
-	return &parameterObjectAsJson, err
+	return parameterObjectAsJson, err
 }

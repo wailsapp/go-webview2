@@ -34,10 +34,11 @@ func (i *ICoreWebView2WebMessageReceivedEventArgs) GetSource() (*string, error) 
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	source := UTF16PtrToString(_source)
+	}
+	// Get result and cleanup
+	source := ptr(UTF16PtrToString(_source))
 	CoTaskMemFree(unsafe.Pointer(_source))
-	return &source, err
+	return source, err
 }
 
 func (i *ICoreWebView2WebMessageReceivedEventArgs) GetWebMessageAsJson() (*string, error) {
@@ -50,10 +51,11 @@ func (i *ICoreWebView2WebMessageReceivedEventArgs) GetWebMessageAsJson() (*strin
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	webMessageAsJson := UTF16PtrToString(_webMessageAsJson)
+	}
+	// Get result and cleanup
+	webMessageAsJson := ptr(UTF16PtrToString(_webMessageAsJson))
 	CoTaskMemFree(unsafe.Pointer(_webMessageAsJson))
-	return &webMessageAsJson, err
+	return webMessageAsJson, err
 }
 
 func (i *ICoreWebView2WebMessageReceivedEventArgs) TryGetWebMessageAsString() (*string, error) {
@@ -66,8 +68,9 @@ func (i *ICoreWebView2WebMessageReceivedEventArgs) TryGetWebMessageAsString() (*
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	webMessageAsString := UTF16PtrToString(_webMessageAsString)
+	}
+	// Get result and cleanup
+	webMessageAsString := ptr(UTF16PtrToString(_webMessageAsString))
 	CoTaskMemFree(unsafe.Pointer(_webMessageAsString))
-	return &webMessageAsString, err
+	return webMessageAsString, err
 }

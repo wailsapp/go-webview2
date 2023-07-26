@@ -31,7 +31,7 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) AddRef() uintptr {
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetMenuItems() (*ICoreWebView2ContextMenuItemCollection, error) {
 
-	var value ICoreWebView2ContextMenuItemCollection
+	var value *ICoreWebView2ContextMenuItemCollection
 
 	hr, _, err := i.Vtbl.GetMenuItems.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -40,12 +40,12 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetMenuItems() (*ICoreWebVi
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetContextMenuTarget() (*ICoreWebView2ContextMenuTarget, error) {
 
-	var value ICoreWebView2ContextMenuTarget
+	var value *ICoreWebView2ContextMenuTarget
 
 	hr, _, err := i.Vtbl.GetContextMenuTarget.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -54,12 +54,12 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetContextMenuTarget() (*IC
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetLocation() (*POINT, error) {
 
-	var value POINT
+	var value *POINT
 
 	hr, _, err := i.Vtbl.GetLocation.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -68,7 +68,7 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetLocation() (*POINT, erro
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) PutSelectedCommandId(value int32) error {
@@ -85,7 +85,7 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) PutSelectedCommandId(value 
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetSelectedCommandId() (*int32, error) {
 
-	var value int32
+	var value *int32
 
 	hr, _, err := i.Vtbl.GetSelectedCommandId.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -94,7 +94,7 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetSelectedCommandId() (*in
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &value, err
+	return value, err
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) PutHandled(value bool) error {
@@ -119,14 +119,15 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetHandled() (*bool, error)
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
-	} // Get result and cleanup
-	value := _value != 0
-	return &value, err
+	}
+	// Get result and cleanup
+	value := ptr(_value != 0)
+	return value, err
 }
 
 func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
 
-	var deferral ICoreWebView2Deferral
+	var deferral *ICoreWebView2Deferral
 
 	hr, _, err := i.Vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -135,5 +136,5 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetDeferral() (*ICoreWebVie
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return &deferral, err
+	return deferral, err
 }
