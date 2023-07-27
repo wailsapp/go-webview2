@@ -27,7 +27,7 @@ func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetUri() (*string, error) {
+func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetUri() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -36,15 +36,15 @@ func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetUri() (*string, er
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetInitiatingOrigin() (*string, error) {
+func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetInitiatingOrigin() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -53,15 +53,15 @@ func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetInitiatingOrigin()
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetIsUserInitiated() (*bool, error) {
+func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetIsUserInitiated() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -70,14 +70,14 @@ func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetIsUserInitiated() 
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 
-func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetCancel() (*bool, error) {
+func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetCancel() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -86,10 +86,10 @@ func (i *ICoreWebView2LaunchingExternalUriSchemeEventArgs) GetCancel() (*bool, e
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 

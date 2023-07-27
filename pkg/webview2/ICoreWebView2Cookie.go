@@ -35,7 +35,7 @@ func (i *ICoreWebView2Cookie) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2Cookie) GetName() (*string, error) {
+func (i *ICoreWebView2Cookie) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _name *uint16
 
@@ -44,15 +44,15 @@ func (i *ICoreWebView2Cookie) GetName() (*string, error) {
 		uintptr(unsafe.Pointer(_name)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	name := ptr(UTF16PtrToString(_name))
+	name := UTF16PtrToString(_name)
 	CoTaskMemFree(unsafe.Pointer(_name))
 	return name, err
 }
 
-func (i *ICoreWebView2Cookie) GetValue() (*string, error) {
+func (i *ICoreWebView2Cookie) GetValue() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -61,10 +61,10 @@ func (i *ICoreWebView2Cookie) GetValue() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
@@ -87,7 +87,7 @@ func (i *ICoreWebView2Cookie) PutValue(value string) error {
 	return err
 }
 
-func (i *ICoreWebView2Cookie) GetDomain() (*string, error) {
+func (i *ICoreWebView2Cookie) GetDomain() (string, error) {
 	// Create *uint16 to hold result
 	var _domain *uint16
 
@@ -96,15 +96,15 @@ func (i *ICoreWebView2Cookie) GetDomain() (*string, error) {
 		uintptr(unsafe.Pointer(_domain)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	domain := ptr(UTF16PtrToString(_domain))
+	domain := UTF16PtrToString(_domain)
 	CoTaskMemFree(unsafe.Pointer(_domain))
 	return domain, err
 }
 
-func (i *ICoreWebView2Cookie) GetPath() (*string, error) {
+func (i *ICoreWebView2Cookie) GetPath() (string, error) {
 	// Create *uint16 to hold result
 	var _path *uint16
 
@@ -113,24 +113,24 @@ func (i *ICoreWebView2Cookie) GetPath() (*string, error) {
 		uintptr(unsafe.Pointer(_path)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	path := ptr(UTF16PtrToString(_path))
+	path := UTF16PtrToString(_path)
 	CoTaskMemFree(unsafe.Pointer(_path))
 	return path, err
 }
 
-func (i *ICoreWebView2Cookie) GetExpires() (*float64, error) {
+func (i *ICoreWebView2Cookie) GetExpires() (float64, error) {
 
-	var expires *float64
+	var expires float64
 
 	hr, _, err := i.Vtbl.GetExpires.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&expires)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return expires, err
 }
@@ -147,7 +147,7 @@ func (i *ICoreWebView2Cookie) PutExpires(expires float64) error {
 	return err
 }
 
-func (i *ICoreWebView2Cookie) GetIsHttpOnly() (*bool, error) {
+func (i *ICoreWebView2Cookie) GetIsHttpOnly() (bool, error) {
 	// Create int32 to hold bool result
 	var _isHttpOnly int32
 
@@ -156,10 +156,10 @@ func (i *ICoreWebView2Cookie) GetIsHttpOnly() (*bool, error) {
 		uintptr(unsafe.Pointer(&_isHttpOnly)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	isHttpOnly := ptr(_isHttpOnly != 0)
+	isHttpOnly := _isHttpOnly != 0
 	return isHttpOnly, err
 }
 
@@ -175,16 +175,16 @@ func (i *ICoreWebView2Cookie) PutIsHttpOnly(isHttpOnly bool) error {
 	return err
 }
 
-func (i *ICoreWebView2Cookie) GetSameSite() (*COREWEBVIEW2_COOKIE_SAME_SITE_KIND, error) {
+func (i *ICoreWebView2Cookie) GetSameSite() (COREWEBVIEW2_COOKIE_SAME_SITE_KIND, error) {
 
-	var sameSite *COREWEBVIEW2_COOKIE_SAME_SITE_KIND
+	var sameSite COREWEBVIEW2_COOKIE_SAME_SITE_KIND
 
 	hr, _, err := i.Vtbl.GetSameSite.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&sameSite)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_COOKIE_SAME_SITE_KIND{}, syscall.Errno(hr)
 	}
 	return sameSite, err
 }
@@ -201,7 +201,7 @@ func (i *ICoreWebView2Cookie) PutSameSite(sameSite COREWEBVIEW2_COOKIE_SAME_SITE
 	return err
 }
 
-func (i *ICoreWebView2Cookie) GetIsSecure() (*bool, error) {
+func (i *ICoreWebView2Cookie) GetIsSecure() (bool, error) {
 	// Create int32 to hold bool result
 	var _isSecure int32
 
@@ -210,10 +210,10 @@ func (i *ICoreWebView2Cookie) GetIsSecure() (*bool, error) {
 		uintptr(unsafe.Pointer(&_isSecure)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	isSecure := ptr(_isSecure != 0)
+	isSecure := _isSecure != 0
 	return isSecure, err
 }
 
@@ -229,7 +229,7 @@ func (i *ICoreWebView2Cookie) PutIsSecure(isSecure bool) error {
 	return err
 }
 
-func (i *ICoreWebView2Cookie) GetIsSession() (*bool, error) {
+func (i *ICoreWebView2Cookie) GetIsSession() (bool, error) {
 	// Create int32 to hold bool result
 	var _isSession int32
 
@@ -238,9 +238,9 @@ func (i *ICoreWebView2Cookie) GetIsSession() (*bool, error) {
 		uintptr(unsafe.Pointer(&_isSession)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	isSession := ptr(_isSession != 0)
+	isSession := _isSession != 0
 	return isSession, err
 }

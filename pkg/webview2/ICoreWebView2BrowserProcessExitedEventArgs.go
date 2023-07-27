@@ -23,30 +23,30 @@ func (i *ICoreWebView2BrowserProcessExitedEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2BrowserProcessExitedEventArgs) GetBrowserProcessExitKind() (*COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND, error) {
+func (i *ICoreWebView2BrowserProcessExitedEventArgs) GetBrowserProcessExitKind() (COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND, error) {
 
-	var browserProcessExitKind *COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND
+	var browserProcessExitKind COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND
 
 	hr, _, err := i.Vtbl.GetBrowserProcessExitKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&browserProcessExitKind)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND{}, syscall.Errno(hr)
 	}
 	return browserProcessExitKind, err
 }
 
-func (i *ICoreWebView2BrowserProcessExitedEventArgs) GetBrowserProcessId() (*uint32, error) {
+func (i *ICoreWebView2BrowserProcessExitedEventArgs) GetBrowserProcessId() (uint32, error) {
 
-	var value *uint32
+	var value uint32
 
 	hr, _, err := i.Vtbl.GetBrowserProcessId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

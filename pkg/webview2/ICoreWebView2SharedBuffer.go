@@ -26,16 +26,16 @@ func (i *ICoreWebView2SharedBuffer) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2SharedBuffer) GetSize() (*uint64, error) {
+func (i *ICoreWebView2SharedBuffer) GetSize() (uint64, error) {
 
-	var value *uint64
+	var value uint64
 
 	hr, _, err := i.Vtbl.GetSize.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -68,16 +68,16 @@ func (i *ICoreWebView2SharedBuffer) OpenStream() (*IStream, error) {
 	return value, err
 }
 
-func (i *ICoreWebView2SharedBuffer) GetFileMappingHandle() (*HANDLE, error) {
+func (i *ICoreWebView2SharedBuffer) GetFileMappingHandle() (HANDLE, error) {
 
-	var value *HANDLE
+	var value HANDLE
 
 	hr, _, err := i.Vtbl.GetFileMappingHandle.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return HANDLE{}, syscall.Errno(hr)
 	}
 	return value, err
 }

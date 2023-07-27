@@ -39,21 +39,21 @@ func (i *ICoreWebView2WebResourceResponseView) GetHeaders() (*ICoreWebView2HttpR
 	return headers, err
 }
 
-func (i *ICoreWebView2WebResourceResponseView) GetStatusCode() (*int, error) {
+func (i *ICoreWebView2WebResourceResponseView) GetStatusCode() (int, error) {
 
-	var statusCode *int
+	var statusCode int
 
 	hr, _, err := i.Vtbl.GetStatusCode.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(statusCode),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return statusCode, err
 }
 
-func (i *ICoreWebView2WebResourceResponseView) GetReasonPhrase() (*string, error) {
+func (i *ICoreWebView2WebResourceResponseView) GetReasonPhrase() (string, error) {
 	// Create *uint16 to hold result
 	var _reasonPhrase *uint16
 
@@ -62,10 +62,10 @@ func (i *ICoreWebView2WebResourceResponseView) GetReasonPhrase() (*string, error
 		uintptr(unsafe.Pointer(_reasonPhrase)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	reasonPhrase := ptr(UTF16PtrToString(_reasonPhrase))
+	reasonPhrase := UTF16PtrToString(_reasonPhrase)
 	CoTaskMemFree(unsafe.Pointer(_reasonPhrase))
 	return reasonPhrase, err
 }

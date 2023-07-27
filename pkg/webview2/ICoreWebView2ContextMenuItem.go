@@ -34,7 +34,7 @@ func (i *ICoreWebView2ContextMenuItem) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetName() (*string, error) {
+func (i *ICoreWebView2ContextMenuItem) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -43,15 +43,15 @@ func (i *ICoreWebView2ContextMenuItem) GetName() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetLabel() (*string, error) {
+func (i *ICoreWebView2ContextMenuItem) GetLabel() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -60,29 +60,29 @@ func (i *ICoreWebView2ContextMenuItem) GetLabel() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetCommandId() (*int32, error) {
+func (i *ICoreWebView2ContextMenuItem) GetCommandId() (int32, error) {
 
-	var value *int32
+	var value int32
 
 	hr, _, err := i.Vtbl.GetCommandId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetShortcutKeyDescription() (*string, error) {
+func (i *ICoreWebView2ContextMenuItem) GetShortcutKeyDescription() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -91,10 +91,10 @@ func (i *ICoreWebView2ContextMenuItem) GetShortcutKeyDescription() (*string, err
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
@@ -113,16 +113,16 @@ func (i *ICoreWebView2ContextMenuItem) GetIcon() (*IStream, error) {
 	return value, err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetKind() (*COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND, error) {
+func (i *ICoreWebView2ContextMenuItem) GetKind() (COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND, error) {
 
-	var value *COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND
+	var value COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND
 
 	hr, _, err := i.Vtbl.GetKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND{}, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -139,7 +139,7 @@ func (i *ICoreWebView2ContextMenuItem) PutIsEnabled(value bool) error {
 	return err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetIsEnabled() (*bool, error) {
+func (i *ICoreWebView2ContextMenuItem) GetIsEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -148,10 +148,10 @@ func (i *ICoreWebView2ContextMenuItem) GetIsEnabled() (*bool, error) {
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 
@@ -167,7 +167,7 @@ func (i *ICoreWebView2ContextMenuItem) PutIsChecked(value bool) error {
 	return err
 }
 
-func (i *ICoreWebView2ContextMenuItem) GetIsChecked() (*bool, error) {
+func (i *ICoreWebView2ContextMenuItem) GetIsChecked() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -176,10 +176,10 @@ func (i *ICoreWebView2ContextMenuItem) GetIsChecked() (*bool, error) {
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 
@@ -197,9 +197,9 @@ func (i *ICoreWebView2ContextMenuItem) GetChildren() (*ICoreWebView2ContextMenuI
 	return value, err
 }
 
-func (i *ICoreWebView2ContextMenuItem) AddCustomItemSelected(eventHandler *ICoreWebView2CustomItemSelectedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2ContextMenuItem) AddCustomItemSelected(eventHandler *ICoreWebView2CustomItemSelectedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddCustomItemSelected.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -207,7 +207,7 @@ func (i *ICoreWebView2ContextMenuItem) AddCustomItemSelected(eventHandler *ICore
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }

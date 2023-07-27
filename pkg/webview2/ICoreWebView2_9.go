@@ -42,9 +42,9 @@ func (i *ICoreWebView2) GetICoreWebView2_9() *ICoreWebView2_9 {
 	return result
 }
 
-func (i *ICoreWebView2_9) AddIsDefaultDownloadDialogOpenChanged(handler *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2_9) AddIsDefaultDownloadDialogOpenChanged(handler *ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddIsDefaultDownloadDialogOpenChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -52,7 +52,7 @@ func (i *ICoreWebView2_9) AddIsDefaultDownloadDialogOpenChanged(handler *ICoreWe
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -69,7 +69,7 @@ func (i *ICoreWebView2_9) RemoveIsDefaultDownloadDialogOpenChanged(token EventRe
 	return err
 }
 
-func (i *ICoreWebView2_9) GetIsDefaultDownloadDialogOpen() (*bool, error) {
+func (i *ICoreWebView2_9) GetIsDefaultDownloadDialogOpen() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -78,10 +78,10 @@ func (i *ICoreWebView2_9) GetIsDefaultDownloadDialogOpen() (*bool, error) {
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 
@@ -107,16 +107,16 @@ func (i *ICoreWebView2_9) CloseDefaultDownloadDialog() error {
 	return err
 }
 
-func (i *ICoreWebView2_9) GetDefaultDownloadDialogCornerAlignment() (*COREWEBVIEW2_DEFAULT_DOWNLOAD_DIALOG_CORNER_ALIGNMENT, error) {
+func (i *ICoreWebView2_9) GetDefaultDownloadDialogCornerAlignment() (COREWEBVIEW2_DEFAULT_DOWNLOAD_DIALOG_CORNER_ALIGNMENT, error) {
 
-	var value *COREWEBVIEW2_DEFAULT_DOWNLOAD_DIALOG_CORNER_ALIGNMENT
+	var value COREWEBVIEW2_DEFAULT_DOWNLOAD_DIALOG_CORNER_ALIGNMENT
 
 	hr, _, err := i.Vtbl.GetDefaultDownloadDialogCornerAlignment.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_DEFAULT_DOWNLOAD_DIALOG_CORNER_ALIGNMENT{}, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -133,16 +133,16 @@ func (i *ICoreWebView2_9) PutDefaultDownloadDialogCornerAlignment(value COREWEBV
 	return err
 }
 
-func (i *ICoreWebView2_9) GetDefaultDownloadDialogMargin() (*POINT, error) {
+func (i *ICoreWebView2_9) GetDefaultDownloadDialogMargin() (POINT, error) {
 
-	var value *POINT
+	var value POINT
 
 	hr, _, err := i.Vtbl.GetDefaultDownloadDialogMargin.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return POINT{}, syscall.Errno(hr)
 	}
 	return value, err
 }

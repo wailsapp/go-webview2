@@ -25,7 +25,7 @@ func (i *ICoreWebView2ControllerOptions) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2ControllerOptions) GetProfileName() (*string, error) {
+func (i *ICoreWebView2ControllerOptions) GetProfileName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -34,10 +34,10 @@ func (i *ICoreWebView2ControllerOptions) GetProfileName() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
@@ -60,7 +60,7 @@ func (i *ICoreWebView2ControllerOptions) PutProfileName(value string) error {
 	return err
 }
 
-func (i *ICoreWebView2ControllerOptions) GetIsInPrivateModeEnabled() (*bool, error) {
+func (i *ICoreWebView2ControllerOptions) GetIsInPrivateModeEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -69,10 +69,10 @@ func (i *ICoreWebView2ControllerOptions) GetIsInPrivateModeEnabled() (*bool, err
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 

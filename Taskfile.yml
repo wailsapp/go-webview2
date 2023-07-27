@@ -20,11 +20,12 @@ tasks:
       - go run update_version_mapping.go
       - task: gofmt
       - go fmt update_version_mapping.go
-#      - task: commit
+      - go test ./...
+      - task: commit
 
   update:forced:
     dir: scripts
     cmds:
       - go run update_version_mapping.go -forced
       - task: gofmt
-#      - task: commit
+      - task: commit

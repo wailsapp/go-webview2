@@ -22,16 +22,16 @@ func (i *ICoreWebView2ProcessFailedEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2ProcessFailedEventArgs) GetProcessFailedKind() (*COREWEBVIEW2_PROCESS_FAILED_KIND, error) {
+func (i *ICoreWebView2ProcessFailedEventArgs) GetProcessFailedKind() (COREWEBVIEW2_PROCESS_FAILED_KIND, error) {
 
-	var processFailedKind *COREWEBVIEW2_PROCESS_FAILED_KIND
+	var processFailedKind COREWEBVIEW2_PROCESS_FAILED_KIND
 
 	hr, _, err := i.Vtbl.GetProcessFailedKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&processFailedKind)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_PROCESS_FAILED_KIND{}, syscall.Errno(hr)
 	}
 	return processFailedKind, err
 }

@@ -47,16 +47,16 @@ func (i *ICoreWebView2PrintSettings) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2PrintSettings) GetOrientation() (*COREWEBVIEW2_PRINT_ORIENTATION, error) {
+func (i *ICoreWebView2PrintSettings) GetOrientation() (COREWEBVIEW2_PRINT_ORIENTATION, error) {
 
-	var orientation *COREWEBVIEW2_PRINT_ORIENTATION
+	var orientation COREWEBVIEW2_PRINT_ORIENTATION
 
 	hr, _, err := i.Vtbl.GetOrientation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&orientation)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_PRINT_ORIENTATION{}, syscall.Errno(hr)
 	}
 	return orientation, err
 }
@@ -73,16 +73,16 @@ func (i *ICoreWebView2PrintSettings) PutOrientation(orientation COREWEBVIEW2_PRI
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetScaleFactor() (*float64, error) {
+func (i *ICoreWebView2PrintSettings) GetScaleFactor() (float64, error) {
 
-	var scaleFactor *float64
+	var scaleFactor float64
 
 	hr, _, err := i.Vtbl.GetScaleFactor.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&scaleFactor)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return scaleFactor, err
 }
@@ -99,16 +99,16 @@ func (i *ICoreWebView2PrintSettings) PutScaleFactor(scaleFactor float64) error {
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetPageWidth() (*float64, error) {
+func (i *ICoreWebView2PrintSettings) GetPageWidth() (float64, error) {
 
-	var pageWidth *float64
+	var pageWidth float64
 
 	hr, _, err := i.Vtbl.GetPageWidth.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pageWidth)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return pageWidth, err
 }
@@ -125,16 +125,16 @@ func (i *ICoreWebView2PrintSettings) PutPageWidth(pageWidth float64) error {
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetPageHeight() (*float64, error) {
+func (i *ICoreWebView2PrintSettings) GetPageHeight() (float64, error) {
 
-	var pageHeight *float64
+	var pageHeight float64
 
 	hr, _, err := i.Vtbl.GetPageHeight.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&pageHeight)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return pageHeight, err
 }
@@ -151,16 +151,16 @@ func (i *ICoreWebView2PrintSettings) PutPageHeight(pageHeight float64) error {
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetMarginTop() (*float64, error) {
+func (i *ICoreWebView2PrintSettings) GetMarginTop() (float64, error) {
 
-	var marginTop *float64
+	var marginTop float64
 
 	hr, _, err := i.Vtbl.GetMarginTop.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&marginTop)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return marginTop, err
 }
@@ -177,16 +177,16 @@ func (i *ICoreWebView2PrintSettings) PutMarginTop(marginTop float64) error {
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetMarginBottom() (*float64, error) {
+func (i *ICoreWebView2PrintSettings) GetMarginBottom() (float64, error) {
 
-	var marginBottom *float64
+	var marginBottom float64
 
 	hr, _, err := i.Vtbl.GetMarginBottom.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&marginBottom)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return marginBottom, err
 }
@@ -203,16 +203,16 @@ func (i *ICoreWebView2PrintSettings) PutMarginBottom(marginBottom float64) error
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetMarginLeft() (*float64, error) {
+func (i *ICoreWebView2PrintSettings) GetMarginLeft() (float64, error) {
 
-	var marginLeft *float64
+	var marginLeft float64
 
 	hr, _, err := i.Vtbl.GetMarginLeft.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&marginLeft)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return marginLeft, err
 }
@@ -229,16 +229,16 @@ func (i *ICoreWebView2PrintSettings) PutMarginLeft(marginLeft float64) error {
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetMarginRight() (*float64, error) {
+func (i *ICoreWebView2PrintSettings) GetMarginRight() (float64, error) {
 
-	var marginRight *float64
+	var marginRight float64
 
 	hr, _, err := i.Vtbl.GetMarginRight.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&marginRight)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return marginRight, err
 }
@@ -255,7 +255,7 @@ func (i *ICoreWebView2PrintSettings) PutMarginRight(marginRight float64) error {
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetShouldPrintBackgrounds() (*bool, error) {
+func (i *ICoreWebView2PrintSettings) GetShouldPrintBackgrounds() (bool, error) {
 	// Create int32 to hold bool result
 	var _shouldPrintBackgrounds int32
 
@@ -264,10 +264,10 @@ func (i *ICoreWebView2PrintSettings) GetShouldPrintBackgrounds() (*bool, error) 
 		uintptr(unsafe.Pointer(&_shouldPrintBackgrounds)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	shouldPrintBackgrounds := ptr(_shouldPrintBackgrounds != 0)
+	shouldPrintBackgrounds := _shouldPrintBackgrounds != 0
 	return shouldPrintBackgrounds, err
 }
 
@@ -283,7 +283,7 @@ func (i *ICoreWebView2PrintSettings) PutShouldPrintBackgrounds(shouldPrintBackgr
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetShouldPrintSelectionOnly() (*bool, error) {
+func (i *ICoreWebView2PrintSettings) GetShouldPrintSelectionOnly() (bool, error) {
 	// Create int32 to hold bool result
 	var _shouldPrintSelectionOnly int32
 
@@ -292,10 +292,10 @@ func (i *ICoreWebView2PrintSettings) GetShouldPrintSelectionOnly() (*bool, error
 		uintptr(unsafe.Pointer(&_shouldPrintSelectionOnly)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	shouldPrintSelectionOnly := ptr(_shouldPrintSelectionOnly != 0)
+	shouldPrintSelectionOnly := _shouldPrintSelectionOnly != 0
 	return shouldPrintSelectionOnly, err
 }
 
@@ -311,7 +311,7 @@ func (i *ICoreWebView2PrintSettings) PutShouldPrintSelectionOnly(shouldPrintSele
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetShouldPrintHeaderAndFooter() (*bool, error) {
+func (i *ICoreWebView2PrintSettings) GetShouldPrintHeaderAndFooter() (bool, error) {
 	// Create int32 to hold bool result
 	var _shouldPrintHeaderAndFooter int32
 
@@ -320,10 +320,10 @@ func (i *ICoreWebView2PrintSettings) GetShouldPrintHeaderAndFooter() (*bool, err
 		uintptr(unsafe.Pointer(&_shouldPrintHeaderAndFooter)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	shouldPrintHeaderAndFooter := ptr(_shouldPrintHeaderAndFooter != 0)
+	shouldPrintHeaderAndFooter := _shouldPrintHeaderAndFooter != 0
 	return shouldPrintHeaderAndFooter, err
 }
 
@@ -339,7 +339,7 @@ func (i *ICoreWebView2PrintSettings) PutShouldPrintHeaderAndFooter(shouldPrintHe
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetHeaderTitle() (*string, error) {
+func (i *ICoreWebView2PrintSettings) GetHeaderTitle() (string, error) {
 	// Create *uint16 to hold result
 	var _headerTitle *uint16
 
@@ -348,10 +348,10 @@ func (i *ICoreWebView2PrintSettings) GetHeaderTitle() (*string, error) {
 		uintptr(unsafe.Pointer(_headerTitle)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	headerTitle := ptr(UTF16PtrToString(_headerTitle))
+	headerTitle := UTF16PtrToString(_headerTitle)
 	CoTaskMemFree(unsafe.Pointer(_headerTitle))
 	return headerTitle, err
 }
@@ -374,7 +374,7 @@ func (i *ICoreWebView2PrintSettings) PutHeaderTitle(headerTitle string) error {
 	return err
 }
 
-func (i *ICoreWebView2PrintSettings) GetFooterUri() (*string, error) {
+func (i *ICoreWebView2PrintSettings) GetFooterUri() (string, error) {
 	// Create *uint16 to hold result
 	var _footerUri *uint16
 
@@ -383,10 +383,10 @@ func (i *ICoreWebView2PrintSettings) GetFooterUri() (*string, error) {
 		uintptr(unsafe.Pointer(_footerUri)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	footerUri := ptr(UTF16PtrToString(_footerUri))
+	footerUri := UTF16PtrToString(_footerUri)
 	CoTaskMemFree(unsafe.Pointer(_footerUri))
 	return footerUri, err
 }

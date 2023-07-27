@@ -67,7 +67,7 @@ func (i *ICoreWebView2Environment) CreateWebResourceResponse(content *IStream, s
 	return response, err
 }
 
-func (i *ICoreWebView2Environment) GetBrowserVersionString() (*string, error) {
+func (i *ICoreWebView2Environment) GetBrowserVersionString() (string, error) {
 	// Create *uint16 to hold result
 	var _versionInfo *uint16
 
@@ -76,17 +76,17 @@ func (i *ICoreWebView2Environment) GetBrowserVersionString() (*string, error) {
 		uintptr(unsafe.Pointer(_versionInfo)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	versionInfo := ptr(UTF16PtrToString(_versionInfo))
+	versionInfo := UTF16PtrToString(_versionInfo)
 	CoTaskMemFree(unsafe.Pointer(_versionInfo))
 	return versionInfo, err
 }
 
-func (i *ICoreWebView2Environment) AddNewBrowserVersionAvailable(eventHandler *ICoreWebView2NewBrowserVersionAvailableEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Environment) AddNewBrowserVersionAvailable(eventHandler *ICoreWebView2NewBrowserVersionAvailableEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddNewBrowserVersionAvailable.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -94,7 +94,7 @@ func (i *ICoreWebView2Environment) AddNewBrowserVersionAvailable(eventHandler *I
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }

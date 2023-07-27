@@ -23,16 +23,16 @@ func (i *ICoreWebView2ProcessInfoCollection) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2ProcessInfoCollection) GetCount() (*uint, error) {
+func (i *ICoreWebView2ProcessInfoCollection) GetCount() (uint, error) {
 
-	var count *uint
+	var count uint
 
 	hr, _, err := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&count)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return count, err
 }

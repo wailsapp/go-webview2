@@ -43,7 +43,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetDownloadOperation() (*ICoreW
 	return downloadOperation, err
 }
 
-func (i *ICoreWebView2DownloadStartingEventArgs) GetCancel() (*bool, error) {
+func (i *ICoreWebView2DownloadStartingEventArgs) GetCancel() (bool, error) {
 	// Create int32 to hold bool result
 	var _cancel int32
 
@@ -52,10 +52,10 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetCancel() (*bool, error) {
 		uintptr(unsafe.Pointer(&_cancel)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	cancel := ptr(_cancel != 0)
+	cancel := _cancel != 0
 	return cancel, err
 }
 
@@ -71,7 +71,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) PutCancel(cancel bool) error {
 	return err
 }
 
-func (i *ICoreWebView2DownloadStartingEventArgs) GetResultFilePath() (*string, error) {
+func (i *ICoreWebView2DownloadStartingEventArgs) GetResultFilePath() (string, error) {
 	// Create *uint16 to hold result
 	var _resultFilePath *uint16
 
@@ -80,10 +80,10 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetResultFilePath() (*string, e
 		uintptr(unsafe.Pointer(_resultFilePath)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	resultFilePath := ptr(UTF16PtrToString(_resultFilePath))
+	resultFilePath := UTF16PtrToString(_resultFilePath)
 	CoTaskMemFree(unsafe.Pointer(_resultFilePath))
 	return resultFilePath, err
 }
@@ -106,7 +106,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) PutResultFilePath(resultFilePat
 	return err
 }
 
-func (i *ICoreWebView2DownloadStartingEventArgs) GetHandled() (*bool, error) {
+func (i *ICoreWebView2DownloadStartingEventArgs) GetHandled() (bool, error) {
 	// Create int32 to hold bool result
 	var _handled int32
 
@@ -115,10 +115,10 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetHandled() (*bool, error) {
 		uintptr(unsafe.Pointer(&_handled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	handled := ptr(_handled != 0)
+	handled := _handled != 0
 	return handled, err
 }
 

@@ -37,9 +37,9 @@ func (i *ICoreWebView2) GetICoreWebView2CompositionController3() *ICoreWebView2C
 	return result
 }
 
-func (i *ICoreWebView2CompositionController3) DragEnter(dataObject *IDataObject, keyState uint32, point POINT) (*uint32, error) {
+func (i *ICoreWebView2CompositionController3) DragEnter(dataObject *IDataObject, keyState uint32, point POINT) (uint32, error) {
 
-	var effect *uint32
+	var effect uint32
 
 	hr, _, err := i.Vtbl.DragEnter.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -49,7 +49,7 @@ func (i *ICoreWebView2CompositionController3) DragEnter(dataObject *IDataObject,
 		uintptr(unsafe.Pointer(&effect)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return effect, err
 }
@@ -65,9 +65,9 @@ func (i *ICoreWebView2CompositionController3) DragLeave() error {
 	return err
 }
 
-func (i *ICoreWebView2CompositionController3) DragOver(keyState uint32, point POINT) (*uint32, error) {
+func (i *ICoreWebView2CompositionController3) DragOver(keyState uint32, point POINT) (uint32, error) {
 
-	var effect *uint32
+	var effect uint32
 
 	hr, _, err := i.Vtbl.DragOver.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -76,14 +76,14 @@ func (i *ICoreWebView2CompositionController3) DragOver(keyState uint32, point PO
 		uintptr(unsafe.Pointer(&effect)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return effect, err
 }
 
-func (i *ICoreWebView2CompositionController3) Drop(dataObject *IDataObject, keyState uint32, point POINT) (*uint32, error) {
+func (i *ICoreWebView2CompositionController3) Drop(dataObject *IDataObject, keyState uint32, point POINT) (uint32, error) {
 
-	var effect *uint32
+	var effect uint32
 
 	hr, _, err := i.Vtbl.Drop.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -93,7 +93,7 @@ func (i *ICoreWebView2CompositionController3) Drop(dataObject *IDataObject, keyS
 		uintptr(unsafe.Pointer(&effect)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return effect, err
 }

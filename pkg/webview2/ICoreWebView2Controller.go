@@ -44,7 +44,7 @@ func (i *ICoreWebView2Controller) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2Controller) GetIsVisible() (*bool, error) {
+func (i *ICoreWebView2Controller) GetIsVisible() (bool, error) {
 	// Create int32 to hold bool result
 	var _isVisible int32
 
@@ -53,10 +53,10 @@ func (i *ICoreWebView2Controller) GetIsVisible() (*bool, error) {
 		uintptr(unsafe.Pointer(&_isVisible)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	isVisible := ptr(_isVisible != 0)
+	isVisible := _isVisible != 0
 	return isVisible, err
 }
 
@@ -72,16 +72,16 @@ func (i *ICoreWebView2Controller) PutIsVisible(isVisible bool) error {
 	return err
 }
 
-func (i *ICoreWebView2Controller) GetBounds() (*RECT, error) {
+func (i *ICoreWebView2Controller) GetBounds() (RECT, error) {
 
-	var bounds *RECT
+	var bounds RECT
 
 	hr, _, err := i.Vtbl.GetBounds.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&bounds)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return RECT{}, syscall.Errno(hr)
 	}
 	return bounds, err
 }
@@ -98,16 +98,16 @@ func (i *ICoreWebView2Controller) PutBounds(bounds RECT) error {
 	return err
 }
 
-func (i *ICoreWebView2Controller) GetZoomFactor() (*float64, error) {
+func (i *ICoreWebView2Controller) GetZoomFactor() (float64, error) {
 
-	var zoomFactor *float64
+	var zoomFactor float64
 
 	hr, _, err := i.Vtbl.GetZoomFactor.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&zoomFactor)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return zoomFactor, err
 }
@@ -124,9 +124,9 @@ func (i *ICoreWebView2Controller) PutZoomFactor(zoomFactor float64) error {
 	return err
 }
 
-func (i *ICoreWebView2Controller) AddZoomFactorChanged(eventHandler *ICoreWebView2ZoomFactorChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Controller) AddZoomFactorChanged(eventHandler *ICoreWebView2ZoomFactorChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddZoomFactorChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -134,7 +134,7 @@ func (i *ICoreWebView2Controller) AddZoomFactorChanged(eventHandler *ICoreWebVie
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -176,9 +176,9 @@ func (i *ICoreWebView2Controller) MoveFocus(reason COREWEBVIEW2_MOVE_FOCUS_REASO
 	return err
 }
 
-func (i *ICoreWebView2Controller) AddMoveFocusRequested(eventHandler *ICoreWebView2MoveFocusRequestedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Controller) AddMoveFocusRequested(eventHandler *ICoreWebView2MoveFocusRequestedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddMoveFocusRequested.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -186,7 +186,7 @@ func (i *ICoreWebView2Controller) AddMoveFocusRequested(eventHandler *ICoreWebVi
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -203,9 +203,9 @@ func (i *ICoreWebView2Controller) RemoveMoveFocusRequested(token EventRegistrati
 	return err
 }
 
-func (i *ICoreWebView2Controller) AddGotFocus(eventHandler *ICoreWebView2FocusChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Controller) AddGotFocus(eventHandler *ICoreWebView2FocusChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddGotFocus.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -213,7 +213,7 @@ func (i *ICoreWebView2Controller) AddGotFocus(eventHandler *ICoreWebView2FocusCh
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -230,9 +230,9 @@ func (i *ICoreWebView2Controller) RemoveGotFocus(token EventRegistrationToken) e
 	return err
 }
 
-func (i *ICoreWebView2Controller) AddLostFocus(eventHandler *ICoreWebView2FocusChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Controller) AddLostFocus(eventHandler *ICoreWebView2FocusChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddLostFocus.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -240,7 +240,7 @@ func (i *ICoreWebView2Controller) AddLostFocus(eventHandler *ICoreWebView2FocusC
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -257,9 +257,9 @@ func (i *ICoreWebView2Controller) RemoveLostFocus(token EventRegistrationToken) 
 	return err
 }
 
-func (i *ICoreWebView2Controller) AddAcceleratorKeyPressed(eventHandler *ICoreWebView2AcceleratorKeyPressedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Controller) AddAcceleratorKeyPressed(eventHandler *ICoreWebView2AcceleratorKeyPressedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddAcceleratorKeyPressed.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -267,7 +267,7 @@ func (i *ICoreWebView2Controller) AddAcceleratorKeyPressed(eventHandler *ICoreWe
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -284,16 +284,16 @@ func (i *ICoreWebView2Controller) RemoveAcceleratorKeyPressed(token EventRegistr
 	return err
 }
 
-func (i *ICoreWebView2Controller) GetParentWindow() (*HWND, error) {
+func (i *ICoreWebView2Controller) GetParentWindow() (HWND, error) {
 
-	var parentWindow *HWND
+	var parentWindow HWND
 
 	hr, _, err := i.Vtbl.GetParentWindow.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&parentWindow)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return HWND{}, syscall.Errno(hr)
 	}
 	return parentWindow, err
 }

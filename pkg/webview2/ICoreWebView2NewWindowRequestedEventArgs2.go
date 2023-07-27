@@ -34,7 +34,7 @@ func (i *ICoreWebView2) GetICoreWebView2NewWindowRequestedEventArgs2() *ICoreWeb
 	return result
 }
 
-func (i *ICoreWebView2NewWindowRequestedEventArgs2) GetName() (*string, error) {
+func (i *ICoreWebView2NewWindowRequestedEventArgs2) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -43,10 +43,10 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs2) GetName() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }

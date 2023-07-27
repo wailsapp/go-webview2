@@ -41,16 +41,16 @@ func (i *ICoreWebView2) GetICoreWebView2Controller3() *ICoreWebView2Controller3 
 	return result
 }
 
-func (i *ICoreWebView2Controller3) GetRasterizationScale() (*float64, error) {
+func (i *ICoreWebView2Controller3) GetRasterizationScale() (float64, error) {
 
-	var scale *float64
+	var scale float64
 
 	hr, _, err := i.Vtbl.GetRasterizationScale.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&scale)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return scale, err
 }
@@ -67,7 +67,7 @@ func (i *ICoreWebView2Controller3) PutRasterizationScale(scale float64) error {
 	return err
 }
 
-func (i *ICoreWebView2Controller3) GetShouldDetectMonitorScaleChanges() (*bool, error) {
+func (i *ICoreWebView2Controller3) GetShouldDetectMonitorScaleChanges() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -76,10 +76,10 @@ func (i *ICoreWebView2Controller3) GetShouldDetectMonitorScaleChanges() (*bool, 
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 
@@ -95,9 +95,9 @@ func (i *ICoreWebView2Controller3) PutShouldDetectMonitorScaleChanges(value bool
 	return err
 }
 
-func (i *ICoreWebView2Controller3) AddRasterizationScaleChanged(eventHandler *ICoreWebView2RasterizationScaleChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Controller3) AddRasterizationScaleChanged(eventHandler *ICoreWebView2RasterizationScaleChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddRasterizationScaleChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -105,7 +105,7 @@ func (i *ICoreWebView2Controller3) AddRasterizationScaleChanged(eventHandler *IC
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -122,16 +122,16 @@ func (i *ICoreWebView2Controller3) RemoveRasterizationScaleChanged(token EventRe
 	return err
 }
 
-func (i *ICoreWebView2Controller3) GetBoundsMode() (*COREWEBVIEW2_BOUNDS_MODE, error) {
+func (i *ICoreWebView2Controller3) GetBoundsMode() (COREWEBVIEW2_BOUNDS_MODE, error) {
 
-	var boundsMode *COREWEBVIEW2_BOUNDS_MODE
+	var boundsMode COREWEBVIEW2_BOUNDS_MODE
 
 	hr, _, err := i.Vtbl.GetBoundsMode.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&boundsMode)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_BOUNDS_MODE{}, syscall.Errno(hr)
 	}
 	return boundsMode, err
 }

@@ -23,21 +23,21 @@ func (i *ICoreWebView2StringCollection) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2StringCollection) GetCount() (*uint, error) {
+func (i *ICoreWebView2StringCollection) GetCount() (uint, error) {
 
-	var value *uint
+	var value uint
 
 	hr, _, err := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2StringCollection) GetValueAtIndex(index uint) (*string, error) {
+func (i *ICoreWebView2StringCollection) GetValueAtIndex(index uint) (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -47,10 +47,10 @@ func (i *ICoreWebView2StringCollection) GetValueAtIndex(index uint) (*string, er
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }

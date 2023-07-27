@@ -61,7 +61,7 @@ func (i *ICoreWebView2_3) Resume() error {
 	return err
 }
 
-func (i *ICoreWebView2_3) GetIsSuspended() (*bool, error) {
+func (i *ICoreWebView2_3) GetIsSuspended() (bool, error) {
 	// Create int32 to hold bool result
 	var _isSuspended int32
 
@@ -70,10 +70,10 @@ func (i *ICoreWebView2_3) GetIsSuspended() (*bool, error) {
 		uintptr(unsafe.Pointer(&_isSuspended)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	isSuspended := ptr(_isSuspended != 0)
+	isSuspended := _isSuspended != 0
 	return isSuspended, err
 }
 

@@ -23,16 +23,16 @@ func (i *ICoreWebView2ClientCertificateCollection) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2ClientCertificateCollection) GetCount() (*uint, error) {
+func (i *ICoreWebView2ClientCertificateCollection) GetCount() (uint, error) {
 
-	var value *uint
+	var value uint
 
 	hr, _, err := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

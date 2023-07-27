@@ -83,37 +83,37 @@ func (i *ICoreWebView2CompositionController) SendPointerInput(eventKind COREWEBV
 	return err
 }
 
-func (i *ICoreWebView2CompositionController) GetCursor() (*HCURSOR, error) {
+func (i *ICoreWebView2CompositionController) GetCursor() (HCURSOR, error) {
 
-	var cursor *HCURSOR
+	var cursor HCURSOR
 
 	hr, _, err := i.Vtbl.GetCursor.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&cursor)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return HCURSOR{}, syscall.Errno(hr)
 	}
 	return cursor, err
 }
 
-func (i *ICoreWebView2CompositionController) GetSystemCursorId() (*uint32, error) {
+func (i *ICoreWebView2CompositionController) GetSystemCursorId() (uint32, error) {
 
-	var systemCursorId *uint32
+	var systemCursorId uint32
 
 	hr, _, err := i.Vtbl.GetSystemCursorId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&systemCursorId)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return systemCursorId, err
 }
 
-func (i *ICoreWebView2CompositionController) AddCursorChanged(eventHandler *ICoreWebView2CursorChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2CompositionController) AddCursorChanged(eventHandler *ICoreWebView2CursorChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddCursorChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -121,7 +121,7 @@ func (i *ICoreWebView2CompositionController) AddCursorChanged(eventHandler *ICor
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }

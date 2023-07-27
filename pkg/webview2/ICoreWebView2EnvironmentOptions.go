@@ -29,7 +29,7 @@ func (i *ICoreWebView2EnvironmentOptions) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2EnvironmentOptions) GetAdditionalBrowserArguments() (*string, error) {
+func (i *ICoreWebView2EnvironmentOptions) GetAdditionalBrowserArguments() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -38,10 +38,10 @@ func (i *ICoreWebView2EnvironmentOptions) GetAdditionalBrowserArguments() (*stri
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
@@ -64,7 +64,7 @@ func (i *ICoreWebView2EnvironmentOptions) PutAdditionalBrowserArguments(value st
 	return err
 }
 
-func (i *ICoreWebView2EnvironmentOptions) GetLanguage() (*string, error) {
+func (i *ICoreWebView2EnvironmentOptions) GetLanguage() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -73,10 +73,10 @@ func (i *ICoreWebView2EnvironmentOptions) GetLanguage() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
@@ -99,7 +99,7 @@ func (i *ICoreWebView2EnvironmentOptions) PutLanguage(value string) error {
 	return err
 }
 
-func (i *ICoreWebView2EnvironmentOptions) GetTargetCompatibleBrowserVersion() (*string, error) {
+func (i *ICoreWebView2EnvironmentOptions) GetTargetCompatibleBrowserVersion() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -108,10 +108,10 @@ func (i *ICoreWebView2EnvironmentOptions) GetTargetCompatibleBrowserVersion() (*
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
@@ -134,7 +134,7 @@ func (i *ICoreWebView2EnvironmentOptions) PutTargetCompatibleBrowserVersion(valu
 	return err
 }
 
-func (i *ICoreWebView2EnvironmentOptions) GetAllowSingleSignOnUsingOSPrimaryAccount() (*bool, error) {
+func (i *ICoreWebView2EnvironmentOptions) GetAllowSingleSignOnUsingOSPrimaryAccount() (bool, error) {
 	// Create int32 to hold bool result
 	var _allow int32
 
@@ -143,10 +143,10 @@ func (i *ICoreWebView2EnvironmentOptions) GetAllowSingleSignOnUsingOSPrimaryAcco
 		uintptr(unsafe.Pointer(&_allow)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	allow := ptr(_allow != 0)
+	allow := _allow != 0
 	return allow, err
 }
 

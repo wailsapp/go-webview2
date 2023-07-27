@@ -29,7 +29,7 @@ func (i *ICoreWebView2Frame) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2Frame) GetName() (*string, error) {
+func (i *ICoreWebView2Frame) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _name *uint16
 
@@ -38,17 +38,17 @@ func (i *ICoreWebView2Frame) GetName() (*string, error) {
 		uintptr(unsafe.Pointer(_name)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	name := ptr(UTF16PtrToString(_name))
+	name := UTF16PtrToString(_name)
 	CoTaskMemFree(unsafe.Pointer(_name))
 	return name, err
 }
 
-func (i *ICoreWebView2Frame) AddNameChanged(eventHandler *ICoreWebView2FrameNameChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Frame) AddNameChanged(eventHandler *ICoreWebView2FrameNameChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddNameChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -56,7 +56,7 @@ func (i *ICoreWebView2Frame) AddNameChanged(eventHandler *ICoreWebView2FrameName
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -80,13 +80,18 @@ func (i *ICoreWebView2Frame) AddHostObjectToScriptWithOrigins(name string, objec
 	if err != nil {
 		return err
 	}
+	// Convert string 'origins' to *uint16
+	_origins, err := UTF16PtrFromString(origins)
+	if err != nil {
+		return err
+	}
 
 	hr, _, err := i.Vtbl.AddHostObjectToScriptWithOrigins.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 		uintptr(unsafe.Pointer(object)),
 		uintptr(unsafe.Pointer(&originsCount)),
-		uintptr(unsafe.Pointer(origins)),
+		uintptr(unsafe.Pointer(_origins)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -112,9 +117,9 @@ func (i *ICoreWebView2Frame) RemoveHostObjectFromScript(name string) error {
 	return err
 }
 
-func (i *ICoreWebView2Frame) AddDestroyed(eventHandler *ICoreWebView2FrameDestroyedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Frame) AddDestroyed(eventHandler *ICoreWebView2FrameDestroyedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddDestroyed.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -122,7 +127,7 @@ func (i *ICoreWebView2Frame) AddDestroyed(eventHandler *ICoreWebView2FrameDestro
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -139,7 +144,7 @@ func (i *ICoreWebView2Frame) RemoveDestroyed(token EventRegistrationToken) error
 	return err
 }
 
-func (i *ICoreWebView2Frame) IsDestroyed() (*bool, error) {
+func (i *ICoreWebView2Frame) IsDestroyed() (bool, error) {
 	// Create int32 to hold bool result
 	var _destroyed int32
 
@@ -148,9 +153,9 @@ func (i *ICoreWebView2Frame) IsDestroyed() (*bool, error) {
 		uintptr(unsafe.Pointer(&_destroyed)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	destroyed := ptr(_destroyed != 0)
+	destroyed := _destroyed != 0
 	return destroyed, err
 }

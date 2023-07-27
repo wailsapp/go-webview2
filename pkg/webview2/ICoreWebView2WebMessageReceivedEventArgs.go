@@ -24,7 +24,7 @@ func (i *ICoreWebView2WebMessageReceivedEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2WebMessageReceivedEventArgs) GetSource() (*string, error) {
+func (i *ICoreWebView2WebMessageReceivedEventArgs) GetSource() (string, error) {
 	// Create *uint16 to hold result
 	var _source *uint16
 
@@ -33,15 +33,15 @@ func (i *ICoreWebView2WebMessageReceivedEventArgs) GetSource() (*string, error) 
 		uintptr(unsafe.Pointer(_source)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	source := ptr(UTF16PtrToString(_source))
+	source := UTF16PtrToString(_source)
 	CoTaskMemFree(unsafe.Pointer(_source))
 	return source, err
 }
 
-func (i *ICoreWebView2WebMessageReceivedEventArgs) GetWebMessageAsJson() (*string, error) {
+func (i *ICoreWebView2WebMessageReceivedEventArgs) GetWebMessageAsJson() (string, error) {
 	// Create *uint16 to hold result
 	var _webMessageAsJson *uint16
 
@@ -50,15 +50,15 @@ func (i *ICoreWebView2WebMessageReceivedEventArgs) GetWebMessageAsJson() (*strin
 		uintptr(unsafe.Pointer(_webMessageAsJson)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	webMessageAsJson := ptr(UTF16PtrToString(_webMessageAsJson))
+	webMessageAsJson := UTF16PtrToString(_webMessageAsJson)
 	CoTaskMemFree(unsafe.Pointer(_webMessageAsJson))
 	return webMessageAsJson, err
 }
 
-func (i *ICoreWebView2WebMessageReceivedEventArgs) TryGetWebMessageAsString() (*string, error) {
+func (i *ICoreWebView2WebMessageReceivedEventArgs) TryGetWebMessageAsString() (string, error) {
 	// Create *uint16 to hold result
 	var _webMessageAsString *uint16
 
@@ -67,10 +67,10 @@ func (i *ICoreWebView2WebMessageReceivedEventArgs) TryGetWebMessageAsString() (*
 		uintptr(unsafe.Pointer(_webMessageAsString)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	webMessageAsString := ptr(UTF16PtrToString(_webMessageAsString))
+	webMessageAsString := UTF16PtrToString(_webMessageAsString)
 	CoTaskMemFree(unsafe.Pointer(_webMessageAsString))
 	return webMessageAsString, err
 }

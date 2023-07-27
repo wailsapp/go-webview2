@@ -1,5 +1,5 @@
 
 	// Get result and cleanup
-	{{.Name}} := ptr(UTF16PtrToString({{.LocalName}}))
+	{{.Name}} := UTF16PtrToString({{.LocalName}})
 	CoTaskMemFree(unsafe.Pointer({{.LocalName}}))
 	{{- .ClearLocalName}}

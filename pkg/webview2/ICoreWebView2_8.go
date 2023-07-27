@@ -40,9 +40,9 @@ func (i *ICoreWebView2) GetICoreWebView2_8() *ICoreWebView2_8 {
 	return result
 }
 
-func (i *ICoreWebView2_8) AddIsMutedChanged(eventHandler *ICoreWebView2IsMutedChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2_8) AddIsMutedChanged(eventHandler *ICoreWebView2IsMutedChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddIsMutedChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -50,7 +50,7 @@ func (i *ICoreWebView2_8) AddIsMutedChanged(eventHandler *ICoreWebView2IsMutedCh
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -67,7 +67,7 @@ func (i *ICoreWebView2_8) RemoveIsMutedChanged(token EventRegistrationToken) err
 	return err
 }
 
-func (i *ICoreWebView2_8) GetIsMuted() (*bool, error) {
+func (i *ICoreWebView2_8) GetIsMuted() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -76,10 +76,10 @@ func (i *ICoreWebView2_8) GetIsMuted() (*bool, error) {
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 
@@ -95,9 +95,9 @@ func (i *ICoreWebView2_8) PutIsMuted(value bool) error {
 	return err
 }
 
-func (i *ICoreWebView2_8) AddIsDocumentPlayingAudioChanged(eventHandler *ICoreWebView2IsDocumentPlayingAudioChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2_8) AddIsDocumentPlayingAudioChanged(eventHandler *ICoreWebView2IsDocumentPlayingAudioChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddIsDocumentPlayingAudioChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -105,7 +105,7 @@ func (i *ICoreWebView2_8) AddIsDocumentPlayingAudioChanged(eventHandler *ICoreWe
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -122,7 +122,7 @@ func (i *ICoreWebView2_8) RemoveIsDocumentPlayingAudioChanged(token EventRegistr
 	return err
 }
 
-func (i *ICoreWebView2_8) GetIsDocumentPlayingAudio() (*bool, error) {
+func (i *ICoreWebView2_8) GetIsDocumentPlayingAudio() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -131,9 +131,9 @@ func (i *ICoreWebView2_8) GetIsDocumentPlayingAudio() (*bool, error) {
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }

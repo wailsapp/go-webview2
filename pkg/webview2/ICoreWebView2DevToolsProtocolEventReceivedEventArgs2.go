@@ -34,7 +34,7 @@ func (i *ICoreWebView2) GetICoreWebView2DevToolsProtocolEventReceivedEventArgs2(
 	return result
 }
 
-func (i *ICoreWebView2DevToolsProtocolEventReceivedEventArgs2) GetSessionId() (*string, error) {
+func (i *ICoreWebView2DevToolsProtocolEventReceivedEventArgs2) GetSessionId() (string, error) {
 	// Create *uint16 to hold result
 	var _sessionId *uint16
 
@@ -43,10 +43,10 @@ func (i *ICoreWebView2DevToolsProtocolEventReceivedEventArgs2) GetSessionId() (*
 		uintptr(unsafe.Pointer(_sessionId)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	sessionId := ptr(UTF16PtrToString(_sessionId))
+	sessionId := UTF16PtrToString(_sessionId)
 	CoTaskMemFree(unsafe.Pointer(_sessionId))
 	return sessionId, err
 }

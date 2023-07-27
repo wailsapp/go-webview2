@@ -37,9 +37,9 @@ func (i *ICoreWebView2) GetICoreWebView2_15() *ICoreWebView2_15 {
 	return result
 }
 
-func (i *ICoreWebView2_15) AddFaviconChanged(eventHandler *ICoreWebView2FaviconChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2_15) AddFaviconChanged(eventHandler *ICoreWebView2FaviconChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddFaviconChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -47,7 +47,7 @@ func (i *ICoreWebView2_15) AddFaviconChanged(eventHandler *ICoreWebView2FaviconC
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -64,7 +64,7 @@ func (i *ICoreWebView2_15) RemoveFaviconChanged(token EventRegistrationToken) er
 	return err
 }
 
-func (i *ICoreWebView2_15) GetFaviconUri() (*string, error) {
+func (i *ICoreWebView2_15) GetFaviconUri() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -73,10 +73,10 @@ func (i *ICoreWebView2_15) GetFaviconUri() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }

@@ -37,7 +37,7 @@ func (i *ICoreWebView2) GetICoreWebView2Settings4() *ICoreWebView2Settings4 {
 	return result
 }
 
-func (i *ICoreWebView2Settings4) GetIsPasswordAutosaveEnabled() (*bool, error) {
+func (i *ICoreWebView2Settings4) GetIsPasswordAutosaveEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -46,10 +46,10 @@ func (i *ICoreWebView2Settings4) GetIsPasswordAutosaveEnabled() (*bool, error) {
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 
@@ -65,7 +65,7 @@ func (i *ICoreWebView2Settings4) PutIsPasswordAutosaveEnabled(value bool) error 
 	return err
 }
 
-func (i *ICoreWebView2Settings4) GetIsGeneralAutofillEnabled() (*bool, error) {
+func (i *ICoreWebView2Settings4) GetIsGeneralAutofillEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -74,10 +74,10 @@ func (i *ICoreWebView2Settings4) GetIsGeneralAutofillEnabled() (*bool, error) {
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 

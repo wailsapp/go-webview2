@@ -23,7 +23,7 @@ func (i *ICoreWebView2ContentLoadingEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2ContentLoadingEventArgs) GetIsErrorPage() (*bool, error) {
+func (i *ICoreWebView2ContentLoadingEventArgs) GetIsErrorPage() (bool, error) {
 	// Create int32 to hold bool result
 	var _isErrorPage int32
 
@@ -32,23 +32,23 @@ func (i *ICoreWebView2ContentLoadingEventArgs) GetIsErrorPage() (*bool, error) {
 		uintptr(unsafe.Pointer(&_isErrorPage)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	isErrorPage := ptr(_isErrorPage != 0)
+	isErrorPage := _isErrorPage != 0
 	return isErrorPage, err
 }
 
-func (i *ICoreWebView2ContentLoadingEventArgs) GetNavigationId() (*uint64, error) {
+func (i *ICoreWebView2ContentLoadingEventArgs) GetNavigationId() (uint64, error) {
 
-	var navigationId *uint64
+	var navigationId uint64
 
 	hr, _, err := i.Vtbl.GetNavigationId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&navigationId)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return navigationId, err
 }

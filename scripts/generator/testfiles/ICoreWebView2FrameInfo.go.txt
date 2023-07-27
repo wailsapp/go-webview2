@@ -1,16 +1,15 @@
 //go:build windows
 
 package webview2
-
 import (
-	"golang.org/x/sys/windows"
-	"syscall"
 	"unsafe"
+	"syscall"
+	"golang.org/x/sys/windows"
 )
 
 type ICoreWebView2FrameInfoVtbl struct {
 	IUnknownVtbl
-	GetName   ComProc
+	GetName ComProc
 	GetSource ComProc
 }
 
@@ -23,9 +22,11 @@ func (i *ICoreWebView2FrameInfo) AddRef() uintptr {
 	return refCounter
 }
 
+
 func (i *ICoreWebView2FrameInfo) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _name *uint16
+
 
 	hr, _, err := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -43,6 +44,7 @@ func (i *ICoreWebView2FrameInfo) GetName() (string, error) {
 func (i *ICoreWebView2FrameInfo) GetSource() (string, error) {
 	// Create *uint16 to hold result
 	var _source *uint16
+
 
 	hr, _, err := i.Vtbl.GetSource.Call(
 		uintptr(unsafe.Pointer(i)),

@@ -28,7 +28,7 @@ func (i *ICoreWebView2CustomSchemeRegistration) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) GetSchemeName() (*string, error) {
+func (i *ICoreWebView2CustomSchemeRegistration) GetSchemeName() (string, error) {
 	// Create *uint16 to hold result
 	var _schemeName *uint16
 
@@ -37,15 +37,15 @@ func (i *ICoreWebView2CustomSchemeRegistration) GetSchemeName() (*string, error)
 		uintptr(unsafe.Pointer(_schemeName)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	schemeName := ptr(UTF16PtrToString(_schemeName))
+	schemeName := UTF16PtrToString(_schemeName)
 	CoTaskMemFree(unsafe.Pointer(_schemeName))
 	return schemeName, err
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) GetTreatAsSecure() (*bool, error) {
+func (i *ICoreWebView2CustomSchemeRegistration) GetTreatAsSecure() (bool, error) {
 	// Create int32 to hold bool result
 	var _treatAsSecure int32
 
@@ -54,10 +54,10 @@ func (i *ICoreWebView2CustomSchemeRegistration) GetTreatAsSecure() (*bool, error
 		uintptr(unsafe.Pointer(&_treatAsSecure)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	treatAsSecure := ptr(_treatAsSecure != 0)
+	treatAsSecure := _treatAsSecure != 0
 	return treatAsSecure, err
 }
 
@@ -73,31 +73,34 @@ func (i *ICoreWebView2CustomSchemeRegistration) PutTreatAsSecure(value bool) err
 	return err
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) GetAllowedOrigins() (*uint32, *string, error) {
+func (i *ICoreWebView2CustomSchemeRegistration) GetAllowedOrigins() (uint32, *string, error) {
 
-	var allowedOriginsCount *uint32 // Create *uint16 to hold result
-	var _allowedOrigins *uint16
+	var allowedOriginsCount uint32
+	var allowedOrigins *string
 
 	hr, _, err := i.Vtbl.GetAllowedOrigins.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&allowedOriginsCount)),
-		uintptr(unsafe.Pointer(_allowedOrigins)),
+		uintptr(unsafe.Pointer(allowedOrigins)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, nil, syscall.Errno(hr)
+		return 0, nil, syscall.Errno(hr)
 	}
-	// Get result and cleanup
-	allowedOrigins := ptr(UTF16PtrToString(_allowedOrigins))
-	CoTaskMemFree(unsafe.Pointer(_allowedOrigins))
 	return allowedOriginsCount, allowedOrigins, err
 }
 
 func (i *ICoreWebView2CustomSchemeRegistration) SetAllowedOrigins(allowedOriginsCount uint32, allowedOrigins *string) error {
 
+	// Convert string 'allowedOrigins' to *uint16
+	_allowedOrigins, err := UTF16PtrFromString(allowedOrigins)
+	if err != nil {
+		return err
+	}
+
 	hr, _, err := i.Vtbl.SetAllowedOrigins.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&allowedOriginsCount)),
-		uintptr(unsafe.Pointer(allowedOrigins)),
+		uintptr(unsafe.Pointer(_allowedOrigins)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -105,7 +108,7 @@ func (i *ICoreWebView2CustomSchemeRegistration) SetAllowedOrigins(allowedOrigins
 	return err
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) GetHasAuthorityComponent() (*bool, error) {
+func (i *ICoreWebView2CustomSchemeRegistration) GetHasAuthorityComponent() (bool, error) {
 	// Create int32 to hold bool result
 	var _hasAuthorityComponent int32
 
@@ -114,10 +117,10 @@ func (i *ICoreWebView2CustomSchemeRegistration) GetHasAuthorityComponent() (*boo
 		uintptr(unsafe.Pointer(&_hasAuthorityComponent)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	hasAuthorityComponent := ptr(_hasAuthorityComponent != 0)
+	hasAuthorityComponent := _hasAuthorityComponent != 0
 	return hasAuthorityComponent, err
 }
 

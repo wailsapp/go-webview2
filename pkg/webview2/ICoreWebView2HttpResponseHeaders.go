@@ -50,12 +50,12 @@ func (i *ICoreWebView2HttpResponseHeaders) AppendHeader(name string, value strin
 	return err
 }
 
-func (i *ICoreWebView2HttpResponseHeaders) Contains(name string) (*bool, error) {
+func (i *ICoreWebView2HttpResponseHeaders) Contains(name string) (bool, error) {
 
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return nil, err
+		return false, err
 	} // Create int32 to hold bool result
 	var _contains int32
 
@@ -65,19 +65,19 @@ func (i *ICoreWebView2HttpResponseHeaders) Contains(name string) (*bool, error) 
 		uintptr(unsafe.Pointer(&_contains)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	contains := ptr(_contains != 0)
+	contains := _contains != 0
 	return contains, err
 }
 
-func (i *ICoreWebView2HttpResponseHeaders) GetHeader(name string) (*string, error) {
+func (i *ICoreWebView2HttpResponseHeaders) GetHeader(name string) (string, error) {
 
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return nil, err
+		return "", err
 	} // Create *uint16 to hold result
 	var _value *uint16
 
@@ -87,10 +87,10 @@ func (i *ICoreWebView2HttpResponseHeaders) GetHeader(name string) (*string, erro
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }

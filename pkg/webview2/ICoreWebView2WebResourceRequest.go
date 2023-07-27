@@ -28,7 +28,7 @@ func (i *ICoreWebView2WebResourceRequest) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2WebResourceRequest) GetUri() (*string, error) {
+func (i *ICoreWebView2WebResourceRequest) GetUri() (string, error) {
 	// Create *uint16 to hold result
 	var _uri *uint16
 
@@ -37,10 +37,10 @@ func (i *ICoreWebView2WebResourceRequest) GetUri() (*string, error) {
 		uintptr(unsafe.Pointer(_uri)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	uri := ptr(UTF16PtrToString(_uri))
+	uri := UTF16PtrToString(_uri)
 	CoTaskMemFree(unsafe.Pointer(_uri))
 	return uri, err
 }
@@ -63,7 +63,7 @@ func (i *ICoreWebView2WebResourceRequest) PutUri(uri string) error {
 	return err
 }
 
-func (i *ICoreWebView2WebResourceRequest) GetMethod() (*string, error) {
+func (i *ICoreWebView2WebResourceRequest) GetMethod() (string, error) {
 	// Create *uint16 to hold result
 	var _method *uint16
 
@@ -72,10 +72,10 @@ func (i *ICoreWebView2WebResourceRequest) GetMethod() (*string, error) {
 		uintptr(unsafe.Pointer(_method)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	method := ptr(UTF16PtrToString(_method))
+	method := UTF16PtrToString(_method)
 	CoTaskMemFree(unsafe.Pointer(_method))
 	return method, err
 }

@@ -93,7 +93,7 @@ func (i *ICoreWebView2) GetSettings() (*ICoreWebView2Settings, error) {
 	return settings, err
 }
 
-func (i *ICoreWebView2) GetSource() (*string, error) {
+func (i *ICoreWebView2) GetSource() (string, error) {
 	// Create *uint16 to hold result
 	var _uri *uint16
 
@@ -102,10 +102,10 @@ func (i *ICoreWebView2) GetSource() (*string, error) {
 		uintptr(unsafe.Pointer(_uri)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	uri := ptr(UTF16PtrToString(_uri))
+	uri := UTF16PtrToString(_uri)
 	CoTaskMemFree(unsafe.Pointer(_uri))
 	return uri, err
 }
@@ -146,9 +146,9 @@ func (i *ICoreWebView2) NavigateToString(htmlContent string) error {
 	return err
 }
 
-func (i *ICoreWebView2) AddNavigationStarting(eventHandler *ICoreWebView2NavigationStartingEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddNavigationStarting(eventHandler *ICoreWebView2NavigationStartingEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddNavigationStarting.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -156,7 +156,7 @@ func (i *ICoreWebView2) AddNavigationStarting(eventHandler *ICoreWebView2Navigat
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -173,9 +173,9 @@ func (i *ICoreWebView2) RemoveNavigationStarting(token EventRegistrationToken) e
 	return err
 }
 
-func (i *ICoreWebView2) AddContentLoading(eventHandler *ICoreWebView2ContentLoadingEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddContentLoading(eventHandler *ICoreWebView2ContentLoadingEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddContentLoading.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -183,7 +183,7 @@ func (i *ICoreWebView2) AddContentLoading(eventHandler *ICoreWebView2ContentLoad
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -200,9 +200,9 @@ func (i *ICoreWebView2) RemoveContentLoading(token EventRegistrationToken) error
 	return err
 }
 
-func (i *ICoreWebView2) AddSourceChanged(eventHandler *ICoreWebView2SourceChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddSourceChanged(eventHandler *ICoreWebView2SourceChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddSourceChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -210,7 +210,7 @@ func (i *ICoreWebView2) AddSourceChanged(eventHandler *ICoreWebView2SourceChange
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -227,9 +227,9 @@ func (i *ICoreWebView2) RemoveSourceChanged(token EventRegistrationToken) error 
 	return err
 }
 
-func (i *ICoreWebView2) AddHistoryChanged(eventHandler *ICoreWebView2HistoryChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddHistoryChanged(eventHandler *ICoreWebView2HistoryChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddHistoryChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -237,7 +237,7 @@ func (i *ICoreWebView2) AddHistoryChanged(eventHandler *ICoreWebView2HistoryChan
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -254,9 +254,9 @@ func (i *ICoreWebView2) RemoveHistoryChanged(token EventRegistrationToken) error
 	return err
 }
 
-func (i *ICoreWebView2) AddNavigationCompleted(eventHandler *ICoreWebView2NavigationCompletedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddNavigationCompleted(eventHandler *ICoreWebView2NavigationCompletedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddNavigationCompleted.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -264,7 +264,7 @@ func (i *ICoreWebView2) AddNavigationCompleted(eventHandler *ICoreWebView2Naviga
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -281,9 +281,9 @@ func (i *ICoreWebView2) RemoveNavigationCompleted(token EventRegistrationToken) 
 	return err
 }
 
-func (i *ICoreWebView2) AddFrameNavigationStarting(eventHandler *ICoreWebView2NavigationStartingEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddFrameNavigationStarting(eventHandler *ICoreWebView2NavigationStartingEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddFrameNavigationStarting.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -291,7 +291,7 @@ func (i *ICoreWebView2) AddFrameNavigationStarting(eventHandler *ICoreWebView2Na
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -308,9 +308,9 @@ func (i *ICoreWebView2) RemoveFrameNavigationStarting(token EventRegistrationTok
 	return err
 }
 
-func (i *ICoreWebView2) AddFrameNavigationCompleted(eventHandler *ICoreWebView2NavigationCompletedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddFrameNavigationCompleted(eventHandler *ICoreWebView2NavigationCompletedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddFrameNavigationCompleted.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -318,7 +318,7 @@ func (i *ICoreWebView2) AddFrameNavigationCompleted(eventHandler *ICoreWebView2N
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -335,9 +335,9 @@ func (i *ICoreWebView2) RemoveFrameNavigationCompleted(token EventRegistrationTo
 	return err
 }
 
-func (i *ICoreWebView2) AddScriptDialogOpening(eventHandler *ICoreWebView2ScriptDialogOpeningEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddScriptDialogOpening(eventHandler *ICoreWebView2ScriptDialogOpeningEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddScriptDialogOpening.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -345,7 +345,7 @@ func (i *ICoreWebView2) AddScriptDialogOpening(eventHandler *ICoreWebView2Script
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -362,9 +362,9 @@ func (i *ICoreWebView2) RemoveScriptDialogOpening(token EventRegistrationToken) 
 	return err
 }
 
-func (i *ICoreWebView2) AddPermissionRequested(eventHandler *ICoreWebView2PermissionRequestedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddPermissionRequested(eventHandler *ICoreWebView2PermissionRequestedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddPermissionRequested.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -372,7 +372,7 @@ func (i *ICoreWebView2) AddPermissionRequested(eventHandler *ICoreWebView2Permis
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -389,9 +389,9 @@ func (i *ICoreWebView2) RemovePermissionRequested(token EventRegistrationToken) 
 	return err
 }
 
-func (i *ICoreWebView2) AddProcessFailed(eventHandler *ICoreWebView2ProcessFailedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddProcessFailed(eventHandler *ICoreWebView2ProcessFailedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddProcessFailed.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -399,7 +399,7 @@ func (i *ICoreWebView2) AddProcessFailed(eventHandler *ICoreWebView2ProcessFaile
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -533,9 +533,9 @@ func (i *ICoreWebView2) PostWebMessageAsString(webMessageAsString string) error 
 	return err
 }
 
-func (i *ICoreWebView2) AddWebMessageReceived(handler *ICoreWebView2WebMessageReceivedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddWebMessageReceived(handler *ICoreWebView2WebMessageReceivedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddWebMessageReceived.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -543,7 +543,7 @@ func (i *ICoreWebView2) AddWebMessageReceived(handler *ICoreWebView2WebMessageRe
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -585,21 +585,21 @@ func (i *ICoreWebView2) CallDevToolsProtocolMethod(methodName string, parameters
 	return err
 }
 
-func (i *ICoreWebView2) GetBrowserProcessId() (*uint32, error) {
+func (i *ICoreWebView2) GetBrowserProcessId() (uint32, error) {
 
-	var value *uint32
+	var value uint32
 
 	hr, _, err := i.Vtbl.GetBrowserProcessId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2) GetCanGoBack() (*bool, error) {
+func (i *ICoreWebView2) GetCanGoBack() (bool, error) {
 	// Create int32 to hold bool result
 	var _canGoBack int32
 
@@ -608,14 +608,14 @@ func (i *ICoreWebView2) GetCanGoBack() (*bool, error) {
 		uintptr(unsafe.Pointer(&_canGoBack)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	canGoBack := ptr(_canGoBack != 0)
+	canGoBack := _canGoBack != 0
 	return canGoBack, err
 }
 
-func (i *ICoreWebView2) GetCanGoForward() (*bool, error) {
+func (i *ICoreWebView2) GetCanGoForward() (bool, error) {
 	// Create int32 to hold bool result
 	var _canGoForward int32
 
@@ -624,10 +624,10 @@ func (i *ICoreWebView2) GetCanGoForward() (*bool, error) {
 		uintptr(unsafe.Pointer(&_canGoForward)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	canGoForward := ptr(_canGoForward != 0)
+	canGoForward := _canGoForward != 0
 	return canGoForward, err
 }
 
@@ -684,9 +684,9 @@ func (i *ICoreWebView2) Stop() error {
 	return err
 }
 
-func (i *ICoreWebView2) AddNewWindowRequested(eventHandler *ICoreWebView2NewWindowRequestedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddNewWindowRequested(eventHandler *ICoreWebView2NewWindowRequestedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddNewWindowRequested.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -694,7 +694,7 @@ func (i *ICoreWebView2) AddNewWindowRequested(eventHandler *ICoreWebView2NewWind
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -711,9 +711,9 @@ func (i *ICoreWebView2) RemoveNewWindowRequested(token EventRegistrationToken) e
 	return err
 }
 
-func (i *ICoreWebView2) AddDocumentTitleChanged(eventHandler *ICoreWebView2DocumentTitleChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddDocumentTitleChanged(eventHandler *ICoreWebView2DocumentTitleChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddDocumentTitleChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -721,7 +721,7 @@ func (i *ICoreWebView2) AddDocumentTitleChanged(eventHandler *ICoreWebView2Docum
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -738,7 +738,7 @@ func (i *ICoreWebView2) RemoveDocumentTitleChanged(token EventRegistrationToken)
 	return err
 }
 
-func (i *ICoreWebView2) GetDocumentTitle() (*string, error) {
+func (i *ICoreWebView2) GetDocumentTitle() (string, error) {
 	// Create *uint16 to hold result
 	var _title *uint16
 
@@ -747,10 +747,10 @@ func (i *ICoreWebView2) GetDocumentTitle() (*string, error) {
 		uintptr(unsafe.Pointer(_title)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	title := ptr(UTF16PtrToString(_title))
+	title := UTF16PtrToString(_title)
 	CoTaskMemFree(unsafe.Pointer(_title))
 	return title, err
 }
@@ -803,9 +803,9 @@ func (i *ICoreWebView2) OpenDevToolsWindow() error {
 	return err
 }
 
-func (i *ICoreWebView2) AddContainsFullScreenElementChanged(eventHandler *ICoreWebView2ContainsFullScreenElementChangedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddContainsFullScreenElementChanged(eventHandler *ICoreWebView2ContainsFullScreenElementChangedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddContainsFullScreenElementChanged.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -813,7 +813,7 @@ func (i *ICoreWebView2) AddContainsFullScreenElementChanged(eventHandler *ICoreW
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -830,7 +830,7 @@ func (i *ICoreWebView2) RemoveContainsFullScreenElementChanged(token EventRegist
 	return err
 }
 
-func (i *ICoreWebView2) GetContainsFullScreenElement() (*bool, error) {
+func (i *ICoreWebView2) GetContainsFullScreenElement() (bool, error) {
 	// Create int32 to hold bool result
 	var _containsFullScreenElement int32
 
@@ -839,16 +839,16 @@ func (i *ICoreWebView2) GetContainsFullScreenElement() (*bool, error) {
 		uintptr(unsafe.Pointer(&_containsFullScreenElement)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	containsFullScreenElement := ptr(_containsFullScreenElement != 0)
+	containsFullScreenElement := _containsFullScreenElement != 0
 	return containsFullScreenElement, err
 }
 
-func (i *ICoreWebView2) AddWebResourceRequested(eventHandler *ICoreWebView2WebResourceRequestedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddWebResourceRequested(eventHandler *ICoreWebView2WebResourceRequestedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddWebResourceRequested.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -856,7 +856,7 @@ func (i *ICoreWebView2) AddWebResourceRequested(eventHandler *ICoreWebView2WebRe
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }
@@ -911,9 +911,9 @@ func (i *ICoreWebView2) RemoveWebResourceRequestedFilter(uri string, resourceCon
 	return err
 }
 
-func (i *ICoreWebView2) AddWindowCloseRequested(eventHandler *ICoreWebView2WindowCloseRequestedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2) AddWindowCloseRequested(eventHandler *ICoreWebView2WindowCloseRequestedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddWindowCloseRequested.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -921,7 +921,7 @@ func (i *ICoreWebView2) AddWindowCloseRequested(eventHandler *ICoreWebView2Windo
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }

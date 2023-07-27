@@ -22,7 +22,7 @@ func (i *ICoreWebView2SourceChangedEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2SourceChangedEventArgs) GetIsNewDocument() (*bool, error) {
+func (i *ICoreWebView2SourceChangedEventArgs) GetIsNewDocument() (bool, error) {
 	// Create int32 to hold bool result
 	var _isNewDocument int32
 
@@ -31,9 +31,9 @@ func (i *ICoreWebView2SourceChangedEventArgs) GetIsNewDocument() (*bool, error) 
 		uintptr(unsafe.Pointer(&_isNewDocument)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	isNewDocument := ptr(_isNewDocument != 0)
+	isNewDocument := _isNewDocument != 0
 	return isNewDocument, err
 }

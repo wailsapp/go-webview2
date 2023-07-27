@@ -27,7 +27,7 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetUri() (*string, error) {
+func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetUri() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -36,15 +36,15 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetUri() (*string, 
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetChallenge() (*string, error) {
+func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetChallenge() (string, error) {
 	// Create *uint16 to hold result
 	var _challenge *uint16
 
@@ -53,10 +53,10 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetChallenge() (*st
 		uintptr(unsafe.Pointer(_challenge)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	challenge := ptr(UTF16PtrToString(_challenge))
+	challenge := UTF16PtrToString(_challenge)
 	CoTaskMemFree(unsafe.Pointer(_challenge))
 	return challenge, err
 }
@@ -75,7 +75,7 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetResponse() (*ICo
 	return response, err
 }
 
-func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetCancel() (*bool, error) {
+func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetCancel() (bool, error) {
 	// Create int32 to hold bool result
 	var _cancel int32
 
@@ -84,10 +84,10 @@ func (i *ICoreWebView2BasicAuthenticationRequestedEventArgs) GetCancel() (*bool,
 		uintptr(unsafe.Pointer(&_cancel)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	cancel := ptr(_cancel != 0)
+	cancel := _cancel != 0
 	return cancel, err
 }
 

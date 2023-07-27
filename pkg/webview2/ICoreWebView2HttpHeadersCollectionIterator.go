@@ -24,7 +24,7 @@ func (i *ICoreWebView2HttpHeadersCollectionIterator) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2HttpHeadersCollectionIterator) GetCurrentHeader() (*string, *string, error) {
+func (i *ICoreWebView2HttpHeadersCollectionIterator) GetCurrentHeader() (string, string, error) {
 	// Create *uint16 to hold result
 	var _name *uint16
 	// Create *uint16 to hold result
@@ -36,18 +36,18 @@ func (i *ICoreWebView2HttpHeadersCollectionIterator) GetCurrentHeader() (*string
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, nil, syscall.Errno(hr)
+		return "", "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	name := ptr(UTF16PtrToString(_name))
+	name := UTF16PtrToString(_name)
 	CoTaskMemFree(unsafe.Pointer(_name))
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return name, value, err
 }
 
-func (i *ICoreWebView2HttpHeadersCollectionIterator) GetHasCurrentHeader() (*bool, error) {
+func (i *ICoreWebView2HttpHeadersCollectionIterator) GetHasCurrentHeader() (bool, error) {
 	// Create int32 to hold bool result
 	var _hasCurrent int32
 
@@ -56,14 +56,14 @@ func (i *ICoreWebView2HttpHeadersCollectionIterator) GetHasCurrentHeader() (*boo
 		uintptr(unsafe.Pointer(&_hasCurrent)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	hasCurrent := ptr(_hasCurrent != 0)
+	hasCurrent := _hasCurrent != 0
 	return hasCurrent, err
 }
 
-func (i *ICoreWebView2HttpHeadersCollectionIterator) MoveNext() (*bool, error) {
+func (i *ICoreWebView2HttpHeadersCollectionIterator) MoveNext() (bool, error) {
 	// Create int32 to hold bool result
 	var _hasNext int32
 
@@ -72,9 +72,9 @@ func (i *ICoreWebView2HttpHeadersCollectionIterator) MoveNext() (*bool, error) {
 		uintptr(unsafe.Pointer(&_hasNext)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	hasNext := ptr(_hasNext != 0)
+	hasNext := _hasNext != 0
 	return hasNext, err
 }

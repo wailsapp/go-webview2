@@ -13,7 +13,9 @@ type Param struct {
 	Name      string     `parser:"@Ident ','?"`
 
 	// Processed
-	GoType string
+	GoType       string
+	InputGoType  string
+	OutputGoType string
 
 	// This is used to generate setup code for the Go inputs
 	setupTemplate   string
@@ -37,27 +39,36 @@ func (p *Param) LocalVariableType() string {
 	return p.GoType
 }
 
-func (p *Param) OutputGoType() string {
-	if p.IsOutputParam() && p.isPointer() {
-		return p.GoType[1:]
-	}
-	return p.GoType
-}
-
 func (p *Param) Process(decl *InterfaceMethod) {
 	p.decl = decl
 	p.GoType = IdlTypeToGoType(p.Type)
-	if p.isPointer() {
+	if p.isDoublePointer() {
 		p.GoType = "*" + p.GoType
 	}
+	p.OutputGoType = p.GoType
+	if p.IsOutputParam() && strings.HasPrefix(p.OutputGoType, "**") {
+		p.OutputGoType = p.GoType[1:]
+	}
+	p.InputGoType = p.GoType
 }
 
 func (p *Param) isPointer() bool {
 	return p.Pointer != ""
 }
 
+func (p *Param) isSinglePointer() bool {
+	return p.Pointer == "*"
+}
+
 func (p *Param) isDoublePointer() bool {
 	return p.Pointer == "**"
+}
+
+func (p *Param) AsInputType() string {
+	if p.isPointer() {
+		return "*" + p.GoType
+	}
+	return p.GoType
 }
 
 func (p *Param) processSetup() {
@@ -138,9 +149,6 @@ func (p *Param) GetReturnVariableName() string {
 	if result == "" {
 		result = p.Name
 	}
-	if p.OutputGoType()[0] == '*' {
-		result = "&" + result
-	}
 	return result
 }
 
@@ -165,11 +173,11 @@ func (p *Param) processSetupOutputs() {
 		return
 	}
 	switch p.GoType {
-	case "*string":
+	case "string":
 		p.LocalName = "_" + p.Name
 		p.setupTemplate = "outputStringSetup.tmpl"
 		p.cleanupTemplate = "outputStringCleanup.tmpl"
-	case "*bool":
+	case "bool":
 		p.LocalName = "_" + p.Name
 		p.setupTemplate = "outputBoolSetup.tmpl"
 		p.cleanupTemplate = "outputBoolCleanup.tmpl"
@@ -195,7 +203,10 @@ func (p *Param) defaultErrorValue() string {
 	case "bool":
 		return "false"
 	}
-	return "nil"
+	if p.OutputGoType[0] == '*' {
+		return "nil"
+	}
+	return p.OutputGoType + "{}"
 }
 
 type Direction struct {

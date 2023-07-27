@@ -29,7 +29,7 @@ func (i *ICoreWebView2Certificate) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2Certificate) GetSubject() (*string, error) {
+func (i *ICoreWebView2Certificate) GetSubject() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -38,15 +38,15 @@ func (i *ICoreWebView2Certificate) GetSubject() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2Certificate) GetIssuer() (*string, error) {
+func (i *ICoreWebView2Certificate) GetIssuer() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -55,43 +55,43 @@ func (i *ICoreWebView2Certificate) GetIssuer() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2Certificate) GetValidFrom() (*float64, error) {
+func (i *ICoreWebView2Certificate) GetValidFrom() (float64, error) {
 
-	var value *float64
+	var value float64
 
 	hr, _, err := i.Vtbl.GetValidFrom.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2Certificate) GetValidTo() (*float64, error) {
+func (i *ICoreWebView2Certificate) GetValidTo() (float64, error) {
 
-	var value *float64
+	var value float64
 
 	hr, _, err := i.Vtbl.GetValidTo.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2Certificate) GetDerEncodedSerialNumber() (*string, error) {
+func (i *ICoreWebView2Certificate) GetDerEncodedSerialNumber() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -100,15 +100,15 @@ func (i *ICoreWebView2Certificate) GetDerEncodedSerialNumber() (*string, error) 
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2Certificate) GetDisplayName() (*string, error) {
+func (i *ICoreWebView2Certificate) GetDisplayName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -117,15 +117,15 @@ func (i *ICoreWebView2Certificate) GetDisplayName() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2Certificate) ToPemEncoding() (*string, error) {
+func (i *ICoreWebView2Certificate) ToPemEncoding() (string, error) {
 	// Create *uint16 to hold result
 	var _pemEncodedData *uint16
 
@@ -134,10 +134,10 @@ func (i *ICoreWebView2Certificate) ToPemEncoding() (*string, error) {
 		uintptr(unsafe.Pointer(_pemEncodedData)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	pemEncodedData := ptr(UTF16PtrToString(_pemEncodedData))
+	pemEncodedData := UTF16PtrToString(_pemEncodedData)
 	CoTaskMemFree(unsafe.Pointer(_pemEncodedData))
 	return pemEncodedData, err
 }

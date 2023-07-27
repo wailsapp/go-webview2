@@ -25,7 +25,7 @@ func (i *ICoreWebView2BasicAuthenticationResponse) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2BasicAuthenticationResponse) GetUserName() (*string, error) {
+func (i *ICoreWebView2BasicAuthenticationResponse) GetUserName() (string, error) {
 	// Create *uint16 to hold result
 	var _userName *uint16
 
@@ -34,10 +34,10 @@ func (i *ICoreWebView2BasicAuthenticationResponse) GetUserName() (*string, error
 		uintptr(unsafe.Pointer(_userName)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	userName := ptr(UTF16PtrToString(_userName))
+	userName := UTF16PtrToString(_userName)
 	CoTaskMemFree(unsafe.Pointer(_userName))
 	return userName, err
 }
@@ -60,7 +60,7 @@ func (i *ICoreWebView2BasicAuthenticationResponse) PutUserName(userName string) 
 	return err
 }
 
-func (i *ICoreWebView2BasicAuthenticationResponse) GetPassword() (*string, error) {
+func (i *ICoreWebView2BasicAuthenticationResponse) GetPassword() (string, error) {
 	// Create *uint16 to hold result
 	var _password *uint16
 
@@ -69,10 +69,10 @@ func (i *ICoreWebView2BasicAuthenticationResponse) GetPassword() (*string, error
 		uintptr(unsafe.Pointer(_password)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	password := ptr(UTF16PtrToString(_password))
+	password := UTF16PtrToString(_password)
 	CoTaskMemFree(unsafe.Pointer(_password))
 	return password, err
 }

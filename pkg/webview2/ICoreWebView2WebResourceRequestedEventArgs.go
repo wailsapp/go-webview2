@@ -80,16 +80,16 @@ func (i *ICoreWebView2WebResourceRequestedEventArgs) GetDeferral() (*ICoreWebVie
 	return deferral, err
 }
 
-func (i *ICoreWebView2WebResourceRequestedEventArgs) GetResourceContext() (*COREWEBVIEW2_WEB_RESOURCE_CONTEXT, error) {
+func (i *ICoreWebView2WebResourceRequestedEventArgs) GetResourceContext() (COREWEBVIEW2_WEB_RESOURCE_CONTEXT, error) {
 
-	var context *COREWEBVIEW2_WEB_RESOURCE_CONTEXT
+	var context COREWEBVIEW2_WEB_RESOURCE_CONTEXT
 
 	hr, _, err := i.Vtbl.GetResourceContext.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&context)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_WEB_RESOURCE_CONTEXT{}, syscall.Errno(hr)
 	}
 	return context, err
 }

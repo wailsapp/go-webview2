@@ -30,7 +30,7 @@ func (i *ICoreWebView2ClientCertificate) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2ClientCertificate) GetSubject() (*string, error) {
+func (i *ICoreWebView2ClientCertificate) GetSubject() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -39,15 +39,15 @@ func (i *ICoreWebView2ClientCertificate) GetSubject() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2ClientCertificate) GetIssuer() (*string, error) {
+func (i *ICoreWebView2ClientCertificate) GetIssuer() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -56,43 +56,43 @@ func (i *ICoreWebView2ClientCertificate) GetIssuer() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2ClientCertificate) GetValidFrom() (*float64, error) {
+func (i *ICoreWebView2ClientCertificate) GetValidFrom() (float64, error) {
 
-	var value *float64
+	var value float64
 
 	hr, _, err := i.Vtbl.GetValidFrom.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2ClientCertificate) GetValidTo() (*float64, error) {
+func (i *ICoreWebView2ClientCertificate) GetValidTo() (float64, error) {
 
-	var value *float64
+	var value float64
 
 	hr, _, err := i.Vtbl.GetValidTo.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0.0, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2ClientCertificate) GetDerEncodedSerialNumber() (*string, error) {
+func (i *ICoreWebView2ClientCertificate) GetDerEncodedSerialNumber() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -101,15 +101,15 @@ func (i *ICoreWebView2ClientCertificate) GetDerEncodedSerialNumber() (*string, e
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2ClientCertificate) GetDisplayName() (*string, error) {
+func (i *ICoreWebView2ClientCertificate) GetDisplayName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -118,15 +118,15 @@ func (i *ICoreWebView2ClientCertificate) GetDisplayName() (*string, error) {
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2ClientCertificate) ToPemEncoding() (*string, error) {
+func (i *ICoreWebView2ClientCertificate) ToPemEncoding() (string, error) {
 	// Create *uint16 to hold result
 	var _pemEncodedData *uint16
 
@@ -135,10 +135,10 @@ func (i *ICoreWebView2ClientCertificate) ToPemEncoding() (*string, error) {
 		uintptr(unsafe.Pointer(_pemEncodedData)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	pemEncodedData := ptr(UTF16PtrToString(_pemEncodedData))
+	pemEncodedData := UTF16PtrToString(_pemEncodedData)
 	CoTaskMemFree(unsafe.Pointer(_pemEncodedData))
 	return pemEncodedData, err
 }
@@ -157,16 +157,16 @@ func (i *ICoreWebView2ClientCertificate) GetPemEncodedIssuerCertificateChain() (
 	return value, err
 }
 
-func (i *ICoreWebView2ClientCertificate) GetKind() (*COREWEBVIEW2_CLIENT_CERTIFICATE_KIND, error) {
+func (i *ICoreWebView2ClientCertificate) GetKind() (COREWEBVIEW2_CLIENT_CERTIFICATE_KIND, error) {
 
-	var value *COREWEBVIEW2_CLIENT_CERTIFICATE_KIND
+	var value COREWEBVIEW2_CLIENT_CERTIFICATE_KIND
 
 	hr, _, err := i.Vtbl.GetKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_CLIENT_CERTIFICATE_KIND{}, syscall.Errno(hr)
 	}
 	return value, err
 }

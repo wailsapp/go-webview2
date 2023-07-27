@@ -35,9 +35,9 @@ func (i *ICoreWebView2) GetICoreWebView2Frame3() *ICoreWebView2Frame3 {
 	return result
 }
 
-func (i *ICoreWebView2Frame3) AddPermissionRequested(handler *ICoreWebView2FramePermissionRequestedEventHandler) (*EventRegistrationToken, error) {
+func (i *ICoreWebView2Frame3) AddPermissionRequested(handler *ICoreWebView2FramePermissionRequestedEventHandler) (EventRegistrationToken, error) {
 
-	var token *EventRegistrationToken
+	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddPermissionRequested.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -45,7 +45,7 @@ func (i *ICoreWebView2Frame3) AddPermissionRequested(handler *ICoreWebView2Frame
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
 	return token, err
 }

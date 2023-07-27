@@ -27,21 +27,21 @@ func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) AddRef() uintptr 
 	return refCounter
 }
 
-func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetErrorStatus() (*COREWEBVIEW2_WEB_ERROR_STATUS, error) {
+func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetErrorStatus() (COREWEBVIEW2_WEB_ERROR_STATUS, error) {
 
-	var value *COREWEBVIEW2_WEB_ERROR_STATUS
+	var value COREWEBVIEW2_WEB_ERROR_STATUS
 
 	hr, _, err := i.Vtbl.GetErrorStatus.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_WEB_ERROR_STATUS{}, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetRequestUri() (*string, error) {
+func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetRequestUri() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -50,10 +50,10 @@ func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetRequestUri() (
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
@@ -72,16 +72,16 @@ func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetServerCertific
 	return value, err
 }
 
-func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetAction() (*COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION, error) {
+func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetAction() (COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION, error) {
 
-	var value *COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION
+	var value COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION
 
 	hr, _, err := i.Vtbl.GetAction.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION{}, syscall.Errno(hr)
 	}
 	return value, err
 }

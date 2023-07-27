@@ -35,7 +35,7 @@ func (i *ICoreWebView2) GetICoreWebView2ControllerOptions2() *ICoreWebView2Contr
 	return result
 }
 
-func (i *ICoreWebView2ControllerOptions2) GetScriptLocale() (*string, error) {
+func (i *ICoreWebView2ControllerOptions2) GetScriptLocale() (string, error) {
 	// Create *uint16 to hold result
 	var _locale *uint16
 
@@ -44,10 +44,10 @@ func (i *ICoreWebView2ControllerOptions2) GetScriptLocale() (*string, error) {
 		uintptr(unsafe.Pointer(_locale)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	locale := ptr(UTF16PtrToString(_locale))
+	locale := UTF16PtrToString(_locale)
 	CoTaskMemFree(unsafe.Pointer(_locale))
 	return locale, err
 }

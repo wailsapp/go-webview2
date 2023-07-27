@@ -24,7 +24,7 @@ func (i *ICoreWebView2FrameInfoCollectionIterator) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2FrameInfoCollectionIterator) GetHasCurrent() (*bool, error) {
+func (i *ICoreWebView2FrameInfoCollectionIterator) GetHasCurrent() (bool, error) {
 	// Create int32 to hold bool result
 	var _hasCurrent int32
 
@@ -33,10 +33,10 @@ func (i *ICoreWebView2FrameInfoCollectionIterator) GetHasCurrent() (*bool, error
 		uintptr(unsafe.Pointer(&_hasCurrent)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	hasCurrent := ptr(_hasCurrent != 0)
+	hasCurrent := _hasCurrent != 0
 	return hasCurrent, err
 }
 
@@ -54,7 +54,7 @@ func (i *ICoreWebView2FrameInfoCollectionIterator) GetCurrent() (*ICoreWebView2F
 	return frameInfo, err
 }
 
-func (i *ICoreWebView2FrameInfoCollectionIterator) MoveNext() (*bool, error) {
+func (i *ICoreWebView2FrameInfoCollectionIterator) MoveNext() (bool, error) {
 	// Create int32 to hold bool result
 	var _hasNext int32
 
@@ -63,9 +63,9 @@ func (i *ICoreWebView2FrameInfoCollectionIterator) MoveNext() (*bool, error) {
 		uintptr(unsafe.Pointer(&_hasNext)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	hasNext := ptr(_hasNext != 0)
+	hasNext := _hasNext != 0
 	return hasNext, err
 }

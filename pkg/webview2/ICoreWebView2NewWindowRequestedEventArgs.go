@@ -29,7 +29,7 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2NewWindowRequestedEventArgs) GetUri() (*string, error) {
+func (i *ICoreWebView2NewWindowRequestedEventArgs) GetUri() (string, error) {
 	// Create *uint16 to hold result
 	var _uri *uint16
 
@@ -38,10 +38,10 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) GetUri() (*string, error) {
 		uintptr(unsafe.Pointer(_uri)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	uri := ptr(UTF16PtrToString(_uri))
+	uri := UTF16PtrToString(_uri)
 	CoTaskMemFree(unsafe.Pointer(_uri))
 	return uri, err
 }
@@ -84,7 +84,7 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) PutHandled(handled bool) erro
 	return err
 }
 
-func (i *ICoreWebView2NewWindowRequestedEventArgs) GetHandled() (*bool, error) {
+func (i *ICoreWebView2NewWindowRequestedEventArgs) GetHandled() (bool, error) {
 	// Create int32 to hold bool result
 	var _handled int32
 
@@ -93,14 +93,14 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) GetHandled() (*bool, error) {
 		uintptr(unsafe.Pointer(&_handled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	handled := ptr(_handled != 0)
+	handled := _handled != 0
 	return handled, err
 }
 
-func (i *ICoreWebView2NewWindowRequestedEventArgs) GetIsUserInitiated() (*bool, error) {
+func (i *ICoreWebView2NewWindowRequestedEventArgs) GetIsUserInitiated() (bool, error) {
 	// Create int32 to hold bool result
 	var _isUserInitiated int32
 
@@ -109,10 +109,10 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs) GetIsUserInitiated() (*bool, 
 		uintptr(unsafe.Pointer(&_isUserInitiated)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	isUserInitiated := ptr(_isUserInitiated != 0)
+	isUserInitiated := _isUserInitiated != 0
 	return isUserInitiated, err
 }
 

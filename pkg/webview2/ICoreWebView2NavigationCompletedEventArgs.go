@@ -24,7 +24,7 @@ func (i *ICoreWebView2NavigationCompletedEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2NavigationCompletedEventArgs) GetIsSuccess() (*bool, error) {
+func (i *ICoreWebView2NavigationCompletedEventArgs) GetIsSuccess() (bool, error) {
 	// Create int32 to hold bool result
 	var _isSuccess int32
 
@@ -33,37 +33,37 @@ func (i *ICoreWebView2NavigationCompletedEventArgs) GetIsSuccess() (*bool, error
 		uintptr(unsafe.Pointer(&_isSuccess)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	isSuccess := ptr(_isSuccess != 0)
+	isSuccess := _isSuccess != 0
 	return isSuccess, err
 }
 
-func (i *ICoreWebView2NavigationCompletedEventArgs) GetWebErrorStatus() (*COREWEBVIEW2_WEB_ERROR_STATUS, error) {
+func (i *ICoreWebView2NavigationCompletedEventArgs) GetWebErrorStatus() (COREWEBVIEW2_WEB_ERROR_STATUS, error) {
 
-	var webErrorStatus *COREWEBVIEW2_WEB_ERROR_STATUS
+	var webErrorStatus COREWEBVIEW2_WEB_ERROR_STATUS
 
 	hr, _, err := i.Vtbl.GetWebErrorStatus.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&webErrorStatus)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_WEB_ERROR_STATUS{}, syscall.Errno(hr)
 	}
 	return webErrorStatus, err
 }
 
-func (i *ICoreWebView2NavigationCompletedEventArgs) GetNavigationId() (*uint64, error) {
+func (i *ICoreWebView2NavigationCompletedEventArgs) GetNavigationId() (uint64, error) {
 
-	var navigationId *uint64
+	var navigationId uint64
 
 	hr, _, err := i.Vtbl.GetNavigationId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&navigationId)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return navigationId, err
 }

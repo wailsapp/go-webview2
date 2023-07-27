@@ -33,7 +33,7 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetHost() (*string, error) {
+func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetHost() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
@@ -42,29 +42,29 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetHost() (*string, e
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(UTF16PtrToString(_value))
+	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
 	return value, err
 }
 
-func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetPort() (*int, error) {
+func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetPort() (int, error) {
 
-	var value *int
+	var value int
 
 	hr, _, err := i.Vtbl.GetPort.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(value),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetIsProxy() (*bool, error) {
+func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetIsProxy() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -73,10 +73,10 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetIsProxy() (*bool, 
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 
@@ -134,7 +134,7 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) PutSelectedCertificat
 	return err
 }
 
-func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetCancel() (*bool, error) {
+func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetCancel() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -143,10 +143,10 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetCancel() (*bool, e
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 
@@ -162,7 +162,7 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) PutCancel(value bool)
 	return err
 }
 
-func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetHandled() (*bool, error) {
+func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetHandled() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -171,10 +171,10 @@ func (i *ICoreWebView2ClientCertificateRequestedEventArgs) GetHandled() (*bool, 
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 

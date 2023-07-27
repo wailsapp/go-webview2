@@ -205,7 +205,7 @@ func (m *InterfaceMethod) processInputParams() {
 	var inputs slicer.StringSlicer
 	var inputParamNames slicer.StringSlicer
 	for _, param := range m.inputParams {
-		inputs.Add(param.Name + " " + param.GoType)
+		inputs.Add(param.Name + " " + param.AsInputType())
 		inputParamNames.Add(param.Name)
 		param.processSetup()
 	}

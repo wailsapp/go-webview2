@@ -23,30 +23,30 @@ func (i *ICoreWebView2ProcessInfo) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2ProcessInfo) GetProcessId() (*int32, error) {
+func (i *ICoreWebView2ProcessInfo) GetProcessId() (int32, error) {
 
-	var value *int32
+	var value int32
 
 	hr, _, err := i.Vtbl.GetProcessId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
 
-func (i *ICoreWebView2ProcessInfo) GetKind() (*COREWEBVIEW2_PROCESS_KIND, error) {
+func (i *ICoreWebView2ProcessInfo) GetKind() (COREWEBVIEW2_PROCESS_KIND, error) {
 
-	var kind *COREWEBVIEW2_PROCESS_KIND
+	var kind COREWEBVIEW2_PROCESS_KIND
 
 	hr, _, err := i.Vtbl.GetKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&kind)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return COREWEBVIEW2_PROCESS_KIND{}, syscall.Errno(hr)
 	}
 	return kind, err
 }

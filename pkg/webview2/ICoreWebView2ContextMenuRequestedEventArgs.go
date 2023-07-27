@@ -57,16 +57,16 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetContextMenuTarget() (*IC
 	return value, err
 }
 
-func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetLocation() (*POINT, error) {
+func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetLocation() (POINT, error) {
 
-	var value *POINT
+	var value POINT
 
 	hr, _, err := i.Vtbl.GetLocation.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return POINT{}, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -83,16 +83,16 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) PutSelectedCommandId(value 
 	return err
 }
 
-func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetSelectedCommandId() (*int32, error) {
+func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetSelectedCommandId() (int32, error) {
 
-	var value *int32
+	var value int32
 
 	hr, _, err := i.Vtbl.GetSelectedCommandId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -109,7 +109,7 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) PutHandled(value bool) erro
 	return err
 }
 
-func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetHandled() (*bool, error) {
+func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetHandled() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
@@ -118,10 +118,10 @@ func (i *ICoreWebView2ContextMenuRequestedEventArgs) GetHandled() (*bool, error)
 		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	value := ptr(_value != 0)
+	value := _value != 0
 	return value, err
 }
 

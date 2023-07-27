@@ -35,7 +35,7 @@ func (i *ICoreWebView2) GetICoreWebView2PermissionRequestedEventArgs2() *ICoreWe
 	return result
 }
 
-func (i *ICoreWebView2PermissionRequestedEventArgs2) GetHandled() (*bool, error) {
+func (i *ICoreWebView2PermissionRequestedEventArgs2) GetHandled() (bool, error) {
 	// Create int32 to hold bool result
 	var _handled int32
 
@@ -44,10 +44,10 @@ func (i *ICoreWebView2PermissionRequestedEventArgs2) GetHandled() (*bool, error)
 		uintptr(unsafe.Pointer(&_handled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	handled := ptr(_handled != 0)
+	handled := _handled != 0
 	return handled, err
 }
 

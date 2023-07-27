@@ -22,7 +22,7 @@ func (i *ICoreWebView2DevToolsProtocolEventReceivedEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2DevToolsProtocolEventReceivedEventArgs) GetParameterObjectAsJson() (*string, error) {
+func (i *ICoreWebView2DevToolsProtocolEventReceivedEventArgs) GetParameterObjectAsJson() (string, error) {
 	// Create *uint16 to hold result
 	var _parameterObjectAsJson *uint16
 
@@ -31,10 +31,10 @@ func (i *ICoreWebView2DevToolsProtocolEventReceivedEventArgs) GetParameterObject
 		uintptr(unsafe.Pointer(_parameterObjectAsJson)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, syscall.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	parameterObjectAsJson := ptr(UTF16PtrToString(_parameterObjectAsJson))
+	parameterObjectAsJson := UTF16PtrToString(_parameterObjectAsJson)
 	CoTaskMemFree(unsafe.Pointer(_parameterObjectAsJson))
 	return parameterObjectAsJson, err
 }
