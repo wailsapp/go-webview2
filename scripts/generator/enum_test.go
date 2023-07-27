@@ -2,11 +2,33 @@ package generator
 
 import (
 	"bytes"
-	"github.com/alecthomas/participle/v2"
+	"embed"
+	_ "embed"
 	"github.com/matryer/is"
-	"os"
+	"github.com/stretchr/testify/require"
+	"strings"
 	"testing"
+	"updater/generator/types"
 )
+
+//go:embed testfiles/*
+var testfiles embed.FS
+
+func testfile(path string) *bytes.Buffer {
+	f, err := testfiles.ReadFile("testfiles/" + path)
+	if err != nil {
+		panic(err)
+	}
+	return bytes.NewBuffer(f)
+}
+
+func makeOutput(input string) *bytes.Buffer {
+	var buf bytes.Buffer
+	// Normalise newlines
+	input = strings.ReplaceAll(input, "\r\n", "\n")
+	buf.Write([]byte(input))
+	return &buf
+}
 
 var testData = []byte(`
 
@@ -60,12 +82,36 @@ func TestEnum(t *testing.T) {
 	var buf bytes.Buffer
 	buf.Write(testData)
 
-	idl, err := Parser.Parse("", &buf, participle.Trace(os.Stdout))
+	idl, err := Parser.Parse("", &buf)
 	i.NoErr(err)
 
 	err = idl.Process()
 	i.NoErr(err)
 
-	err = idl.Generate("./test/enum")
+	files, err := idl.Generate()
 	i.NoErr(err)
+
+	// Remove the `com.go` filename
+	files = files[1:]
+
+	expected := []*types.GeneratedFile{
+		{
+			FileName: "COREWEBVIEW2_PREFERRED_COLOR_SCHEME.go",
+			Package:  "webview2",
+			Content:  testfile("COREWEBVIEW2_PREFERRED_COLOR_SCHEME.go.txt"),
+		},
+		{
+			FileName: "COREWEBVIEW2_PREFERRED_COLOR_SCHEME1.go",
+			Package:  "webview2",
+			Content:  testfile("COREWEBVIEW2_PREFERRED_COLOR_SCHEME1.go.txt"),
+		},
+		{
+			FileName: "COREWEBVIEW2_PREFERRED_COLOR_SCHEME2.go",
+			Package:  "webview2",
+			Content:  testfile("COREWEBVIEW2_PREFERRED_COLOR_SCHEME2.go.txt"),
+		},
+	}
+
+	require.ElementsMatch(t, files, expected)
+
 }
