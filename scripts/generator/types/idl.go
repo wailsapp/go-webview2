@@ -5,11 +5,15 @@ import (
 	"errors"
 	"github.com/leaanthony/slicer"
 	"log"
-	"os"
-	"path/filepath"
 	"strings"
 	"text/template"
 )
+
+type GeneratedFile struct {
+	FileName string
+	Package  string
+	Content  *bytes.Buffer
+}
 
 type IDL struct {
 	Imports   []*Import  `parser:"@@*"`
@@ -26,11 +30,11 @@ func (i *IDL) Process() error {
 	return nil
 }
 
-func (i *IDL) Generate(targetDir string) error {
+func (i *IDL) Generate() ([]*GeneratedFile, error) {
 	for _, library := range i.Libraries {
-		return library.Generate(targetDir)
+		return library.Generate()
 	}
-	return nil
+	return nil, nil
 }
 
 type Import struct {
@@ -63,36 +67,36 @@ func (l *Library) Process() error {
 	return nil
 }
 
-func (l *Library) Generate(targetDir string) error {
-	packageDir, err := filepath.Abs(filepath.Join(targetDir, strings.ToLower(l.Name)))
-	if err != nil {
-		return err
-	}
-
-	_ = os.MkdirAll(packageDir, 0755)
-
-	l.GenerateDefaultFiles(packageDir)
+func (l *Library) Generate() ([]*GeneratedFile, error) {
+	result := l.GenerateDefaultFiles()
 
 	for _, declaration := range l.Declarations {
-		err := declaration.Generate(packageDir)
+		generatedFile, err := declaration.Generate()
 		if err != nil {
-			return err
+			return nil, err
+		}
+		if generatedFile != nil {
+			result = append(result, generatedFile)
 		}
 	}
 
-	return nil
+	return result, nil
 }
 
 func (l *Library) addInterfaceName(interfaceName string) {
 	l.forewardInterfaceDeclarations.Add(interfaceName)
 }
 
-func (l *Library) GenerateDefaultFiles(packageDir string) {
+func (l *Library) GenerateDefaultFiles() []*GeneratedFile {
 	data := struct {
 		PackageName string
 	}{
 		PackageName: l.packageName,
 	}
+
+	var result []*GeneratedFile
+	var buf bytes.Buffer
+
 	templateData, err := templates.ReadFile("templates/com.tmpl")
 	if err != nil {
 		log.Fatal(err)
@@ -101,18 +105,19 @@ func (l *Library) GenerateDefaultFiles(packageDir string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	file, err := os.Create(filepath.Join(packageDir, "com.go"))
+	err = tmpl.Execute(&buf, &data)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = tmpl.Execute(file, &data)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = file.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
+
+	result = append(result, &GeneratedFile{
+		FileName: "com.go",
+		Package:  l.packageName,
+		Content:  &buf,
+	})
+
+	return result
+
 }
 
 type Declaration struct {
@@ -147,7 +152,7 @@ func (d *Declaration) Process(l *Library) error {
 	return errors.New("unknown declaration to process")
 }
 
-func (d *Declaration) Generate(packageDir string) error {
+func (d *Declaration) Generate() (*GeneratedFile, error) {
 
 	var buffer bytes.Buffer
 	var packageName = strings.ToLower(d.library.Name)
@@ -156,31 +161,36 @@ func (d *Declaration) Generate(packageDir string) error {
 	if d.Enum != nil {
 		err := d.Enum.Generate(packageName, &buffer)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		filename = d.Enum.Name + ".go"
 	}
 	if d.Struct != nil {
 		err := d.Struct.Generate(packageName, &buffer)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		filename = d.Struct.Name + ".go"
 	}
 	if d.Interface != nil {
 		err := d.Interface.Generate(packageName, &buffer)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		filename = d.Interface.Name + ".go"
 	}
 	if d.CppQuote != "" {
-		return nil
+		return nil, nil
 	}
 	if d.InterfaceForewardDecl != "" {
-		return nil
+		return nil, nil
 	}
-	f := filepath.Join(packageDir, filename)
-	return os.WriteFile(f, buffer.Bytes(), 0755)
+	//f := filepath.Join(packageDir, filename)
+	//err := os.WriteFile(f, buffer.Bytes(), 0755)
+	return &GeneratedFile{
+		FileName: filename,
+		Package:  packageName,
+		Content:  &buffer,
+	}, nil
 
 }

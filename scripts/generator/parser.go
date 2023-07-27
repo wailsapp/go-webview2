@@ -25,21 +25,21 @@ var (
 	)
 )
 
-func ParseIDL(idlData []byte, outputDir string) error {
+func ParseIDL(idlData []byte) ([]*types.GeneratedFile, error) {
 
 	idl, err := Parser.ParseBytes("", idlData)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = idl.Process()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	err = idl.Generate(outputDir)
+	generatedFiles, err := idl.Generate()
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return generatedFiles, nil
 }

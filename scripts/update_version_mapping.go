@@ -171,9 +171,20 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = generator.ParseIDL(idlData, "../pkg")
+	files, err := generator.ParseIDL(idlData)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	// Write the files to the ../pkg/webview2 directory
+	_ = os.Mkdir("../pkg/webview2", 0755)
+	for _, file := range files {
+		fileName := "../pkg/webview2/" + file.FileName
+		println("Writing: ", fileName)
+		err = os.WriteFile(fileName, file.Content.Bytes(), 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// Save the version to latest_version.txt

@@ -19,7 +19,7 @@ tasks:
     cmds:
       - go run update_version_mapping.go
       - task: gofmt
-      - go fmt scripts/update_version_mapping.go
+      - go fmt update_version_mapping.go
 #      - task: commit
 
   update:forced:

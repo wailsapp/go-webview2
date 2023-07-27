@@ -4,6 +4,7 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"io"
 	"syscall"
 	"unsafe"
 )
