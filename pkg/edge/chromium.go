@@ -5,15 +5,18 @@ package edge
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync/atomic"
 	"syscall"
 	"unsafe"
 
 	"github.com/wailsapp/go-webview2/internal/w32"
+	"github.com/wailsapp/go-webview2/webviewloader"
 	"golang.org/x/sys/windows"
 )
 
@@ -37,6 +40,8 @@ type Chromium struct {
 	environment *ICoreWebView2Environment
 
 	padding Rect
+
+	CanAccessAdditionalWebMessageObjects bool
 
 	// Settings
 	Debug                 bool
@@ -132,6 +137,28 @@ func (e *Chromium) Embed(hwnd uintptr) bool {
 	}
 	e.Init("window.external={invoke:s=>window.chrome.webview.postMessage(s)}")
 	return true
+}
+
+func (e *Chromium) CheckCanAccessAdditionalWebMessageObjects() error {
+	version, err := webviewloader.GetAvailableCoreWebView2BrowserVersionString("")
+	if err != nil {
+		return err
+	}
+
+	vs := strings.Split(version, ".")
+	if len(vs) < 3 {
+		return errors.New("cannon find SDK version in browser version string")
+	}
+
+	sdkVersion, err := strconv.ParseInt(vs[2], 10, 32)
+	if err != nil {
+		return err
+	}
+
+	e.CanAccessAdditionalWebMessageObjects = sdkVersion >= 1774
+	e.Init(fmt.Sprintf("window.CanAccessAdditionalWebMessageObjects=%v", e.CanAccessAdditionalWebMessageObjects))
+
+	return nil
 }
 
 func (e *Chromium) SetPadding(padding Rect) {
@@ -301,9 +328,13 @@ func (e *Chromium) MessageReceived(sender *ICoreWebView2, args *ICoreWebView2Web
 
 	message := w32.Utf16PtrToString(_message)
 
-	obj, _ := args.GetAdditionalObjects()
-	if obj != nil && e.MessageWithAdditionalObjectsCallback != nil {
-		e.MessageWithAdditionalObjectsCallback(message, sender, args)
+	if e.CanAccessAdditionalWebMessageObjects {
+		obj, err := args.GetAdditionalObjects()
+		if err == nil && obj != nil && e.MessageWithAdditionalObjectsCallback != nil {
+			e.MessageWithAdditionalObjectsCallback(message, sender, args)
+		} else if e.MessageCallback != nil {
+			e.MessageCallback(message)
+		}
 	} else if e.MessageCallback != nil {
 		e.MessageCallback(message)
 	}
