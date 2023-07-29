@@ -18,15 +18,19 @@ type ICoreWebView2ObjectCollectionView struct {
 	vtbl *_ICoreWebView2ObjectCollectionViewVtbl
 }
 
-func (i *ICoreWebView2ObjectCollectionView) GetCount() (*uint32, error) {
+func (i *ICoreWebView2ObjectCollectionView) Release() error {
+	return i.vtbl.CallRelease(unsafe.Pointer(i))
+}
+
+func (i *ICoreWebView2ObjectCollectionView) GetCount() (uint32, error) {
 	var err error
-	var value *uint32
+	var value uint32
 	_, _, err = i.vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if err != windows.ERROR_SUCCESS {
-		return nil, err
+		return 0, err
 	}
 	return value, nil
 }

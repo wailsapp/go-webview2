@@ -21,6 +21,10 @@ func (i *ICoreWebView2File) AddRef() uintptr {
 	return i.AddRef()
 }
 
+func (i *ICoreWebView2File) Release() error {
+	return i.vtbl.CallRelease(unsafe.Pointer(i))
+}
+
 func (i *ICoreWebView2File) GetPath() (string, error) {
 	var err error
 	var _path *uint16
