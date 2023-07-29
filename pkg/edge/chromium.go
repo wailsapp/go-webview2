@@ -330,7 +330,12 @@ func (e *Chromium) MessageReceived(sender *ICoreWebView2, args *ICoreWebView2Web
 
 	if e.CanAccessAdditionalWebMessageObjects {
 		obj, err := args.GetAdditionalObjects()
-		if err == nil && obj != nil && e.MessageWithAdditionalObjectsCallback != nil {
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if obj != nil && e.MessageWithAdditionalObjectsCallback != nil {
+			defer obj.Release()
 			e.MessageWithAdditionalObjectsCallback(message, sender, args)
 		} else if e.MessageCallback != nil {
 			e.MessageCallback(message)
