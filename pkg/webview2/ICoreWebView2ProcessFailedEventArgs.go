@@ -31,7 +31,7 @@ func (i *ICoreWebView2ProcessFailedEventArgs) GetProcessFailedKind() (COREWEBVIE
 		uintptr(unsafe.Pointer(&processFailedKind)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PROCESS_FAILED_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return processFailedKind, err
 }

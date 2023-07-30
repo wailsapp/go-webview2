@@ -145,7 +145,7 @@ func (i *ICoreWebView2PrintSettings2) GetCollation() (COREWEBVIEW2_PRINT_COLLATI
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PRINT_COLLATION{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -171,7 +171,7 @@ func (i *ICoreWebView2PrintSettings2) GetColorMode() (COREWEBVIEW2_PRINT_COLOR_M
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PRINT_COLOR_MODE{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -197,7 +197,7 @@ func (i *ICoreWebView2PrintSettings2) GetDuplex() (COREWEBVIEW2_PRINT_DUPLEX, er
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PRINT_DUPLEX{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -223,7 +223,7 @@ func (i *ICoreWebView2PrintSettings2) GetMediaSize() (COREWEBVIEW2_PRINT_MEDIA_S
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PRINT_MEDIA_SIZE{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

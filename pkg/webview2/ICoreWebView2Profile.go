@@ -122,7 +122,7 @@ func (i *ICoreWebView2Profile) GetPreferredColorScheme() (COREWEBVIEW2_PREFERRED
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PREFERRED_COLOR_SCHEME{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

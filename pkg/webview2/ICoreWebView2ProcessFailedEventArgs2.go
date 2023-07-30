@@ -46,7 +46,7 @@ func (i *ICoreWebView2ProcessFailedEventArgs2) GetReason() (COREWEBVIEW2_PROCESS
 		uintptr(unsafe.Pointer(&reason)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PROCESS_FAILED_REASON{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return reason, err
 }

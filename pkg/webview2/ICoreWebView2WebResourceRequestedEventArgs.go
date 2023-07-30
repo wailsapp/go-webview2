@@ -89,7 +89,7 @@ func (i *ICoreWebView2WebResourceRequestedEventArgs) GetResourceContext() (COREW
 		uintptr(unsafe.Pointer(&context)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_WEB_RESOURCE_CONTEXT{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return context, err
 }

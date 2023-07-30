@@ -89,7 +89,7 @@ func (i *ICoreWebView2CustomSchemeRegistration) GetAllowedOrigins() (uint32, *st
 	return allowedOriginsCount, allowedOrigins, err
 }
 
-func (i *ICoreWebView2CustomSchemeRegistration) SetAllowedOrigins(allowedOriginsCount uint32, allowedOrigins *string) error {
+func (i *ICoreWebView2CustomSchemeRegistration) SetAllowedOrigins(allowedOriginsCount uint32, allowedOrigins string) error {
 
 	// Convert string 'allowedOrigins' to *uint16
 	_allowedOrigins, err := UTF16PtrFromString(allowedOrigins)

@@ -131,7 +131,7 @@ func (i *ICoreWebView2Controller3) GetBoundsMode() (COREWEBVIEW2_BOUNDS_MODE, er
 		uintptr(unsafe.Pointer(&boundsMode)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_BOUNDS_MODE{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return boundsMode, err
 }

@@ -33,7 +33,7 @@ func (i *ICoreWebView2PermissionSetting) GetPermissionKind() (COREWEBVIEW2_PERMI
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PERMISSION_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -64,7 +64,7 @@ func (i *ICoreWebView2PermissionSetting) GetPermissionState() (COREWEBVIEW2_PERM
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PERMISSION_STATE{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

@@ -92,7 +92,7 @@ func (i *ICoreWebView2CompositionController) GetCursor() (HCURSOR, error) {
 		uintptr(unsafe.Pointer(&cursor)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return HCURSOR{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return cursor, err
 }

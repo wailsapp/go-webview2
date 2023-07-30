@@ -65,7 +65,7 @@ func (p *Param) isDoublePointer() bool {
 }
 
 func (p *Param) AsInputType() string {
-	if p.isPointer() {
+	if p.isPointer() && p.GoType != "string" {
 		return "*" + p.GoType
 	}
 	return p.GoType
@@ -190,23 +190,22 @@ func (p *Param) processSetupOutputs() {
 }
 
 func (p *Param) defaultErrorValue() string {
-	if strings.HasPrefix(p.GoType, "uint") ||
-		strings.HasPrefix(p.GoType, "int") {
+
+	switch true {
+	case p.IsEnum(), strings.HasPrefix(p.GoType, "uint"), strings.HasPrefix(p.GoType, "int"),
+		p.GoType == "HANDLE", p.GoType == "HWND", p.GoType == "HCURSOR":
 		return "0"
-	}
-	if strings.HasPrefix(p.GoType, "float") {
+	case strings.HasPrefix(p.GoType, "float"):
 		return "0.0"
-	}
-	switch p.GoType {
-	case "string":
-		return `""`
-	case "bool":
+	case p.GoType == "bool":
 		return "false"
-	}
-	if p.OutputGoType[0] == '*' {
+	case p.GoType == "string":
+		return `""`
+	case p.OutputGoType[0] == '*':
 		return "nil"
+	default:
+		return p.GoType + "{}"
 	}
-	return p.OutputGoType + "{}"
 }
 
 type Direction struct {

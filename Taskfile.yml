@@ -14,13 +14,17 @@ tasks:
     cmds:
       - go fmt
 
+  test:
+    cmds:
+      - go test ./...
+
   update:
     dir: scripts
     cmds:
       - go run update_version_mapping.go
       - task: gofmt
       - go fmt update_version_mapping.go
-      - go test ./...
+      - task: test
       - task: commit
 
   update:forced:
@@ -28,4 +32,6 @@ tasks:
     cmds:
       - go run update_version_mapping.go -forced
       - task: gofmt
+      - go fmt update_version_mapping.go
+      - task: test
       - task: commit

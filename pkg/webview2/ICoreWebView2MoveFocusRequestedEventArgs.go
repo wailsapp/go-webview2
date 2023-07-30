@@ -33,7 +33,7 @@ func (i *ICoreWebView2MoveFocusRequestedEventArgs) GetReason() (COREWEBVIEW2_MOV
 		uintptr(unsafe.Pointer(&reason)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_MOVE_FOCUS_REASON{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return reason, err
 }

@@ -3,8 +3,8 @@
 package edge
 
 type Version struct {
-	SDKVersion     string
-	ReleaseNotes   string
+	SDKVersion         string
+	ReleaseNotes           string
 	RuntimeVersion string
 	Notes          string
 }
@@ -14,7 +14,7 @@ var versionMapping = map[string]Version{
 		SDKVersion:     "1.0.1901.177",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101901177",
 		RuntimeVersion: "115.0.1901.177",
-		Notes: `
+		Notes: 			`
 <!-- ------------------------------ -->
 #### General
 
@@ -85,7 +85,7 @@ Release Date: July 24, 2023`,
 		SDKVersion:     "1.0.1988-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101988-prerelease",
 		RuntimeVersion: "117.0.1988.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 <!-- ------------------------------ -->
@@ -281,7 +281,7 @@ Release Date: June 5, 2023`,
 		SDKVersion:     "1.0.1823.32",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10182332",
 		RuntimeVersion: "114.0.1823.32",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -393,7 +393,7 @@ Release Date: June 12, 2023`,
 		SDKVersion:     "1.0.1905-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101905-prerelease",
 		RuntimeVersion: "116.0.1905.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -537,7 +537,7 @@ Release Date: May 8, 2023`,
 		SDKVersion:     "1.0.1774.30",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10177430",
 		RuntimeVersion: "113.0.1774.30",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -630,7 +630,7 @@ Release Date: May 8, 2023`,
 		SDKVersion:     "1.0.1829-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101829-prerelease",
 		RuntimeVersion: "115.0.1829.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -707,7 +707,7 @@ Release Date: April 13, 2023`,
 		SDKVersion:     "1.0.1722.45",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10172245",
 		RuntimeVersion: "112.0.1722.45",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -775,7 +775,7 @@ Release Date: April 10, 2023`,
 		SDKVersion:     "1.0.1777-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101777-prerelease",
 		RuntimeVersion: "114.0.1777.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -867,7 +867,7 @@ Release Date: March 20, 2023`,
 		SDKVersion:     "1.0.1661.34",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10166134",
 		RuntimeVersion: "111.0.1661.34",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -1094,7 +1094,7 @@ Release Date: March 20, 2023`,
 		SDKVersion:     "1.0.1724-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101724-prerelease",
 		RuntimeVersion: "113.0.1724.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -1447,7 +1447,7 @@ Release Date: February 15, 2023`,
 		SDKVersion:     "1.0.1587.40",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10158740",
 		RuntimeVersion: "110.0.1587.40",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -1497,7 +1497,7 @@ Release Date: February 15, 2023`,
 		SDKVersion:     "1.0.1671-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101671-prerelease",
 		RuntimeVersion: "112.0.1671.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -1690,7 +1690,7 @@ Release Date: January 17, 2023`,
 		SDKVersion:     "1.0.1518.46",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10151846",
 		RuntimeVersion: "109.0.1518.46",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -1784,7 +1784,7 @@ Release Date: January 19, 2023`,
 		SDKVersion:     "1.0.1619-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101619-prerelease",
 		RuntimeVersion: "111.0.1619.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -1958,7 +1958,7 @@ Release Date: December 12, 2022`,
 		SDKVersion:     "1.0.1462.37",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10146237",
 		RuntimeVersion: "108.0.1462.37",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -1973,7 +1973,7 @@ Release Date: December 12, 2022`,
 		SDKVersion:     "1.0.1549-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101549-prerelease",
 		RuntimeVersion: "110.0.1549.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -2121,7 +2121,7 @@ Release Date: October 31, 2022`,
 		SDKVersion:     "1.0.1418.22",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10141822",
 		RuntimeVersion: "107.0.1418.22",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -2136,7 +2136,7 @@ Release Date: October 31, 2022`,
 		SDKVersion:     "1.0.1466-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101466-prerelease",
 		RuntimeVersion: "109.0.1466.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -2245,7 +2245,7 @@ Release Date: October 11, 2022`,
 		SDKVersion:     "1.0.1370.28",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10137028",
 		RuntimeVersion: "106.0.1370.28",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -2289,7 +2289,7 @@ Release Date: October 11, 2022`,
 		SDKVersion:     "1.0.1414-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101414-prerelease",
 		RuntimeVersion: "107.0.1414.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -2403,7 +2403,7 @@ Release Date: September 6, 2022`,
 		SDKVersion:     "1.0.1343.22",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10134322",
 		RuntimeVersion: "105.0.1343.22",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -2418,7 +2418,7 @@ Release Date: September 6, 2022`,
 		SDKVersion:     "1.0.1369-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101369-prerelease",
 		RuntimeVersion: "106.0.1369.0",
-		Notes: `
+		Notes: 			`
 
 <!-- ------------------------------ -->
 #### General
@@ -2475,7 +2475,7 @@ Release Date: August 8, 2022`,
 		SDKVersion:     "1.0.1293.44",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10129344",
 		RuntimeVersion: "104.0.1293.44",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Promotions
@@ -2510,7 +2510,7 @@ Release Date: August 8, 2022`,
 		SDKVersion:     "1.0.1340-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101340-prerelease",
 		RuntimeVersion: "105.0.1340.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Experimental features
@@ -2588,7 +2588,7 @@ Release Date: July 4, 2022`,
 		SDKVersion:     "1.0.1264.42",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10126442",
 		RuntimeVersion: "103.0.1264.42",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Promotions
@@ -2620,7 +2620,7 @@ Release Date: July 4, 2022`,
 		SDKVersion:     "1.0.1305-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101305-prerelease",
 		RuntimeVersion: "105.0.1305.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Promotions
@@ -2675,7 +2675,7 @@ Release Date: June 14, 2022`,
 		SDKVersion:     "1.0.1245.22",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10124522",
 		RuntimeVersion: "102.0.1245.22",
-		Notes: `
+		Notes: 			`
 There is no corresponding prerelease package.
 
 #### General
@@ -2711,7 +2711,7 @@ Release Date: May 9, 2022`,
 		SDKVersion:     "1.0.1210.39",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10121039",
 		RuntimeVersion: "101.0.1210.39",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Promotions
@@ -2731,7 +2731,7 @@ Release Date: May 9, 2022`,
 		SDKVersion:     "1.0.1248-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101248-prerelease",
 		RuntimeVersion: "102.0.1248.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 * Added support for WinRT Object projection into JavaScript by adding WinRT JS Projection tool (**wv2winrt**) in NuGet package. For instructions about using the WinRT JS Projection tool see [Call native-side WinRT code from web-side code](/microsoft-edge/webview2/how-to/winrt-from-js).
@@ -2768,7 +2768,7 @@ Release Date: April 12, 2022`,
 		SDKVersion:     "1.0.1185.39",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10118539",
 		RuntimeVersion: "100.0.1185.39",
-		Notes: `
+		Notes: 			`
 #### General
 
 * Renamed 'ICoreWebView2Certificate' to 'ICoreWebView2ClientCertificate'.
@@ -2802,7 +2802,7 @@ Release Date: April 12, 2022`,
 		SDKVersion:     "1.0.1222-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101222-prerelease",
 		RuntimeVersion: "102.0.1222.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Experimental features
@@ -2845,7 +2845,7 @@ Release Date: March 10, 2022`,
 		SDKVersion:     "1.0.1150.38",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10115038",
 		RuntimeVersion: "99.0.1150.38",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Promotions
@@ -2862,7 +2862,7 @@ Release Date: March 10, 2022`,
 		SDKVersion:     "1.0.1189-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101189-prerelease",
 		RuntimeVersion: "100.0.1189.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Experimental features
@@ -2897,7 +2897,7 @@ Release Date: February 6, 2022`,
 		SDKVersion:     "1.0.1108.44",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10110844",
 		RuntimeVersion: "98.0.1108.44",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Promotions
@@ -2931,7 +2931,7 @@ Release Date: February 6, 2022`,
 		SDKVersion:     "1.0.1158-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101158-prerelease",
 		RuntimeVersion: "100.0.1158.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Experimental features
@@ -2963,7 +2963,7 @@ Release Date: January 13, 2022`,
 		SDKVersion:     "1.0.1072.54",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10107254",
 		RuntimeVersion: "97.0.1072.54",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Promotions
@@ -2985,7 +2985,7 @@ Release Date: January 13, 2022`,
 		SDKVersion:     "1.0.1133-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101133-prerelease",
 		RuntimeVersion: "99.0.1133.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Experimental features
@@ -3028,7 +3028,7 @@ Release Date: November 29, 2021`,
 		SDKVersion:     "1.0.1083-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101083-prerelease",
 		RuntimeVersion: "97.0.1083.0",
-		Notes: `
+		Notes: 			`
 #### Experimental features
 
 * Added the following [APIs for iframes](/microsoft-edge/webview2/reference/win32/icorewebview2experimentalframe2?view=webview2-1.0.1083-prerelease&preserve-view=true) in WebView2:
@@ -3066,7 +3066,7 @@ Release Date: November 29, 2021`,
 		SDKVersion:     "1.0.1054.31",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10105431",
 		RuntimeVersion: "96.0.1054.31",
-		Notes: `
+		Notes: 			`
 #### General
 
 *  General reliability fixes.
@@ -3086,7 +3086,7 @@ Release Date: October 29, 2021`,
 		SDKVersion:     "1.0.1056-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101056-prerelease",
 		RuntimeVersion: "97.0.1056.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 *  General reliability improvements.
@@ -3114,7 +3114,7 @@ Release Date: October 25, 2021`,
 		SDKVersion:     "1.0.1020.30",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10102030",
 		RuntimeVersion: "95.0.1020.30",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Bug fixes
@@ -3136,7 +3136,7 @@ Release Date: September 27, 2021`,
 		SDKVersion:     "1.0.992.28",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#1099228",
 		RuntimeVersion: "94.0.992.31",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Bug fixes
@@ -3160,7 +3160,7 @@ Release Date: September 20, 2021`,
 		SDKVersion:     "1.0.1018-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101018-prerelease",
 		RuntimeVersion: "95.0.1018.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Experimental features
@@ -3182,7 +3182,7 @@ Release Date: September 14, 2021`,
 		SDKVersion:     "1.0.1010-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#101010-prerelease",
 		RuntimeVersion: "95.0.1010.0",
-		Notes: `
+		Notes: 			`
 #### General
 *  WebView2 performance improvements.
 *  Reliability fixes. ([Issue #1605](https://github.com/MicrosoftEdge/WebViewFeedback/issues/1605) and [Issue #1678](https://github.com/MicrosoftEdge/WebViewFeedback/issues/1678))
@@ -3232,7 +3232,7 @@ Release Date: September 8, 2021`,
 		SDKVersion:     "1.0.961.33",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#1096133",
 		RuntimeVersion: "93.0.961.44",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Bug fixes
@@ -3257,7 +3257,7 @@ Release Date: July 26, 2021`,
 		SDKVersion:     "1.0.955-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10955-prerelease",
 		RuntimeVersion: "93.0.967.0",
-		Notes: `
+		Notes: 			`
 #### General
 *  WebView2 performance improvements.
 *  Added partial Event Tracing for Windows (ETW) support.
@@ -3305,7 +3305,7 @@ Release Date: July 26, 2021`,
 		SDKVersion:     "1.0.902.49",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#1090249",
 		RuntimeVersion: "92.0.902.49",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Bug fixes
@@ -3333,7 +3333,7 @@ Release Date: June 1, 2021`,
 		SDKVersion:     "1.0.902-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10902-prerelease",
 		RuntimeVersion: "92.0.902.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 *  Improved WebView2 startup performance and disk footprint.
@@ -3387,7 +3387,7 @@ Release Date: May 31, 2021`,
 		SDKVersion:     "1.0.864.35",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#1086435",
 		RuntimeVersion: "91.0.864.35",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Bug fixes
@@ -3419,7 +3419,7 @@ Release Date: April 26, 2021`,
 		SDKVersion:     "1.0.865-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10865-prerelease",
 		RuntimeVersion: "91.0.865.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Experimental features
@@ -3463,7 +3463,7 @@ Release Date: April 21, 2021`,
 		SDKVersion:     "1.0.818.41",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#1081841",
 		RuntimeVersion: "90.0.818.41",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Features
@@ -3481,7 +3481,7 @@ Release Date: March 8, 2021`,
 		SDKVersion:     "1.0.824-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10824-prerelease",
 		RuntimeVersion: "91.0.824.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Features
@@ -3518,7 +3518,7 @@ Release Date: March 8, 2021`,
 		SDKVersion:     "1.0.774.44",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#1077444",
 		RuntimeVersion: "89.0.774.44",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Features
@@ -3548,7 +3548,7 @@ Release Date: February 10, 2021`,
 		SDKVersion:     "1.0.790-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10790-prerelease",
 		RuntimeVersion: "86.0.616.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 > [!IMPORTANT]
@@ -3603,7 +3603,7 @@ Release Date: January 25, 2021`,
 		SDKVersion:     "1.0.705.50",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#1070550",
 		RuntimeVersion: "86.0.616.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 ###### Promotions
@@ -3624,7 +3624,7 @@ Release Date: December 8, 2020`,
 		SDKVersion:     "1.0.721-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10721-prerelease",
 		RuntimeVersion: "86.0.616.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 > [!IMPORTANT]
@@ -3679,7 +3679,7 @@ Release Date: November 20, 2020`,
 		SDKVersion:     "1.0.664.37",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#1066437",
 		RuntimeVersion: "86.0.616.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 > [!IMPORTANT]
@@ -3704,7 +3704,7 @@ Release Date: October 19, 2020`,
 		SDKVersion:     "1.0.674-prerelease",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#10674-prerelease",
 		RuntimeVersion: "86.0.616.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 *  Added [NavigateWithWebResourceRequest](/microsoft-edge/webview2/reference/win32/icorewebview2experimental?view=webview2-1.0.674-prerelease&preserve-view=true#navigatewithwebresourcerequest) method to provide post data or other request headers during navigation.
@@ -3737,7 +3737,7 @@ Release Date: October 19, 2020`,
 		SDKVersion:     "1.0.622.22",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#1062222",
 		RuntimeVersion: "86.0.616.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 > [!IMPORTANT]
@@ -3755,7 +3755,7 @@ Release Date: September 10, 2020`,
 		SDKVersion:     "0.9.622.11",
 		ReleaseNotes:   "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes?tabs=win32cpp#0962211",
 		RuntimeVersion: "85.0.538.0",
-		Notes: `
+		Notes: 			`
 #### General
 
 *  > [!IMPORTANT]

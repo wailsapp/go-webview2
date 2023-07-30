@@ -55,7 +55,7 @@ func (i *ICoreWebView2ScriptDialogOpeningEventArgs) GetKind() (COREWEBVIEW2_SCRI
 		uintptr(unsafe.Pointer(&kind)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_SCRIPT_DIALOG_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return kind, err
 }

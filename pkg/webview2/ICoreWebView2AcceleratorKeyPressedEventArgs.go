@@ -36,7 +36,7 @@ func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetKeyEventKind() (COREWEB
 		uintptr(unsafe.Pointer(&keyEventKind)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_KEY_EVENT_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return keyEventKind, err
 }

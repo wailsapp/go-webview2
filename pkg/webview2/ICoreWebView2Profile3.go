@@ -44,7 +44,7 @@ func (i *ICoreWebView2Profile3) GetPreferredTrackingPreventionLevel() (COREWEBVI
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_TRACKING_PREVENTION_LEVEL{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

@@ -32,7 +32,7 @@ func (i *ICoreWebView2BrowserProcessExitedEventArgs) GetBrowserProcessExitKind()
 		uintptr(unsafe.Pointer(&browserProcessExitKind)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return browserProcessExitKind, err
 }
