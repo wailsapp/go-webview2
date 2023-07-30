@@ -127,7 +127,7 @@ func main() {
 
 	var buffer strings.Builder
 	buffer.WriteString("//go:build windows\n\n")
-	buffer.WriteString("package webviewloader\n\n")
+	buffer.WriteString("package edge\n\n")
 	buffer.WriteString("type Version struct {\n")
 	buffer.WriteString("	SDKVersion         string\n")
 	buffer.WriteString("	ReleaseNotes           string\n")
@@ -146,8 +146,8 @@ func main() {
 	}
 	buffer.WriteString("}\n")
 
-	// Write the buffer to ../webviewloader/version_map.go
-	err = os.WriteFile("../webviewloader/version_map.go", []byte(buffer.String()), 0644)
+	// Write the buffer to ../pkg/edge/version_map.go
+	err = os.WriteFile("../pkg/edge/version_map.go", []byte(buffer.String()), 0644)
 	if err != nil {
 		log.Fatal(err)
 	}

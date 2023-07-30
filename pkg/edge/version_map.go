@@ -1,6 +1,6 @@
 //go:build windows
 
-package webviewloader
+package edge
 
 type Version struct {
 	SDKVersion         string

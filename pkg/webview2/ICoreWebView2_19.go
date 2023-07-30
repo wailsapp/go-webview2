@@ -44,7 +44,7 @@ func (i *ICoreWebView2_19) GetMemoryUsageTargetLevel() (COREWEBVIEW2_MEMORY_USAG
 		uintptr(unsafe.Pointer(&level)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return level, err
 }

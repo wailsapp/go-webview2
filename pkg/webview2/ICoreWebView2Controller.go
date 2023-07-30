@@ -293,7 +293,7 @@ func (i *ICoreWebView2Controller) GetParentWindow() (HWND, error) {
 		uintptr(unsafe.Pointer(&parentWindow)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return HWND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return parentWindow, err
 }

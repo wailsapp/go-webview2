@@ -122,7 +122,7 @@ func (i *ICoreWebView2ContextMenuItem) GetKind() (COREWEBVIEW2_CONTEXT_MENU_ITEM
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

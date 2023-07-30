@@ -166,7 +166,7 @@ func (i *ICoreWebView2ClientCertificate) GetKind() (COREWEBVIEW2_CLIENT_CERTIFIC
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_CLIENT_CERTIFICATE_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

@@ -46,7 +46,7 @@ func (i *ICoreWebView2ProcessInfo) GetKind() (COREWEBVIEW2_PROCESS_KIND, error) 
 		uintptr(unsafe.Pointer(&kind)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PROCESS_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return kind, err
 }

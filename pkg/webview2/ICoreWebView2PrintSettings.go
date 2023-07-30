@@ -56,7 +56,7 @@ func (i *ICoreWebView2PrintSettings) GetOrientation() (COREWEBVIEW2_PRINT_ORIENT
 		uintptr(unsafe.Pointer(&orientation)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PRINT_ORIENTATION{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return orientation, err
 }

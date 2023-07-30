@@ -44,7 +44,7 @@ func (i *ICoreWebView2Settings7) GetHiddenPdfToolbarItems() (COREWEBVIEW2_PDF_TO
 		uintptr(unsafe.Pointer(&hidden_pdf_toolbar_items)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_PDF_TOOLBAR_ITEMS{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return hidden_pdf_toolbar_items, err
 }

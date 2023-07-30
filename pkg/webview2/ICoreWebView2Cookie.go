@@ -184,7 +184,7 @@ func (i *ICoreWebView2Cookie) GetSameSite() (COREWEBVIEW2_COOKIE_SAME_SITE_KIND,
 		uintptr(unsafe.Pointer(&sameSite)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_COOKIE_SAME_SITE_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return sameSite, err
 }

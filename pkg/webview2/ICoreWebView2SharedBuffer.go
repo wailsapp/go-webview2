@@ -77,7 +77,7 @@ func (i *ICoreWebView2SharedBuffer) GetFileMappingHandle() (HANDLE, error) {
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return HANDLE{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

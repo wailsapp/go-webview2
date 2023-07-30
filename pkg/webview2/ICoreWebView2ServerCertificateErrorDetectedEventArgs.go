@@ -36,7 +36,7 @@ func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetErrorStatus() 
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_WEB_ERROR_STATUS{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }
@@ -81,7 +81,7 @@ func (i *ICoreWebView2ServerCertificateErrorDetectedEventArgs) GetAction() (CORE
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, err
 }

@@ -243,7 +243,7 @@ func (i *ICoreWebView2DownloadOperation) GetState() (COREWEBVIEW2_DOWNLOAD_STATE
 		uintptr(unsafe.Pointer(&downloadState)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_DOWNLOAD_STATE{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return downloadState, err
 }
@@ -257,7 +257,7 @@ func (i *ICoreWebView2DownloadOperation) GetInterruptReason() (COREWEBVIEW2_DOWN
 		uintptr(unsafe.Pointer(&interruptReason)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_DOWNLOAD_INTERRUPT_REASON{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return interruptReason, err
 }

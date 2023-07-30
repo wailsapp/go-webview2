@@ -73,7 +73,7 @@ func (i *ICoreWebView2Frame) RemoveNameChanged(token EventRegistrationToken) err
 	return err
 }
 
-func (i *ICoreWebView2Frame) AddHostObjectToScriptWithOrigins(name string, object *VARIANT, originsCount uint32, origins *string) error {
+func (i *ICoreWebView2Frame) AddHostObjectToScriptWithOrigins(name string, object *VARIANT, originsCount uint32, origins string) error {
 
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)

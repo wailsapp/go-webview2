@@ -43,7 +43,7 @@ func (i *ICoreWebView2NavigationStartingEventArgs3) GetNavigationKind() (COREWEB
 		uintptr(unsafe.Pointer(&navigation_kind)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_NAVIGATION_KIND{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return navigation_kind, err
 }

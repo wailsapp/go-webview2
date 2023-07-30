@@ -49,7 +49,7 @@ func (i *ICoreWebView2NavigationCompletedEventArgs) GetWebErrorStatus() (COREWEB
 		uintptr(unsafe.Pointer(&webErrorStatus)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return COREWEBVIEW2_WEB_ERROR_STATUS{}, syscall.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return webErrorStatus, err
 }

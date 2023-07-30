@@ -6,6 +6,8 @@ package edge
 import (
 	"errors"
 	"fmt"
+	"github.com/wailsapp/go-webview2/webviewloader"
+
 	"log"
 	"os"
 	"path/filepath"
@@ -37,9 +39,9 @@ type Chromium struct {
 	navigationCompleted              *ICoreWebView2NavigationCompletedEventHandler
 	processFailed                    *ICoreWebView2ProcessFailedEventHandler
 
-	environment *ICoreWebView2Environment
-
-	padding Rect
+	environment            *ICoreWebView2Environment
+	padding                Rect
+	webview2RuntimeVersion string
 
 	CanAccessAdditionalWebMessageObjects bool
 
@@ -91,6 +93,9 @@ func NewChromium() *Chromium {
 }
 
 func (e *Chromium) Embed(hwnd uintptr) bool {
+
+	var err error
+
 	e.hwnd = hwnd
 
 	dataPath := e.DataPath
@@ -115,6 +120,12 @@ func (e *Chromium) Embed(hwnd uintptr) bool {
 	browserArgs := strings.Join(e.AdditionalBrowserArgs, " ")
 	if err := createCoreWebView2EnvironmentWithOptions(e.BrowserPath, dataPath, e.envCompleted, browserArgs); err != nil {
 		log.Printf("Error calling Webview2Loader: %v", err)
+		return false
+	}
+
+	e.webview2RuntimeVersion, err = webviewloader.GetAvailableCoreWebView2BrowserVersionString(e.BrowserPath)
+	if err != nil {
+		log.Printf("Error getting Webview2 runtime version: %v", err)
 		return false
 	}
 
