@@ -147,7 +147,7 @@ func main() {
 	buffer.WriteString("}\n")
 
 	// Write the buffer to ../webviewloader/version_map.go
-	err = os.WriteFile("../webviewloader/version_map.go", []byte(buffer.String()), 0644)
+	err = os.WriteFile("../edge/version_map.go", []byte(buffer.String()), 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
