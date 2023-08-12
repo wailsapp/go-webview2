@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	fmt.Println("DEB | Using go webview2loader")
+	UsingGoWebview2Loader = true
 	preventEnvAndRegistryOverrides()
 }
 

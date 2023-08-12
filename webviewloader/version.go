@@ -9,6 +9,9 @@ import (
 	"strings"
 )
 
+// UsingGoWebview2Loader is set to true when the go webview2loader is used.
+var UsingGoWebview2Loader bool
+
 // CompareBrowserVersions will compare the 2 given versions and return:
 //
 //	-1 = v1 < v2
