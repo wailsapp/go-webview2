@@ -479,3 +479,13 @@ func (e *Chromium) PutZoomFactor(zoomFactor float64) {
 func (e *Chromium) OpenDevToolsWindow() {
 	e.webview.OpenDevToolsWindow()
 }
+
+func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
+	webview2Settings6 := e.webview.GetICoreWebView2Settings6()
+	return webview2Settings6.GetIsSwipeNavigationEnabled()
+}
+
+func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
+	webview2Settings6 := e.webview.GetICoreWebView2Settings6()
+	return webview2Settings6.PutIsSwipeNavigationEnabled(enabled)
+}
