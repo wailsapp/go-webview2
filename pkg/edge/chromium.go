@@ -480,7 +480,14 @@ func (e *Chromium) OpenDevToolsWindow() {
 	e.webview.OpenDevToolsWindow()
 }
 
+func (e *Chromium) HasCapability(c Capability) bool {
+	return hasCapability(e.webview2RuntimeVersion, c)
+}
+
 func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
+	if !hasCapability(e.webview2RuntimeVersion, SwipeNavigation) {
+		return false, UnsupportedCapabilityError(SwipeNavigation)
+	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
 		return false, err
@@ -495,6 +502,9 @@ func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
 }
 
 func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
+	if !hasCapability(e.webview2RuntimeVersion, SwipeNavigation) {
+		return UnsupportedCapabilityError(SwipeNavigation)
+	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
 		return err

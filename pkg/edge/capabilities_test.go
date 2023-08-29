@@ -13,26 +13,26 @@ func Test_hasCapability(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "should support getAdditionalObjects if version is 113.0.1774.30",
+			name: "should support GetAdditionalObjects if version is 113.0.1774.30",
 			args: args{
 				webview2RuntimeVersion: "113.0.1774.30",
-				capability:             getAdditionalObjects,
+				capability:             GetAdditionalObjects,
 			},
 			want: true,
 		},
 		{
-			name: "should support getAdditionalObjects if version is 115.0.1901.177",
+			name: "should support GetAdditionalObjects if version is 115.0.1901.177",
 			args: args{
 				webview2RuntimeVersion: "115.0.1901.177",
-				capability:             getAdditionalObjects,
+				capability:             GetAdditionalObjects,
 			},
 			want: true,
 		},
 		{
-			name: "should not support getAdditionalObjects if version is 113.0.1724.0",
+			name: "should not support GetAdditionalObjects if version is 113.0.1724.0",
 			args: args{
 				webview2RuntimeVersion: "113.0.1724.0",
-				capability:             getAdditionalObjects,
+				capability:             GetAdditionalObjects,
 			},
 			want: false,
 		},
