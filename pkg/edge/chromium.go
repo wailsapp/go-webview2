@@ -486,7 +486,7 @@ func (e *Chromium) HasCapability(c Capability) bool {
 
 func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
 	if !hasCapability(e.webview2RuntimeVersion, SwipeNavigation) {
-		return false, UnsupportedCapabilityError(SwipeNavigation)
+		return false, UnsupportedCapabilityError
 	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
@@ -503,7 +503,7 @@ func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
 
 func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
 	if !hasCapability(e.webview2RuntimeVersion, SwipeNavigation) {
-		return UnsupportedCapabilityError(SwipeNavigation)
+		return UnsupportedCapabilityError
 	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
