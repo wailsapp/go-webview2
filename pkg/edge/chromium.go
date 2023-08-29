@@ -486,7 +486,12 @@ func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
 		return false, err
 	}
 	webview2Settings6 := webview2Settings.GetICoreWebView2Settings6()
-	return webview2Settings6.GetIsSwipeNavigationEnabled()
+	var result bool
+	result, err = webview2Settings6.GetIsSwipeNavigationEnabled()
+	if err != windows.DS_S_SUCCESS {
+		return false, err
+	}
+	return result, nil
 }
 
 func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
@@ -495,5 +500,9 @@ func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
 		return err
 	}
 	webview2Settings6 := webview2Settings.GetICoreWebView2Settings6()
-	return webview2Settings6.PutIsSwipeNavigationEnabled(enabled)
+	err = webview2Settings6.PutIsSwipeNavigationEnabled(enabled)
+	if err != windows.DS_S_SUCCESS {
+		return err
+	}
+	return nil
 }
