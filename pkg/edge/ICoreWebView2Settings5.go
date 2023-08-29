@@ -8,7 +8,7 @@ import (
 	"unsafe"
 )
 
-type ICoreWebView2Settings6Vtbl struct {
+type ICoreWebView2Settings5Vtbl struct {
 	_IUnknownVtbl
 	GetIsScriptEnabled                  ComProc
 	PutIsScriptEnabled                  ComProc
@@ -38,36 +38,34 @@ type ICoreWebView2Settings6Vtbl struct {
 	PutIsGeneralAutofillEnabled         ComProc
 	GetIsPinchZoomEnabled               ComProc
 	PutIsPinchZoomEnabled               ComProc
-	GetIsSwipeNavigationEnabled         ComProc
-	PutIsSwipeNavigationEnabled         ComProc
 }
 
-type ICoreWebView2Settings6 struct {
-	Vtbl *ICoreWebView2Settings6Vtbl
+type ICoreWebView2Settings5 struct {
+	Vtbl *ICoreWebView2Settings5Vtbl
 }
 
-func (i *ICoreWebView2Settings6) AddRef() uintptr {
+func (i *ICoreWebView2Settings5) AddRef() uintptr {
 	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
 	return refCounter
 }
 
-func (i *ICoreWebView2) GetICoreWebView2Settings6() *ICoreWebView2Settings6 {
-	var result *ICoreWebView2Settings6
+func (i *ICoreWebView2) GetICoreWebView2Settings5() *ICoreWebView2Settings5 {
+	var result *ICoreWebView2Settings5
 
-	iidICoreWebView2Settings6 := NewGUID("{11cb3acd-9bc8-43b8-83bf-f40753714f87}")
-	i.vtbl.QueryInterface.Call(
+	iidICoreWebView2Settings5 := NewGUID("{183e7052-1d03-43a0-ab99-98e043b66b39}")
+	_, _, _ = i.vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(iidICoreWebView2Settings6)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Settings5)),
 		uintptr(unsafe.Pointer(&result)))
 
 	return result
 }
 
-func (i *ICoreWebView2Settings6) GetIsSwipeNavigationEnabled() (bool, error) {
+func (i *ICoreWebView2Settings5) GetIsPinchZoomEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _enabled int32
 
-	hr, _, err := i.Vtbl.GetIsSwipeNavigationEnabled.Call(
+	hr, _, err := i.Vtbl.GetIsPinchZoomEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_enabled)),
 	)
@@ -79,9 +77,9 @@ func (i *ICoreWebView2Settings6) GetIsSwipeNavigationEnabled() (bool, error) {
 	return enabled, err
 }
 
-func (i *ICoreWebView2Settings6) PutIsSwipeNavigationEnabled(enabled bool) error {
+func (i *ICoreWebView2Settings5) PutIsPinchZoomEnabled(enabled bool) error {
 
-	hr, _, err := i.Vtbl.PutIsSwipeNavigationEnabled.Call(
+	hr, _, err := i.Vtbl.PutIsPinchZoomEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&enabled)),
 	)
