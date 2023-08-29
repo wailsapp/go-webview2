@@ -51,7 +51,7 @@ func (i *ICoreWebView2Settings6) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2) GetICoreWebView2Settings6() *ICoreWebView2Settings6 {
+func (i *ICoreWebViewSettings) GetICoreWebView2Settings6() *ICoreWebView2Settings6 {
 	var result *ICoreWebView2Settings6
 
 	iidICoreWebView2Settings6 := NewGUID("{11cb3acd-9bc8-43b8-83bf-f40753714f87}")

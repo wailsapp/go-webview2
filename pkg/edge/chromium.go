@@ -481,11 +481,19 @@ func (e *Chromium) OpenDevToolsWindow() {
 }
 
 func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
-	webview2Settings6 := e.webview.GetICoreWebView2Settings6()
+	webview2Settings, err := e.webview.GetSettings()
+	if err != nil {
+		return false, err
+	}
+	webview2Settings6 := webview2Settings.GetICoreWebView2Settings6()
 	return webview2Settings6.GetIsSwipeNavigationEnabled()
 }
 
 func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
-	webview2Settings6 := e.webview.GetICoreWebView2Settings6()
+	webview2Settings, err := e.webview.GetSettings()
+	if err != nil {
+		return err
+	}
+	webview2Settings6 := webview2Settings.GetICoreWebView2Settings6()
 	return webview2Settings6.PutIsSwipeNavigationEnabled(enabled)
 }
