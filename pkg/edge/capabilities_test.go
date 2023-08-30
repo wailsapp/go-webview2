@@ -36,6 +36,30 @@ func Test_hasCapability(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "should support SwipeNavigation if version is equal to minimum",
+			args: args{
+				webview2RuntimeVersion: "94.0.992.31",
+				capability:             SwipeNavigation,
+			},
+			want: true,
+		},
+		{
+			name: "should support SwipeNavigation if version is above minimum",
+			args: args{
+				webview2RuntimeVersion: "115.0.1901.177",
+				capability:             SwipeNavigation,
+			},
+			want: true,
+		},
+		{
+			name: "should not support SwipeNavigation if version is below minimum",
+			args: args{
+				webview2RuntimeVersion: "93.0.992.31",
+				capability:             SwipeNavigation,
+			},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

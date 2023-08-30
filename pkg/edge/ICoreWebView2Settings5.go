@@ -49,7 +49,7 @@ func (i *ICoreWebView2Settings5) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2) GetICoreWebView2Settings5() *ICoreWebView2Settings5 {
+func (i *ICoreWebViewSettings) GetICoreWebView2Settings5() *ICoreWebView2Settings5 {
 	var result *ICoreWebView2Settings5
 
 	iidICoreWebView2Settings5 := NewGUID("{183e7052-1d03-43a0-ab99-98e043b66b39}")
