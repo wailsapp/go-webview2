@@ -83,7 +83,7 @@ func (i *ICoreWebView2Settings6) PutIsSwipeNavigationEnabled(enabled bool) error
 
 	hr, _, err := i.Vtbl.PutIsSwipeNavigationEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&enabled)),
+		uintptr(boolToInt(enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
