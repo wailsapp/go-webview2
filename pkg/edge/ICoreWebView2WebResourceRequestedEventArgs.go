@@ -3,6 +3,8 @@
 package edge
 
 import (
+	"fmt"
+	"syscall"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
@@ -49,4 +51,24 @@ func (i *ICoreWebView2WebResourceRequestedEventArgs) GetRequest() (*ICoreWebView
 		return nil, err
 	}
 	return request, nil
+}
+
+func (i *ICoreWebView2WebResourceRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
+	var deferral *ICoreWebView2Deferral
+
+	hr, _, err := i.vtbl.GetDeferral.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&deferral)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	}
+
+	if deferral == nil {
+		if err == nil {
+			err = fmt.Errorf("unknown error")
+		}
+		return nil, err
+	}
+	return deferral, nil
 }
