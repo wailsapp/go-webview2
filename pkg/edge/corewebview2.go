@@ -6,6 +6,7 @@ package edge
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"runtime"
 	"syscall"
 	"unsafe"
@@ -236,7 +237,7 @@ type ICoreWebView2Environment struct {
 }
 
 // CreateWebResourceResponse creates a new ICoreWebView2WebResourceResponse, it must be released after finishing using it.
-func (e *ICoreWebView2Environment) CreateWebResourceResponse(content []byte, statusCode int, reasonPhrase string, headers string) (*ICoreWebView2WebResourceResponse, error) {
+func (e *ICoreWebView2Environment) CreateWebResourceResponse(content []byte, statusCode int, headers string) (*ICoreWebView2WebResourceResponse, error) {
 	var err error
 	var stream uintptr
 
@@ -253,7 +254,7 @@ func (e *ICoreWebView2Environment) CreateWebResourceResponse(content []byte, sta
 	}
 
 	// Convert string 'uri' to *uint16
-	_reason, err := windows.UTF16PtrFromString(reasonPhrase)
+	_reason, err := windows.UTF16PtrFromString(http.StatusText(statusCode))
 	if err != nil {
 		return nil, err
 	}
