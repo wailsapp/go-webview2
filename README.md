@@ -8,7 +8,7 @@ as a standalone package.
 To update this package, run the following commands:
 
 ```bash
-task run update
+task update
 ```
 
 ----------------
