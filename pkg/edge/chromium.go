@@ -537,9 +537,6 @@ func (e *Chromium) AllowExternalDrag(allow bool) error {
 	controller := e.GetController()
 	controller4 := controller.GetICoreWebView2Controller4()
 	err := controller4.PutAllowExternalDrop(allow)
-	if err != nil {
-		return err
-	}
 	if err != windows.DS_S_SUCCESS {
 		return err
 	}
@@ -553,9 +550,6 @@ func (e *Chromium) GetAllowExternalDrag() (bool, error) {
 	controller := e.GetController()
 	controller4 := controller.GetICoreWebView2Controller4()
 	result, err := controller4.GetAllowExternalDrop()
-	if err != nil {
-		return false, err
-	}
 	if err != windows.DS_S_SUCCESS {
 		return false, err
 	}
