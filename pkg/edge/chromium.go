@@ -534,8 +534,9 @@ func (e *Chromium) AllowExternalDrag(allow bool) error {
 	if !hasCapability(e.webview2RuntimeVersion, AllowExternalDrop) {
 		return UnsupportedCapabilityError
 	}
-	webview2Controller4 := e.webview.GetICoreWebView2Controller4()
-	err := webview2Controller4.PutAllowExternalDrop(allow)
+	controller := e.GetController()
+	controller4 := controller.GetICoreWebView2Controller4()
+	err := controller4.PutAllowExternalDrop(allow)
 	if err != nil {
 		return err
 	}
@@ -549,8 +550,9 @@ func (e *Chromium) GetAllowExternalDrag() (bool, error) {
 	if !hasCapability(e.webview2RuntimeVersion, AllowExternalDrop) {
 		return false, UnsupportedCapabilityError
 	}
-	webview2Controller4 := e.webview.GetICoreWebView2Controller4()
-	result, err := webview2Controller4.GetAllowExternalDrop()
+	controller := e.GetController()
+	controller4 := controller.GetICoreWebView2Controller4()
+	result, err := controller4.GetAllowExternalDrop()
 	if err != nil {
 		return false, err
 	}
