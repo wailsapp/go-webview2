@@ -315,7 +315,7 @@ func (e *Chromium) MessageReceived(sender *ICoreWebView2, args *ICoreWebView2Web
 
 	message := w32.Utf16PtrToString(_message)
 
-	if hasCapability(e.webview2RuntimeVersion, getAdditionalObjects) {
+	if hasCapability(e.webview2RuntimeVersion, GetAdditionalObjects) {
 		obj, err := args.GetAdditionalObjects()
 		if err != nil {
 			log.Fatal(err)
@@ -528,4 +528,34 @@ func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
 		return err
 	}
 	return nil
+}
+
+func (e *Chromium) AllowExternalDrag(allow bool) error {
+	if !hasCapability(e.webview2RuntimeVersion, AllowExternalDrop) {
+		return UnsupportedCapabilityError
+	}
+	webview2Controller4 := e.webview.GetICoreWebView2Controller4()
+	err := webview2Controller4.PutAllowExternalDrop(allow)
+	if err != nil {
+		return err
+	}
+	if err != windows.DS_S_SUCCESS {
+		return err
+	}
+	return nil
+}
+
+func (e *Chromium) GetAllowExternalDrag() (bool, error) {
+	if !hasCapability(e.webview2RuntimeVersion, AllowExternalDrop) {
+		return false, UnsupportedCapabilityError
+	}
+	webview2Controller4 := e.webview.GetICoreWebView2Controller4()
+	result, err := webview2Controller4.GetAllowExternalDrop()
+	if err != nil {
+		return false, err
+	}
+	if err != windows.DS_S_SUCCESS {
+		return false, err
+	}
+	return result, nil
 }

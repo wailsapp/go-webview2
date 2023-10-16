@@ -18,6 +18,7 @@ func (u *unsupportedCapabilityError) Error() string {
 const (
 	GetAdditionalObjects = Capability("113.0.1774.30")
 	SwipeNavigation      = Capability("94.0.992.31")
+	AllowExternalDrop    = Capability("100.0.1185.39")
 )
 
 func hasCapability(webview2RuntimeVersion string, capability Capability) bool {
