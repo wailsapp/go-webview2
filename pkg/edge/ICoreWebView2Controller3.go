@@ -54,7 +54,7 @@ func (i *ICoreWebView2Controller3) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2) GetICoreWebView2Controller3() *ICoreWebView2Controller3 {
+func (i *ICoreWebView2Controller) GetICoreWebView2Controller3() *ICoreWebView2Controller3 {
 	var result *ICoreWebView2Controller3
 
 	iidICoreWebView2Controller3 := NewGUID("{f9614724-5d2b-41dc-aef7-73d62b51543b}")
