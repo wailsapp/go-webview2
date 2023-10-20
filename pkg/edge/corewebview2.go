@@ -18,7 +18,7 @@ import (
 func init() {
 	runtime.LockOSThread()
 
-	r, _, _ := w32.Ole32CoInitializeEx.Call(0, 2)
+	r, _, _ := w32.Ole32OleInitialize.Call(0)
 	if int(r) < 0 {
 		log.Printf("Warning: CoInitializeEx call failed: E=%08x", r)
 	}

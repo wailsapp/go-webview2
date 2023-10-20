@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	ole32               = windows.NewLazySystemDLL("ole32")
-	Ole32CoInitializeEx = ole32.NewProc("CoInitializeEx")
+	ole32              = windows.NewLazySystemDLL("ole32")
+	Ole32OleInitialize = ole32.NewProc("OleInitialize")
 
 	kernel32                   = windows.NewLazySystemDLL("kernel32")
 	Kernel32GetCurrentThreadID = kernel32.NewProc("GetCurrentThreadId")
