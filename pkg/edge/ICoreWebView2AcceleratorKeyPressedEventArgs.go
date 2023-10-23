@@ -54,7 +54,7 @@ func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetVirtualKey() (uint, err
 
 func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetPhysicalKeyStatus() (COREWEBVIEW2_PHYSICAL_KEY_STATUS, error) {
 	var err error
-	var physicalKeyStatus COREWEBVIEW2_PHYSICAL_KEY_STATUS
+	var physicalKeyStatus internal_COREWEBVIEW2_PHYSICAL_KEY_STATUS
 	_, _, err = i.vtbl.GetPhysicalKeyStatus.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&physicalKeyStatus)),
@@ -62,7 +62,14 @@ func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) GetPhysicalKeyStatus() (CO
 	if err != windows.ERROR_SUCCESS {
 		return COREWEBVIEW2_PHYSICAL_KEY_STATUS{}, err
 	}
-	return physicalKeyStatus, nil
+	return COREWEBVIEW2_PHYSICAL_KEY_STATUS{
+		RepeatCount:   physicalKeyStatus.RepeatCount,
+		ScanCode:      physicalKeyStatus.ScanCode,
+		IsExtendedKey: physicalKeyStatus.IsExtendedKey != 0,
+		IsMenuKeyDown: physicalKeyStatus.IsMenuKeyDown != 0,
+		WasKeyDown:    physicalKeyStatus.WasKeyDown != 0,
+		IsKeyReleased: physicalKeyStatus.IsKeyReleased != 0,
+	}, nil
 }
 
 func (i *ICoreWebView2AcceleratorKeyPressedEventArgs) PutHandled(handled bool) error {
