@@ -20,6 +20,17 @@ type IStream struct {
 	vtbl *_IStreamVtbl
 }
 
+func NewIStream() *IStream {
+	return &IStream{
+		vtbl: &_IStreamVtbl{},
+	}
+}
+
+func (i *IStream) AddRef() uintptr {
+	refCounter, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
+}
+
 func (i *IStream) Release() error {
 	return i.vtbl.CallRelease(unsafe.Pointer(i))
 }

@@ -38,6 +38,12 @@ const (
 	CoreWebView2PermissionKindNotifications
 	CoreWebView2PermissionKindOtherSensors
 	CoreWebView2PermissionKindClipboardRead
+	CoreWebView2PermissionKindMultipleAutomaticDownloads
+	CoreWebView2PermissionKindFileReadWrite
+	CoreWebView2PermissionKindAutoplay
+	CoreWebView2PermissionKindLocalFonts
+	CoreWebView2PermissionKindMidiSystemExclusiveMessages
+	CoreWebView2PermissionKindWindowManagement
 )
 
 type CoreWebView2PermissionState uint32
@@ -205,6 +211,20 @@ func (i *ICoreWebView2) GetSettings() (*ICoreWebViewSettings, error) {
 		return nil, err
 	}
 	return settings, nil
+}
+
+func (i *ICoreWebView2) CapturePreview(imageFormat COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT, imageStream *IStream, handler *ICoreWebView2CapturePreviewCompletedHandler) error {
+
+	hr, _, err := i.vtbl.CapturePreview.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(imageFormat),
+		uintptr(unsafe.Pointer(imageStream)),
+		uintptr(unsafe.Pointer(handler)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
+	}
+	return err
 }
 
 func (i *ICoreWebView2) GetContainsFullScreenElement() (bool, error) {

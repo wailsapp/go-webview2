@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"syscall"
 	"unsafe"
@@ -34,6 +35,7 @@ type Chromium struct {
 	acceleratorKeyPressed            *ICoreWebView2AcceleratorKeyPressedEventHandler
 	navigationCompleted              *ICoreWebView2NavigationCompletedEventHandler
 	processFailed                    *ICoreWebView2ProcessFailedEventHandler
+	capturePreviewCompleted          *ICoreWebView2CapturePreviewCompletedHandler
 
 	environment            *ICoreWebView2Environment
 	padding                Rect
@@ -57,6 +59,37 @@ type Chromium struct {
 	ProcessFailedCallback                    func(sender *ICoreWebView2, args *ICoreWebView2ProcessFailedEventArgs)
 	ContainsFullScreenElementChangedCallback func(sender *ICoreWebView2, args *ICoreWebView2ContainsFullScreenElementChangedEventArgs)
 	AcceleratorKeyCallback                   func(uint) bool
+
+	// capture
+	captureStream    *IStream
+	captureMutex     sync.RWMutex
+	captureWaitGroup sync.WaitGroup
+}
+
+func (e *Chromium) CaptureImage(imageFormat COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT) ([]byte, error) {
+	e.captureMutex.Lock()
+	defer e.captureMutex.Unlock()
+	e.captureWaitGroup.Add(1)
+	e.captureStream = NewIStream()
+	err := e.webview.CapturePreview(imageFormat, e.captureStream, e.capturePreviewCompleted)
+	if err != nil {
+		return nil, err
+	}
+	// This will be processed in another thread, so we need to wait for it to finish
+	e.captureWaitGroup.Wait()
+	defer e.captureStream.Release()
+	// Read the bytes from the stream
+	var bytes []byte
+	_, err = e.captureStream.Read(bytes)
+	if err != nil {
+		return nil, err
+	}
+	return bytes, nil
+}
+
+func (e *Chromium) CapturePreviewCompleted(errorCode uintptr) uintptr {
+	e.captureWaitGroup.Done()
+	return errorCode
 }
 
 func NewChromium() *Chromium {
@@ -97,6 +130,7 @@ func NewChromium() *Chromium {
 		pinner.Pin(e.processFailed)
 		pinner.Pin(e.containsFullScreenElementChanged)
 	*/
+	e.capturePreviewCompleted = newICoreWebView2CapturePreviewCompletedHandler(e)
 	e.permissions = make(map[CoreWebView2PermissionKind]CoreWebView2PermissionState)
 
 	return e
@@ -309,7 +343,6 @@ func (e *Chromium) CreateCoreWebView2ControllerCompleted(res uintptr, controller
 	)
 
 	e.controller.AddAcceleratorKeyPressed(e.acceleratorKeyPressed, &token)
-
 	atomic.StoreUintptr(&e.inited, 1)
 
 	return 0
