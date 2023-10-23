@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"sync/atomic"
 	"syscall"
@@ -73,7 +72,6 @@ func NewChromium() *Chromium {
 	 There's a proposal to add a runtime.Pin function, to prevent moving pinned objects, which would allow to easily fix
 	 this issue by just pinning the handlers. The https://go-review.googlesource.com/c/go/+/367296/ should land in Go 1.19.
 	*/
-	var pinner runtime.Pinner
 	e.envCompleted = newICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler(e)
 	e.controllerCompleted = newICoreWebView2CreateCoreWebView2ControllerCompletedHandler(e)
 	e.webMessageReceived = newICoreWebView2WebMessageReceivedEventHandler(e)
@@ -83,15 +81,22 @@ func NewChromium() *Chromium {
 	e.navigationCompleted = newICoreWebView2NavigationCompletedEventHandler(e)
 	e.processFailed = newICoreWebView2ProcessFailedEventHandler(e)
 	e.containsFullScreenElementChanged = newICoreWebView2ContainsFullScreenElementChangedEventHandler(e)
-	pinner.Pin(e.envCompleted)
-	pinner.Pin(e.controllerCompleted)
-	pinner.Pin(e.webMessageReceived)
-	pinner.Pin(e.permissionRequested)
-	pinner.Pin(e.webResourceRequested)
-	pinner.Pin(e.acceleratorKeyPressed)
-	pinner.Pin(e.navigationCompleted)
-	pinner.Pin(e.processFailed)
-	pinner.Pin(e.containsFullScreenElementChanged)
+	/*
+		// Pinner seems to panic in some cases as reported on Discord, maybe during shutdown when GC detects pinned objects
+		// to be released that have not been unpinned.
+		// It would also be better to use our ComBridge for this event handlers implementation instead of pinning them.
+		// So all COM Implementations on the go-side use the same code.
+		var pinner runtime.Pinner
+		pinner.Pin(e.envCompleted)
+		pinner.Pin(e.controllerCompleted)
+		pinner.Pin(e.webMessageReceived)
+		pinner.Pin(e.permissionRequested)
+		pinner.Pin(e.webResourceRequested)
+		pinner.Pin(e.acceleratorKeyPressed)
+		pinner.Pin(e.navigationCompleted)
+		pinner.Pin(e.processFailed)
+		pinner.Pin(e.containsFullScreenElementChanged)
+	*/
 	e.permissions = make(map[CoreWebView2PermissionKind]CoreWebView2PermissionState)
 
 	return e
