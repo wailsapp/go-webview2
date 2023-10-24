@@ -5,6 +5,7 @@ package edge
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -12,6 +13,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"syscall"
+	"time"
 	"unsafe"
 
 	"github.com/wailsapp/go-webview2/internal/w32"
@@ -61,34 +63,52 @@ type Chromium struct {
 	AcceleratorKeyCallback                   func(uint) bool
 
 	// capture
-	captureStream    *IStream
-	captureMutex     sync.RWMutex
-	captureWaitGroup sync.WaitGroup
+	captureMutex    sync.RWMutex
+	captureStream   *IStream
+	captureCallback func([]byte, error)
+	captureFilename string
 }
 
-func (e *Chromium) CaptureImage(imageFormat COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT) ([]byte, error) {
+func (e *Chromium) CaptureImage(imageFormat COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT, callback func(image []byte, err error)) error {
+	// Generate a random filename
 	e.captureMutex.Lock()
-	defer e.captureMutex.Unlock()
-	e.captureWaitGroup.Add(1)
-	e.captureStream = NewIStream()
-	err := e.webview.CapturePreview(imageFormat, e.captureStream, e.capturePreviewCompleted)
+	e.captureFilename = filepath.Join(os.TempDir(), fmt.Sprintf("wails-capture-%d.png", time.Now().Unix()))
+	err := w32.SHCreateStreamOnFileEx(e.captureFilename, w32.STGM_READWRITE|w32.STGM_CREATE, 0, true, 0, uintptr(unsafe.Pointer(&e.captureStream)))
 	if err != nil {
-		return nil, err
+		e.captureMutex.Unlock()
+		return err
 	}
-	// This will be processed in another thread, so we need to wait for it to finish
-	e.captureWaitGroup.Wait()
-	defer e.captureStream.Release()
-	// Read the bytes from the stream
-	var bytes []byte
-	_, err = e.captureStream.Read(bytes)
+	e.captureCallback = callback
+	err = e.webview.CapturePreview(imageFormat, e.captureStream, e.capturePreviewCompleted)
 	if err != nil {
-		return nil, err
+		e.captureMutex.Unlock()
+		return err
 	}
-	return bytes, nil
+	return nil
 }
 
 func (e *Chromium) CapturePreviewCompleted(errorCode uintptr) uintptr {
-	e.captureWaitGroup.Done()
+	defer e.captureMutex.Unlock()
+	if errorCode != 0 {
+		e.captureCallback(nil, fmt.Errorf("capture failed with error code %d", errorCode))
+		return errorCode
+	}
+
+	e.captureStream.Commit(STGC_DEFAULT)
+	e.captureStream.Release()
+
+	// Read the file
+	imageData, err := os.ReadFile(e.captureFilename)
+	e.captureCallback(imageData, err)
+	if err != nil {
+		return 0
+	}
+	// Delete the temporary file
+	_ = os.Remove(e.captureFilename)
+	e.captureFilename = ""
+	e.captureCallback = nil
+	e.captureStream = nil
+
 	return errorCode
 }
 

@@ -17,8 +17,9 @@ var (
 	kernel32                   = windows.NewLazySystemDLL("kernel32")
 	Kernel32GetCurrentThreadID = kernel32.NewProc("GetCurrentThreadId")
 
-	shlwapi                  = windows.NewLazySystemDLL("shlwapi")
-	shlwapiSHCreateMemStream = shlwapi.NewProc("SHCreateMemStream")
+	shlwapi                       = windows.NewLazySystemDLL("shlwapi")
+	shlwapiSHCreateMemStream      = shlwapi.NewProc("SHCreateMemStream")
+	shlwapiSHCreateStreamOnFileEx = shlwapi.NewProc("SHCreateStreamOnFileEx")
 
 	user32                   = windows.NewLazySystemDLL("user32")
 	User32LoadImageW         = user32.NewProc("LoadImageW")
@@ -154,4 +155,32 @@ func SHCreateMemStream(data []byte) (uintptr, error) {
 	}
 
 	return ret, nil
+}
+
+const STGM_READWRITE = 0x00000002
+const STGM_CREATE = 0x00001000
+const STGM_SHARE_EXCLUSIVE = 0x00000010
+
+func BoolToBOOL(value bool) int32 {
+	if value {
+		return 1
+	}
+
+	return 0
+}
+
+func SHCreateStreamOnFileEx(pszFile string, grfMode uint32, dwAttributes uint32, fCreate bool, pstmTemplate uintptr, ppstm uintptr) error {
+	ret, _, err := shlwapiSHCreateStreamOnFileEx.Call(
+		uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(pszFile))),
+		uintptr(grfMode),
+		uintptr(dwAttributes),
+		uintptr(BoolToBOOL(fCreate)),
+		pstmTemplate,
+		ppstm,
+	)
+	if ret != 0 {
+		return err
+	}
+
+	return nil
 }

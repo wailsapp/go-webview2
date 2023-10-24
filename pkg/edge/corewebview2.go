@@ -215,7 +215,7 @@ func (i *ICoreWebView2) GetSettings() (*ICoreWebViewSettings, error) {
 
 func (i *ICoreWebView2) CapturePreview(imageFormat COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT, imageStream *IStream, handler *ICoreWebView2CapturePreviewCompletedHandler) error {
 
-	hr, _, err := i.vtbl.CapturePreview.Call(
+	hr, _, _ := i.vtbl.CapturePreview.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(imageFormat),
 		uintptr(unsafe.Pointer(imageStream)),
@@ -224,7 +224,7 @@ func (i *ICoreWebView2) CapturePreview(imageFormat COREWEBVIEW2_CAPTURE_PREVIEW_
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2) GetContainsFullScreenElement() (bool, error) {
