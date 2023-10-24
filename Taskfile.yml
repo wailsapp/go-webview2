@@ -4,10 +4,33 @@ version: '3'
 
 tasks:
 
-  commit:
+  commit:windows:
+    dir: scripts
+    platforms:
+      - windows
     cmds:
       - git add .
-      - git commit -m "Updated mappings"
+      - git commit -m 'Update to Webview {{.VERSION}}'
+    vars:
+      VERSION:
+        sh: powershell cat latest_version.txt
+
+  commit:unix:
+    dir: scripts
+    platforms:
+      - darwin
+      - linux
+    cmds:
+      - git add .
+      - git commit -m 'Update to Webview {{.VERSION}}'
+    vars:
+      VERSION:
+        sh: cat latest_version.txt
+
+  commit:
+    cmds:
+      - task: commit:windows
+      - task: commit:unix
 
   gofmt:
     dir: pkg/webview2
