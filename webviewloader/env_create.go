@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/wailsapp/go-webview2/pkg/combridge"
+	"github.com/AlpineAIO/go-webview2/pkg/combridge"
 	"golang.org/x/sys/windows"
 )
 

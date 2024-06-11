@@ -6,7 +6,7 @@ package edge
 import (
 	"unsafe"
 
-	"github.com/wailsapp/go-webview2/internal/w32"
+	"github.com/AlpineAIO/go-webview2/internal/w32"
 )
 
 func (e *Chromium) SetSize(bounds w32.Rect) {

@@ -6,7 +6,7 @@ import (
 	"math"
 	"unsafe"
 
-	"github.com/wailsapp/go-webview2/internal/w32"
+	"github.com/AlpineAIO/go-webview2/internal/w32"
 	"golang.org/x/sys/windows"
 )
 
