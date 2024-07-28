@@ -17,7 +17,7 @@ import (
 	"updater/generator"
 )
 
-const URL = "https://raw.githubusercontent.com/MicrosoftDocs/edge-developer/master/microsoft-edge/webview2/release-notes.md"
+const URL = "https://raw.githubusercontent.com/MicrosoftDocs/edge-developer/master/microsoft-edge/webview2/release-notes/index.md"
 
 //go:embed latest_version.txt
 var latestVersionProcessed string
