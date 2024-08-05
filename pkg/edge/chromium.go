@@ -112,7 +112,7 @@ func NewChromium() *Chromium {
 }
 
 func (e *Chromium) errorCallback(err error) {
-	e.errorCallback(err)
+	e.globalErrorCallback(err)
 	os.Exit(1)
 }
 
