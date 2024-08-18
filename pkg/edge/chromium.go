@@ -255,7 +255,7 @@ func (e *Chromium) Eval(script string) {
 		uintptr(unsafe.Pointer(_script)),
 		0,
 	)
-	if err != nil && !errors.Is(err, windows.ERROR_SUCCESS) {
+	if err != nil && !errors.Is(err, windows.ERROR_SUCCESS) && !errors.Is(err, windows.ERROR_IO_PENDING) {
 		e.errorCallback(err)
 	}
 }
