@@ -76,7 +76,7 @@ func (i *ICoreWebView2Controller) MoveFocus(reason COREWEBVIEW2_MOVE_FOCUS_REASO
 
 	_, _, err = i.vtbl.MoveFocus.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(reason),
+		uintptr(unsafe.Pointer(&reason)),
 	)
 	if err != windows.ERROR_SUCCESS {
 		return err
