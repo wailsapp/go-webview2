@@ -423,7 +423,7 @@ func (e *Chromium) MessageReceived(sender *ICoreWebView2, args *ICoreWebView2Web
 		uintptr(unsafe.Pointer(sender)),
 		uintptr(unsafe.Pointer(_message)),
 	)
-	if err != nil && !errors.Is(err, windows.ERROR_SUCCESS) {
+	if err != nil && !errors.Is(err, windows.ERROR_SUCCESS) && !errors.Is(err, windows.ERROR_IO_PENDING) {
 		e.errorCallback(err)
 	}
 	windows.CoTaskMemFree(unsafe.Pointer(_message))
