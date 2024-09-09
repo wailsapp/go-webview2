@@ -25,7 +25,7 @@ func (i *ICoreWebView2NavigationCompletedEventArgs2) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2NavigationCompletedEventArgs2() *ICoreWebView2NavigationCompletedEventArgs2 {
 	var result *ICoreWebView2NavigationCompletedEventArgs2
 
-	iidICoreWebView2NavigationCompletedEventArgs2 := NewGUID("{FDF8B738-EE1E-4DB2-A329-8D7D7B74D792}")
+	iidICoreWebView2NavigationCompletedEventArgs2 := NewGUID("{fdf8b738-ee1e-4db2-a329-8d7d7b74d792}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2NavigationCompletedEventArgs2)),
@@ -36,14 +36,14 @@ func (i *ICoreWebView2) GetICoreWebView2NavigationCompletedEventArgs2() *ICoreWe
 
 func (i *ICoreWebView2NavigationCompletedEventArgs2) GetHttpStatusCode() (int, error) {
 
-	var http_status_code int
+	var value int
 
 	hr, _, err := i.Vtbl.GetHttpStatusCode.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(http_status_code),
+		uintptr(value),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return http_status_code, err
+	return value, err
 }

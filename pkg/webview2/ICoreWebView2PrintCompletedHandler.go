@@ -33,13 +33,13 @@ func ICoreWebView2PrintCompletedHandlerIUnknownRelease(this *ICoreWebView2PrintC
 	return this.impl.Release()
 }
 
-func ICoreWebView2PrintCompletedHandlerInvoke(this *ICoreWebView2PrintCompletedHandler, errorCode uintptr, printStatus COREWEBVIEW2_PRINT_STATUS) uintptr {
-	return this.impl.PrintCompleted(errorCode, printStatus)
+func ICoreWebView2PrintCompletedHandlerInvoke(this *ICoreWebView2PrintCompletedHandler, errorCode uintptr, result COREWEBVIEW2_PRINT_STATUS) uintptr {
+	return this.impl.PrintCompleted(errorCode, result)
 }
 
 type ICoreWebView2PrintCompletedHandlerImpl interface {
 	IUnknownImpl
-	PrintCompleted(errorCode uintptr, printStatus COREWEBVIEW2_PRINT_STATUS) uintptr
+	PrintCompleted(errorCode uintptr, result COREWEBVIEW2_PRINT_STATUS) uintptr
 }
 
 var ICoreWebView2PrintCompletedHandlerFn = ICoreWebView2PrintCompletedHandlerVtbl{

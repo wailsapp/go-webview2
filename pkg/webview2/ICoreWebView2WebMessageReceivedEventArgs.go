@@ -26,51 +26,51 @@ func (i *ICoreWebView2WebMessageReceivedEventArgs) AddRef() uintptr {
 
 func (i *ICoreWebView2WebMessageReceivedEventArgs) GetSource() (string, error) {
 	// Create *uint16 to hold result
-	var _source *uint16
+	var _value *uint16
 
 	hr, _, err := i.Vtbl.GetSource.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_source)),
+		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	source := UTF16PtrToString(_source)
-	CoTaskMemFree(unsafe.Pointer(_source))
-	return source, err
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return value, err
 }
 
 func (i *ICoreWebView2WebMessageReceivedEventArgs) GetWebMessageAsJson() (string, error) {
 	// Create *uint16 to hold result
-	var _webMessageAsJson *uint16
+	var _value *uint16
 
 	hr, _, err := i.Vtbl.GetWebMessageAsJson.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_webMessageAsJson)),
+		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	webMessageAsJson := UTF16PtrToString(_webMessageAsJson)
-	CoTaskMemFree(unsafe.Pointer(_webMessageAsJson))
-	return webMessageAsJson, err
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return value, err
 }
 
 func (i *ICoreWebView2WebMessageReceivedEventArgs) TryGetWebMessageAsString() (string, error) {
 	// Create *uint16 to hold result
-	var _webMessageAsString *uint16
+	var _value *uint16
 
 	hr, _, err := i.Vtbl.TryGetWebMessageAsString.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_webMessageAsString)),
+		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	webMessageAsString := UTF16PtrToString(_webMessageAsString)
-	CoTaskMemFree(unsafe.Pointer(_webMessageAsString))
-	return webMessageAsString, err
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return value, err
 }

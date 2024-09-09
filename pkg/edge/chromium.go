@@ -621,6 +621,35 @@ func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
 	return result, nil
 }
 
+// PutIsGeneralAutofillEnabled controls whether autofill for information
+// like names, street and email addresses, phone numbers, and arbitrary input
+// is enabled. This excludes password and credit card information. When
+// IsGeneralAutofillEnabled is false, no suggestions appear, and no new information
+// is saved. When IsGeneralAutofillEnabled is true, information is saved, suggestions
+// appear and clicking on one will populate the form fields.
+// It will take effect immediately after setting.
+// The default value is `FALSE`.
+func (e *Chromium) PutIsGeneralAutofillEnabled(value bool) error {
+	webview2Settings, err := e.webview.GetSettings()
+	if err != nil {
+		return err
+	}
+	webview2Settings4 := webview2Settings.GetICoreWebView2Settings4()
+	return webview2Settings4.PutIsGeneralAutofillEnabled(value)
+}
+
+// PutIsPasswordAutosaveEnabled sets whether the browser should offer to save passwords and other
+// identifying information entered into forms automatically.
+// The default value is `FALSE`.
+func (e *Chromium) PutIsPasswordAutosaveEnabled(value bool) error {
+	webview2Settings, err := e.webview.GetSettings()
+	if err != nil {
+		return err
+	}
+	webview2Settings4 := webview2Settings.GetICoreWebView2Settings4()
+	return webview2Settings4.PutIsPasswordAutosaveEnabled(value)
+}
+
 func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
 	if !hasCapability(e.webview2RuntimeVersion, SwipeNavigation) {
 		return UnsupportedCapabilityError

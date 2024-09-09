@@ -24,14 +24,14 @@ func (i *ICoreWebView2FrameCreatedEventArgs) AddRef() uintptr {
 
 func (i *ICoreWebView2FrameCreatedEventArgs) GetFrame() (*ICoreWebView2Frame, error) {
 
-	var frame *ICoreWebView2Frame
+	var value *ICoreWebView2Frame
 
 	hr, _, err := i.Vtbl.GetFrame.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&frame)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return frame, err
+	return value, err
 }

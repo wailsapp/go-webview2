@@ -33,13 +33,13 @@ func ICoreWebView2TrySuspendCompletedHandlerIUnknownRelease(this *ICoreWebView2T
 	return this.impl.Release()
 }
 
-func ICoreWebView2TrySuspendCompletedHandlerInvoke(this *ICoreWebView2TrySuspendCompletedHandler, errorCode uintptr, isSuccessful bool) uintptr {
-	return this.impl.TrySuspendCompleted(errorCode, isSuccessful)
+func ICoreWebView2TrySuspendCompletedHandlerInvoke(this *ICoreWebView2TrySuspendCompletedHandler, errorCode uintptr, result bool) uintptr {
+	return this.impl.TrySuspendCompleted(errorCode, result)
 }
 
 type ICoreWebView2TrySuspendCompletedHandlerImpl interface {
 	IUnknownImpl
-	TrySuspendCompleted(errorCode uintptr, isSuccessful bool) uintptr
+	TrySuspendCompleted(errorCode uintptr, result bool) uintptr
 }
 
 var ICoreWebView2TrySuspendCompletedHandlerFn = ICoreWebView2TrySuspendCompletedHandlerVtbl{

@@ -33,13 +33,13 @@ func ICoreWebView2GetFaviconCompletedHandlerIUnknownRelease(this *ICoreWebView2G
 	return this.impl.Release()
 }
 
-func ICoreWebView2GetFaviconCompletedHandlerInvoke(this *ICoreWebView2GetFaviconCompletedHandler, errorCode uintptr, faviconStream *IStream) uintptr {
-	return this.impl.GetFaviconCompleted(errorCode, faviconStream)
+func ICoreWebView2GetFaviconCompletedHandlerInvoke(this *ICoreWebView2GetFaviconCompletedHandler, errorCode uintptr, result *IStream) uintptr {
+	return this.impl.GetFaviconCompleted(errorCode, result)
 }
 
 type ICoreWebView2GetFaviconCompletedHandlerImpl interface {
 	IUnknownImpl
-	GetFaviconCompleted(errorCode uintptr, faviconStream *IStream) uintptr
+	GetFaviconCompleted(errorCode uintptr, result *IStream) uintptr
 }
 
 var ICoreWebView2GetFaviconCompletedHandlerFn = ICoreWebView2GetFaviconCompletedHandlerVtbl{

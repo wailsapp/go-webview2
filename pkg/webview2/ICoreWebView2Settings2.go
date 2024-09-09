@@ -37,32 +37,32 @@ func (i *ICoreWebView2) GetICoreWebView2Settings2() *ICoreWebView2Settings2 {
 
 func (i *ICoreWebView2Settings2) GetUserAgent() (string, error) {
 	// Create *uint16 to hold result
-	var _userAgent *uint16
+	var _value *uint16
 
 	hr, _, err := i.Vtbl.GetUserAgent.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_userAgent)),
+		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	userAgent := UTF16PtrToString(_userAgent)
-	CoTaskMemFree(unsafe.Pointer(_userAgent))
-	return userAgent, err
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return value, err
 }
 
-func (i *ICoreWebView2Settings2) PutUserAgent(userAgent string) error {
+func (i *ICoreWebView2Settings2) PutUserAgent(value string) error {
 
-	// Convert string 'userAgent' to *uint16
-	_userAgent, err := UTF16PtrFromString(userAgent)
+	// Convert string 'value' to *uint16
+	_value, err := UTF16PtrFromString(value)
 	if err != nil {
 		return err
 	}
 
 	hr, _, err := i.Vtbl.PutUserAgent.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_userAgent)),
+		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

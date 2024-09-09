@@ -25,7 +25,7 @@ func (i *ICoreWebView2Profile5) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2Profile5() *ICoreWebView2Profile5 {
 	var result *ICoreWebView2Profile5
 
-	iidICoreWebView2Profile5 := NewGUID("{2EE5B76E-6E80-4DF2-BCD3-D4EC3340A01B}")
+	iidICoreWebView2Profile5 := NewGUID("{2ee5b76e-6e80-4df2-bcd3-d4ec3340a01b}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2Profile5)),
@@ -36,14 +36,14 @@ func (i *ICoreWebView2) GetICoreWebView2Profile5() *ICoreWebView2Profile5 {
 
 func (i *ICoreWebView2Profile5) GetCookieManager() (*ICoreWebView2CookieManager, error) {
 
-	var cookieManager *ICoreWebView2CookieManager
+	var value *ICoreWebView2CookieManager
 
 	hr, _, err := i.Vtbl.GetCookieManager.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&cookieManager)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return cookieManager, err
+	return value, err
 }

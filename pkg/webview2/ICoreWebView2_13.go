@@ -25,7 +25,7 @@ func (i *ICoreWebView2_13) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2_13() *ICoreWebView2_13 {
 	var result *ICoreWebView2_13
 
-	iidICoreWebView2_13 := NewGUID("{F75F09A8-667E-4983-88D6-C8773F315E84}")
+	iidICoreWebView2_13 := NewGUID("{f75f09a8-667e-4983-88d6-c8773f315e84}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2_13)),

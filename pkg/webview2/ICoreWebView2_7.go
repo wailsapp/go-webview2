@@ -34,17 +34,17 @@ func (i *ICoreWebView2) GetICoreWebView2_7() *ICoreWebView2_7 {
 	return result
 }
 
-func (i *ICoreWebView2_7) PrintToPdf(resultFilePath string, printSettings *ICoreWebView2PrintSettings, handler *ICoreWebView2PrintToPdfCompletedHandler) error {
+func (i *ICoreWebView2_7) PrintToPdf(ResultFilePath string, printSettings *ICoreWebView2PrintSettings, handler *ICoreWebView2PrintToPdfCompletedHandler) error {
 
-	// Convert string 'resultFilePath' to *uint16
-	_resultFilePath, err := UTF16PtrFromString(resultFilePath)
+	// Convert string 'ResultFilePath' to *uint16
+	_ResultFilePath, err := UTF16PtrFromString(ResultFilePath)
 	if err != nil {
 		return err
 	}
 
 	hr, _, err := i.Vtbl.PrintToPdf.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_resultFilePath)),
+		uintptr(unsafe.Pointer(_ResultFilePath)),
 		uintptr(unsafe.Pointer(printSettings)),
 		uintptr(unsafe.Pointer(handler)),
 	)

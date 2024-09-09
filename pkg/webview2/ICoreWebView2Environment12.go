@@ -25,7 +25,7 @@ func (i *ICoreWebView2Environment12) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2Environment12() *ICoreWebView2Environment12 {
 	var result *ICoreWebView2Environment12
 
-	iidICoreWebView2Environment12 := NewGUID("{F503DB9B-739F-48DD-B151-FDFCF253F54E}")
+	iidICoreWebView2Environment12 := NewGUID("{f503db9b-739f-48dd-b151-fdfcf253f54e}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2Environment12)),
@@ -34,17 +34,17 @@ func (i *ICoreWebView2) GetICoreWebView2Environment12() *ICoreWebView2Environmen
 	return result
 }
 
-func (i *ICoreWebView2Environment12) CreateSharedBuffer(size uint64) (*ICoreWebView2SharedBuffer, error) {
+func (i *ICoreWebView2Environment12) CreateSharedBuffer(Size uint64) (*ICoreWebView2SharedBuffer, error) {
 
-	var shared_buffer *ICoreWebView2SharedBuffer
+	var value *ICoreWebView2SharedBuffer
 
 	hr, _, err := i.Vtbl.CreateSharedBuffer.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&size)),
-		uintptr(unsafe.Pointer(&shared_buffer)),
+		uintptr(unsafe.Pointer(&Size)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return shared_buffer, err
+	return value, err
 }

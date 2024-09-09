@@ -23,31 +23,31 @@ func (i *ICoreWebView2CookieList) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2CookieList) GetCount() (uint, error) {
+func (i *ICoreWebView2CookieList) GetCount() (uint32, error) {
 
-	var count uint
+	var value uint32
 
 	hr, _, err := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&count)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return count, err
+	return value, err
 }
 
-func (i *ICoreWebView2CookieList) GetValueAtIndex(index uint) (*ICoreWebView2Cookie, error) {
+func (i *ICoreWebView2CookieList) GetValueAtIndex(index uint32) (*ICoreWebView2Cookie, error) {
 
-	var cookie *ICoreWebView2Cookie
+	var value *ICoreWebView2Cookie
 
 	hr, _, err := i.Vtbl.GetValueAtIndex.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&index)),
-		uintptr(unsafe.Pointer(&cookie)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return cookie, err
+	return value, err
 }

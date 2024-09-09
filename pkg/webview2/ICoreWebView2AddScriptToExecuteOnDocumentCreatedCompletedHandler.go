@@ -33,13 +33,13 @@ func ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerIUnknownRel
 	return this.impl.Release()
 }
 
-func ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerInvoke(this *ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler, errorCode uintptr, id string) uintptr {
-	return this.impl.AddScriptToExecuteOnDocumentCreatedCompleted(errorCode, id)
+func ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerInvoke(this *ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler, errorCode uintptr, result string) uintptr {
+	return this.impl.AddScriptToExecuteOnDocumentCreatedCompleted(errorCode, result)
 }
 
 type ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerImpl interface {
 	IUnknownImpl
-	AddScriptToExecuteOnDocumentCreatedCompleted(errorCode uintptr, id string) uintptr
+	AddScriptToExecuteOnDocumentCreatedCompleted(errorCode uintptr, result string) uintptr
 }
 
 var ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerFn = ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerVtbl{

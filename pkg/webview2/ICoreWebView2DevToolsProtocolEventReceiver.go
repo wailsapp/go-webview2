@@ -23,13 +23,13 @@ func (i *ICoreWebView2DevToolsProtocolEventReceiver) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2DevToolsProtocolEventReceiver) AddDevToolsProtocolEventReceived(handler *ICoreWebView2DevToolsProtocolEventReceivedEventHandler) (EventRegistrationToken, error) {
+func (i *ICoreWebView2DevToolsProtocolEventReceiver) AddDevToolsProtocolEventReceived(eventHandler *ICoreWebView2DevToolsProtocolEventReceivedEventHandler) (EventRegistrationToken, error) {
 
 	var token EventRegistrationToken
 
 	hr, _, err := i.Vtbl.AddDevToolsProtocolEventReceived.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(handler)),
+		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {

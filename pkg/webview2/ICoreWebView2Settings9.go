@@ -26,7 +26,7 @@ func (i *ICoreWebView2Settings9) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2Settings9() *ICoreWebView2Settings9 {
 	var result *ICoreWebView2Settings9
 
-	iidICoreWebView2Settings9 := NewGUID("{0528A73B-E92D-49F4-927A-E547DDDAA37D}")
+	iidICoreWebView2Settings9 := NewGUID("{0528a73b-e92d-49f4-927a-e547dddaa37d}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2Settings9)),
@@ -37,25 +37,25 @@ func (i *ICoreWebView2) GetICoreWebView2Settings9() *ICoreWebView2Settings9 {
 
 func (i *ICoreWebView2Settings9) GetIsNonClientRegionSupportEnabled() (bool, error) {
 	// Create int32 to hold bool result
-	var _enabled int32
+	var _value int32
 
 	hr, _, err := i.Vtbl.GetIsNonClientRegionSupportEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&_enabled)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	enabled := _enabled != 0
-	return enabled, err
+	value := _value != 0
+	return value, err
 }
 
-func (i *ICoreWebView2Settings9) PutIsNonClientRegionSupportEnabled(enabled bool) error {
+func (i *ICoreWebView2Settings9) PutIsNonClientRegionSupportEnabled(value bool) error {
 
 	hr, _, err := i.Vtbl.PutIsNonClientRegionSupportEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&enabled)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

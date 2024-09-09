@@ -36,15 +36,15 @@ func (i *ICoreWebView2) GetICoreWebView2Environment4() *ICoreWebView2Environment
 
 func (i *ICoreWebView2Environment4) GetAutomationProviderForWindow(hwnd HWND) (*IUnknown, error) {
 
-	var provider *IUnknown
+	var value *IUnknown
 
 	hr, _, err := i.Vtbl.GetAutomationProviderForWindow.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&hwnd)),
-		uintptr(unsafe.Pointer(&provider)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return provider, err
+	return value, err
 }

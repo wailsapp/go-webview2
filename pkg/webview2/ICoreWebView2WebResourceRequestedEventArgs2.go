@@ -25,7 +25,7 @@ func (i *ICoreWebView2WebResourceRequestedEventArgs2) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2WebResourceRequestedEventArgs2() *ICoreWebView2WebResourceRequestedEventArgs2 {
 	var result *ICoreWebView2WebResourceRequestedEventArgs2
 
-	iidICoreWebView2WebResourceRequestedEventArgs2 := NewGUID("{9C562C24-B219-4D7F-92F6-B187FBBADD56}")
+	iidICoreWebView2WebResourceRequestedEventArgs2 := NewGUID("{9c562c24-b219-4d7f-92f6-b187fbbadd56}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2WebResourceRequestedEventArgs2)),
@@ -36,14 +36,14 @@ func (i *ICoreWebView2) GetICoreWebView2WebResourceRequestedEventArgs2() *ICoreW
 
 func (i *ICoreWebView2WebResourceRequestedEventArgs2) GetRequestedSourceKind() (COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS, error) {
 
-	var requestedSourceKind COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS
+	var value COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS
 
 	hr, _, err := i.Vtbl.GetRequestedSourceKind.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&requestedSourceKind)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return requestedSourceKind, err
+	return value, err
 }

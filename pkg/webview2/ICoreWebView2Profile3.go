@@ -26,7 +26,7 @@ func (i *ICoreWebView2Profile3) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2Profile3() *ICoreWebView2Profile3 {
 	var result *ICoreWebView2Profile3
 
-	iidICoreWebView2Profile3 := NewGUID("{B188E659-5685-4E05-BDBA-FC640E0F1992}")
+	iidICoreWebView2Profile3 := NewGUID("{b188e659-5685-4e05-bdba-fc640e0f1992}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2Profile3)),

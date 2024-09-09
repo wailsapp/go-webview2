@@ -33,13 +33,13 @@ func ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerIUnknownRelea
 	return this.impl.Release()
 }
 
-func ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerInvoke(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler, errorCode uintptr, content *IStream) uintptr {
-	return this.impl.WebResourceResponseViewGetContentCompleted(errorCode, content)
+func ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerInvoke(this *ICoreWebView2WebResourceResponseViewGetContentCompletedHandler, errorCode uintptr, result *IStream) uintptr {
+	return this.impl.WebResourceResponseViewGetContentCompleted(errorCode, result)
 }
 
 type ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerImpl interface {
 	IUnknownImpl
-	WebResourceResponseViewGetContentCompleted(errorCode uintptr, content *IStream) uintptr
+	WebResourceResponseViewGetContentCompleted(errorCode uintptr, result *IStream) uintptr
 }
 
 var ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerFn = ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerVtbl{

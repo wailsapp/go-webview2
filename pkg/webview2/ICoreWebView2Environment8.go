@@ -27,7 +27,7 @@ func (i *ICoreWebView2Environment8) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2Environment8() *ICoreWebView2Environment8 {
 	var result *ICoreWebView2Environment8
 
-	iidICoreWebView2Environment8 := NewGUID("{D6EB91DD-C3D2-45E5-BD29-6DC2BC4DE9CF}")
+	iidICoreWebView2Environment8 := NewGUID("{d6eb91dd-c3d2-45e5-bd29-6dc2bc4de9cf}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2Environment8)),

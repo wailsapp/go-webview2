@@ -33,13 +33,13 @@ func ICoreWebView2GetProcessExtendedInfosCompletedHandlerIUnknownRelease(this *I
 	return this.impl.Release()
 }
 
-func ICoreWebView2GetProcessExtendedInfosCompletedHandlerInvoke(this *ICoreWebView2GetProcessExtendedInfosCompletedHandler, errorCode uintptr, value *ICoreWebView2ProcessExtendedInfoCollection) uintptr {
-	return this.impl.GetProcessExtendedInfosCompleted(errorCode, value)
+func ICoreWebView2GetProcessExtendedInfosCompletedHandlerInvoke(this *ICoreWebView2GetProcessExtendedInfosCompletedHandler, errorCode uintptr, result *ICoreWebView2ProcessExtendedInfoCollection) uintptr {
+	return this.impl.GetProcessExtendedInfosCompleted(errorCode, result)
 }
 
 type ICoreWebView2GetProcessExtendedInfosCompletedHandlerImpl interface {
 	IUnknownImpl
-	GetProcessExtendedInfosCompleted(errorCode uintptr, value *ICoreWebView2ProcessExtendedInfoCollection) uintptr
+	GetProcessExtendedInfosCompleted(errorCode uintptr, result *ICoreWebView2ProcessExtendedInfoCollection) uintptr
 }
 
 var ICoreWebView2GetProcessExtendedInfosCompletedHandlerFn = ICoreWebView2GetProcessExtendedInfosCompletedHandlerVtbl{

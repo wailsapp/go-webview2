@@ -33,13 +33,13 @@ func ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandlerIUnknownRelease(t
 	return this.impl.Release()
 }
 
-func ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandlerInvoke(this *ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler, errorCode uintptr, createdEnvironment *ICoreWebView2Environment) uintptr {
-	return this.impl.CreateCoreWebView2EnvironmentCompleted(errorCode, createdEnvironment)
+func ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandlerInvoke(this *ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler, errorCode uintptr, result *ICoreWebView2Environment) uintptr {
+	return this.impl.CreateCoreWebView2EnvironmentCompleted(errorCode, result)
 }
 
 type ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandlerImpl interface {
 	IUnknownImpl
-	CreateCoreWebView2EnvironmentCompleted(errorCode uintptr, createdEnvironment *ICoreWebView2Environment) uintptr
+	CreateCoreWebView2EnvironmentCompleted(errorCode uintptr, result *ICoreWebView2Environment) uintptr
 }
 
 var ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandlerFn = ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandlerVtbl{

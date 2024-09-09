@@ -25,34 +25,34 @@ func (i *ICoreWebView2FrameInfo) AddRef() uintptr {
 
 func (i *ICoreWebView2FrameInfo) GetName() (string, error) {
 	// Create *uint16 to hold result
-	var _name *uint16
+	var _value *uint16
 
 	hr, _, err := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_name)),
+		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	name := UTF16PtrToString(_name)
-	CoTaskMemFree(unsafe.Pointer(_name))
-	return name, err
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return value, err
 }
 
 func (i *ICoreWebView2FrameInfo) GetSource() (string, error) {
 	// Create *uint16 to hold result
-	var _source *uint16
+	var _value *uint16
 
 	hr, _, err := i.Vtbl.GetSource.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_source)),
+		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	source := UTF16PtrToString(_source)
-	CoTaskMemFree(unsafe.Pointer(_source))
-	return source, err
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return value, err
 }

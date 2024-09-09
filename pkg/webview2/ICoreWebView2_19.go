@@ -26,7 +26,7 @@ func (i *ICoreWebView2_19) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2_19() *ICoreWebView2_19 {
 	var result *ICoreWebView2_19
 
-	iidICoreWebView2_19 := NewGUID("{6921F954-79B0-437F-A997-C85811897C68}")
+	iidICoreWebView2_19 := NewGUID("{6921f954-79b0-437f-a997-c85811897c68}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2_19)),
@@ -37,23 +37,23 @@ func (i *ICoreWebView2) GetICoreWebView2_19() *ICoreWebView2_19 {
 
 func (i *ICoreWebView2_19) GetMemoryUsageTargetLevel() (COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL, error) {
 
-	var level COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL
+	var value COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL
 
 	hr, _, err := i.Vtbl.GetMemoryUsageTargetLevel.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&level)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return level, err
+	return value, err
 }
 
-func (i *ICoreWebView2_19) PutMemoryUsageTargetLevel(level COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL) error {
+func (i *ICoreWebView2_19) PutMemoryUsageTargetLevel(value COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL) error {
 
 	hr, _, err := i.Vtbl.PutMemoryUsageTargetLevel.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(level),
+		uintptr(value),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

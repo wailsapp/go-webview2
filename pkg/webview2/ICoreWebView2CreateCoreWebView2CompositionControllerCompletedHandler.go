@@ -33,13 +33,13 @@ func ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandlerIUnknow
 	return this.impl.Release()
 }
 
-func ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandlerInvoke(this *ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler, errorCode uintptr, webView *ICoreWebView2CompositionController) uintptr {
-	return this.impl.CreateCoreWebView2CompositionControllerCompleted(errorCode, webView)
+func ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandlerInvoke(this *ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler, errorCode uintptr, result *ICoreWebView2CompositionController) uintptr {
+	return this.impl.CreateCoreWebView2CompositionControllerCompleted(errorCode, result)
 }
 
 type ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandlerImpl interface {
 	IUnknownImpl
-	CreateCoreWebView2CompositionControllerCompleted(errorCode uintptr, webView *ICoreWebView2CompositionController) uintptr
+	CreateCoreWebView2CompositionControllerCompleted(errorCode uintptr, result *ICoreWebView2CompositionController) uintptr
 }
 
 var ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandlerFn = ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandlerVtbl{

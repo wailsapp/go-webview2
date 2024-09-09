@@ -57,17 +57,17 @@ func (i *ICoreWebView2HttpRequestHeaders) GetHeaders(name string) (*ICoreWebView
 	if err != nil {
 		return nil, err
 	}
-	var iterator *ICoreWebView2HttpHeadersCollectionIterator
+	var value *ICoreWebView2HttpHeadersCollectionIterator
 
 	hr, _, err := i.Vtbl.GetHeaders.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
-		uintptr(unsafe.Pointer(&iterator)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return iterator, err
+	return value, err
 }
 
 func (i *ICoreWebView2HttpRequestHeaders) Contains(name string) (bool, error) {
@@ -77,19 +77,19 @@ func (i *ICoreWebView2HttpRequestHeaders) Contains(name string) (bool, error) {
 	if err != nil {
 		return false, err
 	} // Create int32 to hold bool result
-	var _contains int32
+	var _value int32
 
 	hr, _, err := i.Vtbl.Contains.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
-		uintptr(unsafe.Pointer(&_contains)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	contains := _contains != 0
-	return contains, err
+	value := _value != 0
+	return value, err
 }
 
 func (i *ICoreWebView2HttpRequestHeaders) SetHeader(name string, value string) error {
@@ -136,14 +136,14 @@ func (i *ICoreWebView2HttpRequestHeaders) RemoveHeader(name string) error {
 
 func (i *ICoreWebView2HttpRequestHeaders) GetIterator() (*ICoreWebView2HttpHeadersCollectionIterator, error) {
 
-	var iterator *ICoreWebView2HttpHeadersCollectionIterator
+	var value *ICoreWebView2HttpHeadersCollectionIterator
 
 	hr, _, err := i.Vtbl.GetIterator.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&iterator)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return iterator, err
+	return value, err
 }

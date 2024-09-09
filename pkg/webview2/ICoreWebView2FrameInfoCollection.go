@@ -24,14 +24,14 @@ func (i *ICoreWebView2FrameInfoCollection) AddRef() uintptr {
 
 func (i *ICoreWebView2FrameInfoCollection) GetIterator() (*ICoreWebView2FrameInfoCollectionIterator, error) {
 
-	var iterator *ICoreWebView2FrameInfoCollectionIterator
+	var value *ICoreWebView2FrameInfoCollectionIterator
 
 	hr, _, err := i.Vtbl.GetIterator.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&iterator)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return iterator, err
+	return value, err
 }

@@ -24,14 +24,14 @@ func (i *ICoreWebView2ProcessFailedEventArgs) AddRef() uintptr {
 
 func (i *ICoreWebView2ProcessFailedEventArgs) GetProcessFailedKind() (COREWEBVIEW2_PROCESS_FAILED_KIND, error) {
 
-	var processFailedKind COREWEBVIEW2_PROCESS_FAILED_KIND
+	var value COREWEBVIEW2_PROCESS_FAILED_KIND
 
 	hr, _, err := i.Vtbl.GetProcessFailedKind.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&processFailedKind)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return processFailedKind, err
+	return value, err
 }

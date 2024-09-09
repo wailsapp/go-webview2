@@ -26,7 +26,7 @@ func (i *ICoreWebView2_22) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2_22() *ICoreWebView2_22 {
 	var result *ICoreWebView2_22
 
-	iidICoreWebView2_22 := NewGUID("{DB75DFC7-A857-4632-A398-6969DDE26C0A}")
+	iidICoreWebView2_22 := NewGUID("{db75dfc7-a857-4632-a398-6969dde26c0a}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2_22)),
@@ -35,7 +35,7 @@ func (i *ICoreWebView2) GetICoreWebView2_22() *ICoreWebView2_22 {
 	return result
 }
 
-func (i *ICoreWebView2_22) AddWebResourceRequestedFilterWithRequestSourceKinds(uri string, resourceContext COREWEBVIEW2_WEB_RESOURCE_CONTEXT, requestSourceKinds COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS) error {
+func (i *ICoreWebView2_22) AddWebResourceRequestedFilterWithRequestSourceKinds(uri string, ResourceContext COREWEBVIEW2_WEB_RESOURCE_CONTEXT, requestSourceKinds COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS) error {
 
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
@@ -46,7 +46,7 @@ func (i *ICoreWebView2_22) AddWebResourceRequestedFilterWithRequestSourceKinds(u
 	hr, _, err := i.Vtbl.AddWebResourceRequestedFilterWithRequestSourceKinds.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_uri)),
-		uintptr(resourceContext),
+		uintptr(ResourceContext),
 		uintptr(requestSourceKinds),
 	)
 	if windows.Handle(hr) != windows.S_OK {
@@ -55,7 +55,7 @@ func (i *ICoreWebView2_22) AddWebResourceRequestedFilterWithRequestSourceKinds(u
 	return err
 }
 
-func (i *ICoreWebView2_22) RemoveWebResourceRequestedFilterWithRequestSourceKinds(uri string, resourceContext COREWEBVIEW2_WEB_RESOURCE_CONTEXT, requestSourceKinds COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS) error {
+func (i *ICoreWebView2_22) RemoveWebResourceRequestedFilterWithRequestSourceKinds(uri string, ResourceContext COREWEBVIEW2_WEB_RESOURCE_CONTEXT, requestSourceKinds COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS) error {
 
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
@@ -66,7 +66,7 @@ func (i *ICoreWebView2_22) RemoveWebResourceRequestedFilterWithRequestSourceKind
 	hr, _, err := i.Vtbl.RemoveWebResourceRequestedFilterWithRequestSourceKinds.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_uri)),
-		uintptr(resourceContext),
+		uintptr(ResourceContext),
 		uintptr(requestSourceKinds),
 	)
 	if windows.Handle(hr) != windows.S_OK {

@@ -36,14 +36,14 @@ func (i *ICoreWebView2) GetICoreWebView2_20() *ICoreWebView2_20 {
 
 func (i *ICoreWebView2_20) GetFrameId() (uint32, error) {
 
-	var id uint32
+	var value uint32
 
 	hr, _, err := i.Vtbl.GetFrameId.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&id)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return id, err
+	return value, err
 }

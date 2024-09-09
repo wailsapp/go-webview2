@@ -26,7 +26,7 @@ func (i *ICoreWebView2NavigationStartingEventArgs2) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2NavigationStartingEventArgs2() *ICoreWebView2NavigationStartingEventArgs2 {
 	var result *ICoreWebView2NavigationStartingEventArgs2
 
-	iidICoreWebView2NavigationStartingEventArgs2 := NewGUID("{9086BE93-91AA-472D-A7E0-579F2BA006AD}")
+	iidICoreWebView2NavigationStartingEventArgs2 := NewGUID("{9086be93-91aa-472d-a7e0-579f2ba006ad}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2NavigationStartingEventArgs2)),

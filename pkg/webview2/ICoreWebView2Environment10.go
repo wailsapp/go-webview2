@@ -38,23 +38,23 @@ func (i *ICoreWebView2) GetICoreWebView2Environment10() *ICoreWebView2Environmen
 
 func (i *ICoreWebView2Environment10) CreateCoreWebView2ControllerOptions() (*ICoreWebView2ControllerOptions, error) {
 
-	var options *ICoreWebView2ControllerOptions
+	var value *ICoreWebView2ControllerOptions
 
 	hr, _, err := i.Vtbl.CreateCoreWebView2ControllerOptions.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&options)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return options, err
+	return value, err
 }
 
-func (i *ICoreWebView2Environment10) CreateCoreWebView2ControllerWithOptions(parentWindow HWND, options *ICoreWebView2ControllerOptions, handler *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler) error {
+func (i *ICoreWebView2Environment10) CreateCoreWebView2ControllerWithOptions(ParentWindow HWND, options *ICoreWebView2ControllerOptions, handler *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler) error {
 
 	hr, _, err := i.Vtbl.CreateCoreWebView2ControllerWithOptions.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&parentWindow)),
+		uintptr(unsafe.Pointer(&ParentWindow)),
 		uintptr(unsafe.Pointer(options)),
 		uintptr(unsafe.Pointer(handler)),
 	)
@@ -64,11 +64,11 @@ func (i *ICoreWebView2Environment10) CreateCoreWebView2ControllerWithOptions(par
 	return err
 }
 
-func (i *ICoreWebView2Environment10) CreateCoreWebView2CompositionControllerWithOptions(parentWindow HWND, options *ICoreWebView2ControllerOptions, handler *ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler) error {
+func (i *ICoreWebView2Environment10) CreateCoreWebView2CompositionControllerWithOptions(ParentWindow HWND, options *ICoreWebView2ControllerOptions, handler *ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler) error {
 
 	hr, _, err := i.Vtbl.CreateCoreWebView2CompositionControllerWithOptions.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&parentWindow)),
+		uintptr(unsafe.Pointer(&ParentWindow)),
 		uintptr(unsafe.Pointer(options)),
 		uintptr(unsafe.Pointer(handler)),
 	)

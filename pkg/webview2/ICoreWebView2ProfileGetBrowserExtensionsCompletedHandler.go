@@ -33,13 +33,13 @@ func ICoreWebView2ProfileGetBrowserExtensionsCompletedHandlerIUnknownRelease(thi
 	return this.impl.Release()
 }
 
-func ICoreWebView2ProfileGetBrowserExtensionsCompletedHandlerInvoke(this *ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler, errorCode uintptr, extensionList *ICoreWebView2BrowserExtensionList) uintptr {
-	return this.impl.ProfileGetBrowserExtensionsCompleted(errorCode, extensionList)
+func ICoreWebView2ProfileGetBrowserExtensionsCompletedHandlerInvoke(this *ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler, errorCode uintptr, result *ICoreWebView2BrowserExtensionList) uintptr {
+	return this.impl.ProfileGetBrowserExtensionsCompleted(errorCode, result)
 }
 
 type ICoreWebView2ProfileGetBrowserExtensionsCompletedHandlerImpl interface {
 	IUnknownImpl
-	ProfileGetBrowserExtensionsCompleted(errorCode uintptr, extensionList *ICoreWebView2BrowserExtensionList) uintptr
+	ProfileGetBrowserExtensionsCompleted(errorCode uintptr, result *ICoreWebView2BrowserExtensionList) uintptr
 }
 
 var ICoreWebView2ProfileGetBrowserExtensionsCompletedHandlerFn = ICoreWebView2ProfileGetBrowserExtensionsCompletedHandlerVtbl{

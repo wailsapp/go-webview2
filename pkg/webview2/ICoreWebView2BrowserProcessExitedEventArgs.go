@@ -25,16 +25,16 @@ func (i *ICoreWebView2BrowserProcessExitedEventArgs) AddRef() uintptr {
 
 func (i *ICoreWebView2BrowserProcessExitedEventArgs) GetBrowserProcessExitKind() (COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND, error) {
 
-	var browserProcessExitKind COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND
+	var value COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND
 
 	hr, _, err := i.Vtbl.GetBrowserProcessExitKind.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&browserProcessExitKind)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return browserProcessExitKind, err
+	return value, err
 }
 
 func (i *ICoreWebView2BrowserProcessExitedEventArgs) GetBrowserProcessId() (uint32, error) {

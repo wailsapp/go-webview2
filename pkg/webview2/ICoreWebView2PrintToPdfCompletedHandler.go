@@ -33,13 +33,13 @@ func ICoreWebView2PrintToPdfCompletedHandlerIUnknownRelease(this *ICoreWebView2P
 	return this.impl.Release()
 }
 
-func ICoreWebView2PrintToPdfCompletedHandlerInvoke(this *ICoreWebView2PrintToPdfCompletedHandler, errorCode uintptr, isSuccessful bool) uintptr {
-	return this.impl.PrintToPdfCompleted(errorCode, isSuccessful)
+func ICoreWebView2PrintToPdfCompletedHandlerInvoke(this *ICoreWebView2PrintToPdfCompletedHandler, errorCode uintptr, result bool) uintptr {
+	return this.impl.PrintToPdfCompleted(errorCode, result)
 }
 
 type ICoreWebView2PrintToPdfCompletedHandlerImpl interface {
 	IUnknownImpl
-	PrintToPdfCompleted(errorCode uintptr, isSuccessful bool) uintptr
+	PrintToPdfCompleted(errorCode uintptr, result bool) uintptr
 }
 
 var ICoreWebView2PrintToPdfCompletedHandlerFn = ICoreWebView2PrintToPdfCompletedHandlerVtbl{

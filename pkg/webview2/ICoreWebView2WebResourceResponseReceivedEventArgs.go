@@ -25,28 +25,28 @@ func (i *ICoreWebView2WebResourceResponseReceivedEventArgs) AddRef() uintptr {
 
 func (i *ICoreWebView2WebResourceResponseReceivedEventArgs) GetRequest() (*ICoreWebView2WebResourceRequest, error) {
 
-	var request *ICoreWebView2WebResourceRequest
+	var value *ICoreWebView2WebResourceRequest
 
 	hr, _, err := i.Vtbl.GetRequest.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&request)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return request, err
+	return value, err
 }
 
 func (i *ICoreWebView2WebResourceResponseReceivedEventArgs) GetResponse() (*ICoreWebView2WebResourceResponseView, error) {
 
-	var response *ICoreWebView2WebResourceResponseView
+	var value *ICoreWebView2WebResourceResponseView
 
 	hr, _, err := i.Vtbl.GetResponse.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&response)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return response, err
+	return value, err
 }

@@ -33,13 +33,13 @@ func ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerIUnknownRelease
 	return this.impl.Release()
 }
 
-func ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerInvoke(this *ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler, errorCode uintptr, collectionView *ICoreWebView2PermissionSettingCollectionView) uintptr {
-	return this.impl.GetNonDefaultPermissionSettingsCompleted(errorCode, collectionView)
+func ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerInvoke(this *ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler, errorCode uintptr, result *ICoreWebView2PermissionSettingCollectionView) uintptr {
+	return this.impl.GetNonDefaultPermissionSettingsCompleted(errorCode, result)
 }
 
 type ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerImpl interface {
 	IUnknownImpl
-	GetNonDefaultPermissionSettingsCompleted(errorCode uintptr, collectionView *ICoreWebView2PermissionSettingCollectionView) uintptr
+	GetNonDefaultPermissionSettingsCompleted(errorCode uintptr, result *ICoreWebView2PermissionSettingCollectionView) uintptr
 }
 
 var ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerFn = ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerVtbl{

@@ -33,13 +33,13 @@ func ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownRelease(th
 	return this.impl.Release()
 }
 
-func ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerInvoke(this *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler, errorCode uintptr, createdController *ICoreWebView2Controller) uintptr {
-	return this.impl.CreateCoreWebView2ControllerCompleted(errorCode, createdController)
+func ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerInvoke(this *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler, errorCode uintptr, result *ICoreWebView2Controller) uintptr {
+	return this.impl.CreateCoreWebView2ControllerCompleted(errorCode, result)
 }
 
 type ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerImpl interface {
 	IUnknownImpl
-	CreateCoreWebView2ControllerCompleted(errorCode uintptr, createdController *ICoreWebView2Controller) uintptr
+	CreateCoreWebView2ControllerCompleted(errorCode uintptr, result *ICoreWebView2Controller) uintptr
 }
 
 var ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerFn = ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerVtbl{

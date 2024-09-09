@@ -33,13 +33,13 @@ func ICoreWebView2GetCookiesCompletedHandlerIUnknownRelease(this *ICoreWebView2G
 	return this.impl.Release()
 }
 
-func ICoreWebView2GetCookiesCompletedHandlerInvoke(this *ICoreWebView2GetCookiesCompletedHandler, result uintptr, cookieList *ICoreWebView2CookieList) uintptr {
-	return this.impl.GetCookiesCompleted(result, cookieList)
+func ICoreWebView2GetCookiesCompletedHandlerInvoke(this *ICoreWebView2GetCookiesCompletedHandler, errorCode uintptr, result *ICoreWebView2CookieList) uintptr {
+	return this.impl.GetCookiesCompleted(errorCode, result)
 }
 
 type ICoreWebView2GetCookiesCompletedHandlerImpl interface {
 	IUnknownImpl
-	GetCookiesCompleted(result uintptr, cookieList *ICoreWebView2CookieList) uintptr
+	GetCookiesCompleted(errorCode uintptr, result *ICoreWebView2CookieList) uintptr
 }
 
 var ICoreWebView2GetCookiesCompletedHandlerFn = ICoreWebView2GetCookiesCompletedHandlerVtbl{

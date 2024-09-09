@@ -75,11 +75,13 @@ func (i *ICoreWebView2Settings4) GetIsPasswordAutosaveEnabled() (bool, error) {
 	return value, err
 }
 
+// PutIsPasswordAutosaveEnabled sets the IsPasswordAutosaveEnabled property.
+// The default value is `FALSE`.
 func (i *ICoreWebView2Settings4) PutIsPasswordAutosaveEnabled(value bool) error {
 
 	hr, _, err := i.Vtbl.PutIsPasswordAutosaveEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(boolToInt(value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -107,7 +109,7 @@ func (i *ICoreWebView2Settings4) PutIsGeneralAutofillEnabled(value bool) error {
 
 	hr, _, err := i.Vtbl.PutIsGeneralAutofillEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(boolToInt(value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

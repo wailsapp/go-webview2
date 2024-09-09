@@ -25,7 +25,7 @@ func (i *ICoreWebView2NavigationStartingEventArgs3) AddRef() uintptr {
 func (i *ICoreWebView2) GetICoreWebView2NavigationStartingEventArgs3() *ICoreWebView2NavigationStartingEventArgs3 {
 	var result *ICoreWebView2NavigationStartingEventArgs3
 
-	iidICoreWebView2NavigationStartingEventArgs3 := NewGUID("{DDFFE494-4942-4BD2-AB73-35B8FF40E19F}")
+	iidICoreWebView2NavigationStartingEventArgs3 := NewGUID("{ddffe494-4942-4bd2-ab73-35b8ff40e19f}")
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2NavigationStartingEventArgs3)),
@@ -36,14 +36,14 @@ func (i *ICoreWebView2) GetICoreWebView2NavigationStartingEventArgs3() *ICoreWeb
 
 func (i *ICoreWebView2NavigationStartingEventArgs3) GetNavigationKind() (COREWEBVIEW2_NAVIGATION_KIND, error) {
 
-	var navigation_kind COREWEBVIEW2_NAVIGATION_KIND
+	var value COREWEBVIEW2_NAVIGATION_KIND
 
 	hr, _, err := i.Vtbl.GetNavigationKind.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&navigation_kind)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return navigation_kind, err
+	return value, err
 }

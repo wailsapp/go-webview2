@@ -37,25 +37,25 @@ func (i *ICoreWebView2) GetICoreWebView2PermissionRequestedEventArgs2() *ICoreWe
 
 func (i *ICoreWebView2PermissionRequestedEventArgs2) GetHandled() (bool, error) {
 	// Create int32 to hold bool result
-	var _handled int32
+	var _value int32
 
 	hr, _, err := i.Vtbl.GetHandled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&_handled)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	handled := _handled != 0
-	return handled, err
+	value := _value != 0
+	return value, err
 }
 
-func (i *ICoreWebView2PermissionRequestedEventArgs2) PutHandled(handled bool) error {
+func (i *ICoreWebView2PermissionRequestedEventArgs2) PutHandled(value bool) error {
 
 	hr, _, err := i.Vtbl.PutHandled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&handled)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
