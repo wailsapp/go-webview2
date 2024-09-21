@@ -3,6 +3,7 @@
 package edge
 
 import (
+	"errors"
 	"golang.org/x/sys/windows"
 	"syscall"
 	"unsafe"
@@ -86,7 +87,12 @@ func (i *ICoreWebView2Settings4) PutIsPasswordAutosaveEnabled(value bool) error 
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+
+	if !errors.Is(err, windows.ERROR_SUCCESS) {
+		return err
+	}
+
+	return nil
 }
 
 func (i *ICoreWebView2Settings4) GetIsGeneralAutofillEnabled() (bool, error) {
@@ -111,8 +117,14 @@ func (i *ICoreWebView2Settings4) PutIsGeneralAutofillEnabled(value bool) error {
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(value)),
 	)
+
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+
+	if !errors.Is(err, windows.ERROR_SUCCESS) {
+		return err
+	}
+
+	return nil
 }

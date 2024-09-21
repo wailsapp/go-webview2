@@ -630,6 +630,9 @@ func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
 // It will take effect immediately after setting.
 // The default value is `FALSE`.
 func (e *Chromium) PutIsGeneralAutofillEnabled(value bool) error {
+	if !hasCapability(e.webview2RuntimeVersion, GeneralAutofillEnabled) {
+		return UnsupportedCapabilityError
+	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
 		return err
@@ -642,6 +645,9 @@ func (e *Chromium) PutIsGeneralAutofillEnabled(value bool) error {
 // identifying information entered into forms automatically.
 // The default value is `FALSE`.
 func (e *Chromium) PutIsPasswordAutosaveEnabled(value bool) error {
+	if !hasCapability(e.webview2RuntimeVersion, PasswordAutosaveEnabled) {
+		return UnsupportedCapabilityError
+	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
 		return err
