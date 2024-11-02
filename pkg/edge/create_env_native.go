@@ -23,7 +23,7 @@ func createCoreWebView2EnvironmentWithOptions(browserExecutableFolder, userDataF
 		return fmt.Errorf("Error calling UTF16PtrFromString for %s: %v", userDataFolder, err)
 	}
 
-	hr, err = webviewloader.CreateCoreWebView2EnvironmentWithOptions(
+	hr, err := webviewloader.CreateCoreWebView2EnvironmentWithOptions(
 		browserPathPtr,
 		userPathPtr,
 		uintptr(unsafe.Pointer(environmentCompletedHandle)),
@@ -34,10 +34,7 @@ func createCoreWebView2EnvironmentWithOptions(browserExecutableFolder, userDataF
 	}
 
 	if hr != 0 {
-		if err == nil || err == windows.ERROR_SUCCESS {
-			err = syscall.Errno(hr)
-		}
-		return err
+		return syscall.Errno(hr)
 	}
 
 	return nil
