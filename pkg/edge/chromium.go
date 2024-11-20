@@ -697,3 +697,30 @@ func (e *Chromium) GetAllowExternalDrag() (bool, error) {
 	}
 	return result, nil
 }
+
+func (e *Chromium) GetCookieManager() (*ICoreWebView2CookieManager, error) {
+	if e.webview == nil {
+		return nil, errors.New("webview not initialized")
+	}
+
+	// Check WebView2 version
+	if e.webview2RuntimeVersion == "" {
+		return nil, errors.New("WebView2 runtime version not available")
+	}
+
+	// Get ICoreWebView2_2 interface
+	webview2, err := e.webview.QueryInterface2()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get ICoreWebView2_2: %w\nThis functionality requires WebView2 Runtime version 89.0.721.0 or later. Current version: %s", err, e.webview2RuntimeVersion)
+	}
+	defer webview2.Release()
+
+	// Get cookie manager
+	cookieManager, err := webview2.GetCookieManager()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get cookie manager: %w", err)
+	}
+	
+	// Note: The caller is responsible for calling Release() on the returned cookieManager
+	return cookieManager, nil
+}

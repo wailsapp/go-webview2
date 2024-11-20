@@ -155,3 +155,21 @@ func SHCreateMemStream(data []byte) (uintptr, error) {
 
 	return ret, nil
 }
+
+const CW_USEDEFAULT = 0x80000000
+
+// DefWindowProc calls the default window procedure to provide default processing for any window messages that an application does not process.
+func DefWindowProc(hwnd, msg, wparam, lparam uintptr) uintptr {
+	ret, _, _ := User32DefWindowProcW.Call(hwnd, msg, wparam, lparam)
+	return ret
+}
+
+// DestroyWindow destroys the specified window. The function sends WM_DESTROY and WM_NCDESTROY messages to the window
+// to deactivate it and remove the keyboard focus from it.
+func DestroyWindow(hwnd uintptr) error {
+	ret, _, err := User32DestroyWindow.Call(hwnd)
+	if ret == 0 {
+		return err
+	}
+	return nil
+}

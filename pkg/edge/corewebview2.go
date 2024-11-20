@@ -220,8 +220,25 @@ func (i *ICoreWebView2) GetContainsFullScreenElement() (bool, error) {
 	return result, nil
 }
 
-// ICoreWebView2Environment
+func (i *ICoreWebView2) QueryInterface2() (*ICoreWebView2_2, error) {
+	var result *ICoreWebView2_2
+	iid := windows.GUID{
+		Data1: 0x9E8F0CF8,
+		Data2: 0xE670,
+		Data3: 0x4B5E,
+		Data4: [8]byte{0xB2, 0xBC, 0x73, 0xE0, 0x61, 0xE3, 0x18, 0x4C},
+	}
+	hr, _, _ := i.vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&iid)),
+		uintptr(unsafe.Pointer(&result)))
+	if hr != 0 {
+		return nil, windows.Errno(hr)
+	}
+	return result, nil
+}
 
+// ICoreWebView2EnvironmentVtbl
 type iCoreWebView2EnvironmentVtbl struct {
 	_IUnknownVtbl
 	CreateCoreWebView2Controller     ComProc
