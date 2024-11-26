@@ -152,6 +152,19 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Save the latest release notes to a file
+	if len(versions) > 0 {
+		latestReleaseNotes := fmt.Sprintf("Version: %s\nRuntime Version: %s\nRelease Notes URL: %s\n\nNotes:\n%s",
+			versions[0].Number,
+			versions[0].RuntimeVersion,
+			versions[0].ReleaseNotes,
+			strings.Join(versions[0].Notes, "\n"))
+		err = os.WriteFile("latest_release_notes.txt", []byte(latestReleaseNotes), 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	if !forced {
 		// Check if the latest version is different from the last time we ran this script
 		latest, err := CompareBrowserVersions(latestVersion, latestVersionProcessed)
