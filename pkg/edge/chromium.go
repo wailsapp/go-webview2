@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync/atomic"
 	"syscall"
@@ -22,7 +23,26 @@ import (
 type Rect = w32.Rect
 
 func globalErrorHandler(err error) {
+	if err == nil {
+		return
+	}
+
 	println("Error detected in Webview2:\n", err.Error())
+
+	stackBuf := make([]uintptr, 64)
+	stackSize := runtime.Callers(2, stackBuf)
+	frames := runtime.CallersFrames(stackBuf[:stackSize])
+
+	fmt.Println("\nStack:")
+	stackIndex := 1
+	for {
+		frame, more := frames.Next()
+		if !more {
+			break
+		}
+		fmt.Printf("%d. %s\n\t%s:%d\n", stackIndex, frame.Function, frame.File, frame.Line)
+		stackIndex++
+	}
 }
 
 type Chromium struct {
@@ -720,7 +740,7 @@ func (e *Chromium) GetCookieManager() (*ICoreWebView2CookieManager, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to get cookie manager: %w", err)
 	}
-	
+
 	// Note: The caller is responsible for calling Release() on the returned cookieManager
 	return cookieManager, nil
 }
