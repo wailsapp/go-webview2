@@ -27,20 +27,20 @@ func globalErrorHandler(err error) {
 		return
 	}
 
-	println("Error detected in Webview2:\n", err.Error())
+	fmt.Printf("[WebView2 Error] %v\n", err)
 
 	stackBuf := make([]uintptr, 64)
 	stackSize := runtime.Callers(2, stackBuf)
 	frames := runtime.CallersFrames(stackBuf[:stackSize])
 
-	fmt.Println("\nStack:")
+	fmt.Println("\nStack trace:")
 	stackIndex := 1
 	for {
 		frame, more := frames.Next()
 		if !more {
 			break
 		}
-		fmt.Printf("%d. %s\n\t%s:%d\n", stackIndex, frame.Function, frame.File, frame.Line)
+		log.Printf("%d: %s\n\t%s:%d\n", stackIndex, frame.Function, frame.File, frame.Line)
 		stackIndex++
 	}
 }
@@ -301,9 +301,18 @@ func (e *Chromium) Release() uintptr {
 }
 
 func (e *Chromium) EnvironmentCompleted(res uintptr, env *ICoreWebView2Environment) uintptr {
-	if int32(res) < 0 {
-		e.errorCallback(fmt.Errorf("error creating environmentwith %08x: %s", res, syscall.Errno(res)))
+	if env == nil {
+		err := syscall.Errno(res)
+		log.Printf("[WebView2] Environment creation failed with error code %v: %v\n", res, err)
+		if e.globalErrorCallback != nil {
+			e.globalErrorCallback(fmt.Errorf("failed to create WebView2 environment: %w", err))
+		}
+		return res
 	}
+
+	log.Printf("[WebView2] Environment created successfully\n")
+	e.environment = env
+
 	_, _, err := env.vtbl.AddRef.Call(uintptr(unsafe.Pointer(env)))
 	if err != nil && !errors.Is(err, windows.ERROR_SUCCESS) {
 		e.errorCallback(err)
