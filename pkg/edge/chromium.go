@@ -432,7 +432,7 @@ func (e *Chromium) MessageReceived(sender *ICoreWebView2, args *ICoreWebView2Web
 
 	message := w32.Utf16PtrToString(_message)
 
-	if hasCapability(e.webview2RuntimeVersion, GetAdditionalObjects) {
+	if HasCapability(e.webview2RuntimeVersion, GetAdditionalObjects) {
 		obj, err := args.GetAdditionalObjects()
 		if err != nil {
 			e.errorCallback(err)
@@ -630,11 +630,11 @@ func (e *Chromium) OpenDevToolsWindow() {
 }
 
 func (e *Chromium) HasCapability(c Capability) bool {
-	return hasCapability(e.webview2RuntimeVersion, c)
+	return HasCapability(e.webview2RuntimeVersion, c)
 }
 
 func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
-	if !hasCapability(e.webview2RuntimeVersion, SwipeNavigation) {
+	if !HasCapability(e.webview2RuntimeVersion, SwipeNavigation) {
 		return false, UnsupportedCapabilityError
 	}
 	webview2Settings, err := e.webview.GetSettings()
@@ -659,7 +659,7 @@ func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
 // It will take effect immediately after setting.
 // The default value is `FALSE`.
 func (e *Chromium) PutIsGeneralAutofillEnabled(value bool) error {
-	if !hasCapability(e.webview2RuntimeVersion, GeneralAutofillEnabled) {
+	if !HasCapability(e.webview2RuntimeVersion, GeneralAutofillEnabled) {
 		return UnsupportedCapabilityError
 	}
 	webview2Settings, err := e.webview.GetSettings()
@@ -674,7 +674,7 @@ func (e *Chromium) PutIsGeneralAutofillEnabled(value bool) error {
 // identifying information entered into forms automatically.
 // The default value is `FALSE`.
 func (e *Chromium) PutIsPasswordAutosaveEnabled(value bool) error {
-	if !hasCapability(e.webview2RuntimeVersion, PasswordAutosaveEnabled) {
+	if !HasCapability(e.webview2RuntimeVersion, PasswordAutosaveEnabled) {
 		return UnsupportedCapabilityError
 	}
 	webview2Settings, err := e.webview.GetSettings()
@@ -686,7 +686,7 @@ func (e *Chromium) PutIsPasswordAutosaveEnabled(value bool) error {
 }
 
 func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
-	if !hasCapability(e.webview2RuntimeVersion, SwipeNavigation) {
+	if !HasCapability(e.webview2RuntimeVersion, SwipeNavigation) {
 		return UnsupportedCapabilityError
 	}
 	webview2Settings, err := e.webview.GetSettings()
@@ -702,7 +702,7 @@ func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
 }
 
 func (e *Chromium) AllowExternalDrag(allow bool) error {
-	if !hasCapability(e.webview2RuntimeVersion, AllowExternalDrop) {
+	if !HasCapability(e.webview2RuntimeVersion, AllowExternalDrop) {
 		return UnsupportedCapabilityError
 	}
 	controller := e.GetController()
@@ -715,7 +715,7 @@ func (e *Chromium) AllowExternalDrag(allow bool) error {
 }
 
 func (e *Chromium) GetAllowExternalDrag() (bool, error) {
-	if !hasCapability(e.webview2RuntimeVersion, AllowExternalDrop) {
+	if !HasCapability(e.webview2RuntimeVersion, AllowExternalDrop) {
 		return false, UnsupportedCapabilityError
 	}
 	controller := e.GetController()
