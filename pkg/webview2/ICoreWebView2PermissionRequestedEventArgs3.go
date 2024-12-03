@@ -39,7 +39,7 @@ func (i *ICoreWebView2PermissionRequestedEventArgs3) GetSavesInProfile() (bool, 
 	// Create int32 to hold bool result
 	var _value int32
 
-	hr, _, err := i.Vtbl.GetSavesInProfile.Call(
+	hr, _, _ := i.Vtbl.GetSavesInProfile.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_value)),
 	)
@@ -48,17 +48,17 @@ func (i *ICoreWebView2PermissionRequestedEventArgs3) GetSavesInProfile() (bool, 
 	}
 	// Get result and cleanup
 	value := _value != 0
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2PermissionRequestedEventArgs3) PutSavesInProfile(value bool) error {
 
-	hr, _, err := i.Vtbl.PutSavesInProfile.Call(
+	hr, _, _ := i.Vtbl.PutSavesInProfile.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

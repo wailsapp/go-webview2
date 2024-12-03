@@ -21,14 +21,31 @@ type ICoreWebView2WebMessageReceivedEventArgs struct {
 }
 
 func (i *ICoreWebView2WebMessageReceivedEventArgs) GetAdditionalObjects() (*ICoreWebView2ObjectCollectionView, error) {
-	var err error
 	var value *ICoreWebView2ObjectCollectionView
-	_, _, err = i.vtbl.GetAdditionalObjects.Call(
+
+	hr, _, _ := i.vtbl.GetAdditionalObjects.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, windows.Errno(hr)
 	}
 	return value, nil
+}
+
+func (i *ICoreWebView2WebMessageReceivedEventArgs) TryGetWebMessageAsString() (string, error) {
+	var u16msg *uint16
+
+	hr, _, _ := i.vtbl.TryGetWebMessageAsString.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&u16msg)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", windows.Errno(hr)
+	}
+	defer windows.CoTaskMemFree(unsafe.Pointer(u16msg))
+
+	msg := windows.UTF16PtrToString(u16msg)
+
+	return msg, nil
 }

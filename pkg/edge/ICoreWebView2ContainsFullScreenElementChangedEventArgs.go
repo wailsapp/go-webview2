@@ -2,6 +2,10 @@
 
 package edge
 
+import (
+	"unsafe"
+)
+
 type _ICoreWebView2ContainsFullScreenElementChangedEventArgsVtbl struct {
 	_IUnknownVtbl
 }
@@ -11,5 +15,7 @@ type ICoreWebView2ContainsFullScreenElementChangedEventArgs struct {
 }
 
 func (i *ICoreWebView2ContainsFullScreenElementChangedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return ret
 }

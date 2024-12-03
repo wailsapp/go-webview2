@@ -30,7 +30,7 @@ func (i *ICoreWebView2HttpHeadersCollectionIterator) GetCurrentHeader() (string,
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetCurrentHeader.Call(
+	hr, _, _ := i.Vtbl.GetCurrentHeader.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 		uintptr(unsafe.Pointer(_value)),
@@ -44,14 +44,14 @@ func (i *ICoreWebView2HttpHeadersCollectionIterator) GetCurrentHeader() (string,
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return name, value, err
+	return name, value, nil
 }
 
 func (i *ICoreWebView2HttpHeadersCollectionIterator) GetHasCurrentHeader() (bool, error) {
 	// Create int32 to hold bool result
 	var _hasCurrent int32
 
-	hr, _, err := i.Vtbl.GetHasCurrentHeader.Call(
+	hr, _, _ := i.Vtbl.GetHasCurrentHeader.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_hasCurrent)),
 	)
@@ -60,14 +60,14 @@ func (i *ICoreWebView2HttpHeadersCollectionIterator) GetHasCurrentHeader() (bool
 	}
 	// Get result and cleanup
 	hasCurrent := _hasCurrent != 0
-	return hasCurrent, err
+	return hasCurrent, nil
 }
 
 func (i *ICoreWebView2HttpHeadersCollectionIterator) MoveNext() (bool, error) {
 	// Create int32 to hold bool result
 	var _hasNext int32
 
-	hr, _, err := i.Vtbl.MoveNext.Call(
+	hr, _, _ := i.Vtbl.MoveNext.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_hasNext)),
 	)
@@ -76,5 +76,5 @@ func (i *ICoreWebView2HttpHeadersCollectionIterator) MoveNext() (bool, error) {
 	}
 	// Get result and cleanup
 	hasNext := _hasNext != 0
-	return hasNext, err
+	return hasNext, nil
 }

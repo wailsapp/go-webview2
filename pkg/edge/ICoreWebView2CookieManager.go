@@ -25,6 +25,20 @@ type ICoreWebView2CookieManager struct {
 	vtbl *iCoreWebView2CookieManagerVtbl
 }
 
+// AddRef increments the reference count of ICoreWebView2CookieManager interface
+func (i *ICoreWebView2CookieManager) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+// Release decrements the reference count of ICoreWebView2CookieManager interface
+func (i *ICoreWebView2CookieManager) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
 // CreateCookie creates a new cookie with the given parameters
 func (i *ICoreWebView2CookieManager) CreateCookie(name, value, domain, path string) (*ICoreWebView2Cookie, error) {
 	var cookie *ICoreWebView2Cookie
@@ -97,11 +111,11 @@ func (i *ICoreWebView2CookieManager) GetCookies(uri string) (*ICoreWebView2Cooki
 func (i *ICoreWebView2CookieManager) DeleteCookies(name, uri string) error {
 	nameutf16, err := windows.UTF16PtrFromString(name)
 	if err != nil {
-		return err
+		return nil
 	}
 	uriutf16, err := windows.UTF16PtrFromString(uri)
 	if err != nil {
-		return err
+		return nil
 	}
 
 	hr, _, _ := i.vtbl.DeleteCookies.Call(
@@ -119,11 +133,11 @@ func (i *ICoreWebView2CookieManager) DeleteCookies(name, uri string) error {
 func (i *ICoreWebView2CookieManager) DeleteCookiesWithDomainAndPath(domain, path string) error {
 	domainutf16, err := windows.UTF16PtrFromString(domain)
 	if err != nil {
-		return err
+		return nil
 	}
 	pathutf16, err := windows.UTF16PtrFromString(path)
 	if err != nil {
-		return err
+		return nil
 	}
 
 	hr, _, _ := i.vtbl.DeleteCookiesWithDomainAndPath.Call(
@@ -170,9 +184,4 @@ func (i *ICoreWebView2CookieManager) DeleteAllCookies() error {
 		return syscall.Errno(hr)
 	}
 	return nil
-}
-
-// Release releases the ICoreWebView2CookieManager interface
-func (i *ICoreWebView2CookieManager) Release() error {
-	return i.vtbl.CallRelease(unsafe.Pointer(i))
 }

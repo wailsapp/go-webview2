@@ -30,7 +30,7 @@ func (i *ICoreWebView2BrowserExtension) GetId() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetId.Call(
+	hr, _, _ := i.Vtbl.GetId.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -40,14 +40,14 @@ func (i *ICoreWebView2BrowserExtension) GetId() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2BrowserExtension) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetName.Call(
+	hr, _, _ := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -57,26 +57,26 @@ func (i *ICoreWebView2BrowserExtension) GetName() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2BrowserExtension) Remove(handler *ICoreWebView2BrowserExtensionRemoveCompletedHandler) error {
 
-	hr, _, err := i.Vtbl.Remove.Call(
+	hr, _, _ := i.Vtbl.Remove.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(handler)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2BrowserExtension) GetIsEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
-	hr, _, err := i.Vtbl.GetIsEnabled.Call(
+	hr, _, _ := i.Vtbl.GetIsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_value)),
 	)
@@ -85,12 +85,12 @@ func (i *ICoreWebView2BrowserExtension) GetIsEnabled() (bool, error) {
 	}
 	// Get result and cleanup
 	value := _value != 0
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2BrowserExtension) Enable(isEnabled bool, handler *ICoreWebView2BrowserExtensionEnableCompletedHandler) error {
 
-	hr, _, err := i.Vtbl.Enable.Call(
+	hr, _, _ := i.Vtbl.Enable.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&isEnabled)),
 		uintptr(unsafe.Pointer(handler)),
@@ -98,5 +98,5 @@ func (i *ICoreWebView2BrowserExtension) Enable(isEnabled bool, handler *ICoreWeb
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

@@ -3,6 +3,7 @@
 package edge
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"syscall"
@@ -27,22 +28,38 @@ type ICoreWebView2WebResourceResponse struct {
 	vtbl *_ICoreWebView2WebResourceResponseVtbl
 }
 
+func (i *ICoreWebView2WebResourceResponse) AddRef() error {
+	_, _, err := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	if err != nil && !errors.Is(err, windows.ERROR_SUCCESS) {
+		return err
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2WebResourceResponse) Release() error {
+	_, _, err := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+	if err != nil && !errors.Is(err, windows.ERROR_SUCCESS) {
+		return err
+	}
+
+	return nil
+}
+
 // GetHeaders returns the mutable HTTP request headers. Make sure to call
 // Release on the returned Object after finished using it.
 func (i *ICoreWebView2WebResourceResponse) GetHeaders() (*ICoreWebView2HttpResponseHeaders, error) {
 	var headers *ICoreWebView2HttpResponseHeaders
-	res, _, err := i.vtbl.GetHeaders.Call(
+	hr, _, _ := i.vtbl.GetHeaders.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&headers)),
 	)
-	if windows.Handle(res) != windows.S_OK {
-		return nil, syscall.Errno(res)
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
 	}
 	if headers == nil {
-		if err == nil {
-			err = fmt.Errorf("unknown error")
-		}
-		return nil, err
+
+		return nil, fmt.Errorf("unknown error")
 	}
 	return headers, nil
 }
@@ -60,7 +77,7 @@ func (i *ICoreWebView2WebResourceResponse) PutStatusCode(statusCode int) error {
 	// Convert string 'reasonPhrase' to *uint16
 	_reasonPhrase, err := UTF16PtrFromString(http.StatusText(statusCode))
 	if err != nil {
-		return err
+		return nil
 	}
 
 	hr, _, _ = i.vtbl.PutReasonPhrase.Call(
@@ -91,15 +108,11 @@ func (i *ICoreWebView2WebResourceResponse) PutByteContent(content []byte) error 
 		// Create stream for response
 		str, err := w32.SHCreateMemStream(content)
 		if err != nil {
-			return err
+			return nil
 		}
 		stream = (*IStream)(unsafe.Pointer(str))
 		defer stream.Release()
 	}
 
 	return i.PutContent(stream)
-}
-
-func (i *ICoreWebView2WebResourceResponse) Release() error {
-	return i.vtbl.CallRelease(unsafe.Pointer(i))
 }

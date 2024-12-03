@@ -44,7 +44,7 @@ func (i *ICoreWebView2DownloadOperation) AddBytesReceivedChanged(eventHandler *I
 
 	var token EventRegistrationToken
 
-	hr, _, err := i.Vtbl.AddBytesReceivedChanged.Call(
+	hr, _, _ := i.Vtbl.AddBytesReceivedChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
@@ -52,26 +52,26 @@ func (i *ICoreWebView2DownloadOperation) AddBytesReceivedChanged(eventHandler *I
 	if windows.Handle(hr) != windows.S_OK {
 		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
-	return token, err
+	return token, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) RemoveBytesReceivedChanged(token EventRegistrationToken) error {
 
-	hr, _, err := i.Vtbl.RemoveBytesReceivedChanged.Call(
+	hr, _, _ := i.Vtbl.RemoveBytesReceivedChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2DownloadOperation) AddEstimatedEndTimeChanged(eventHandler *ICoreWebView2EstimatedEndTimeChangedEventHandler) (EventRegistrationToken, error) {
 
 	var token EventRegistrationToken
 
-	hr, _, err := i.Vtbl.AddEstimatedEndTimeChanged.Call(
+	hr, _, _ := i.Vtbl.AddEstimatedEndTimeChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
@@ -79,26 +79,26 @@ func (i *ICoreWebView2DownloadOperation) AddEstimatedEndTimeChanged(eventHandler
 	if windows.Handle(hr) != windows.S_OK {
 		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
-	return token, err
+	return token, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) RemoveEstimatedEndTimeChanged(token EventRegistrationToken) error {
 
-	hr, _, err := i.Vtbl.RemoveEstimatedEndTimeChanged.Call(
+	hr, _, _ := i.Vtbl.RemoveEstimatedEndTimeChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2DownloadOperation) AddStateChanged(eventHandler *ICoreWebView2StateChangedEventHandler) (EventRegistrationToken, error) {
 
 	var token EventRegistrationToken
 
-	hr, _, err := i.Vtbl.AddStateChanged.Call(
+	hr, _, _ := i.Vtbl.AddStateChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
@@ -106,26 +106,26 @@ func (i *ICoreWebView2DownloadOperation) AddStateChanged(eventHandler *ICoreWebV
 	if windows.Handle(hr) != windows.S_OK {
 		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
-	return token, err
+	return token, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) RemoveStateChanged(token EventRegistrationToken) error {
 
-	hr, _, err := i.Vtbl.RemoveStateChanged.Call(
+	hr, _, _ := i.Vtbl.RemoveStateChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetUri() (string, error) {
 	// Create *uint16 to hold result
 	var _uri *uint16
 
-	hr, _, err := i.Vtbl.GetUri.Call(
+	hr, _, _ := i.Vtbl.GetUri.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_uri)),
 	)
@@ -135,14 +135,14 @@ func (i *ICoreWebView2DownloadOperation) GetUri() (string, error) {
 	// Get result and cleanup
 	uri := UTF16PtrToString(_uri)
 	CoTaskMemFree(unsafe.Pointer(_uri))
-	return uri, err
+	return uri, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetContentDisposition() (string, error) {
 	// Create *uint16 to hold result
 	var _contentDisposition *uint16
 
-	hr, _, err := i.Vtbl.GetContentDisposition.Call(
+	hr, _, _ := i.Vtbl.GetContentDisposition.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_contentDisposition)),
 	)
@@ -152,14 +152,14 @@ func (i *ICoreWebView2DownloadOperation) GetContentDisposition() (string, error)
 	// Get result and cleanup
 	contentDisposition := UTF16PtrToString(_contentDisposition)
 	CoTaskMemFree(unsafe.Pointer(_contentDisposition))
-	return contentDisposition, err
+	return contentDisposition, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetMimeType() (string, error) {
 	// Create *uint16 to hold result
 	var _mimeType *uint16
 
-	hr, _, err := i.Vtbl.GetMimeType.Call(
+	hr, _, _ := i.Vtbl.GetMimeType.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_mimeType)),
 	)
@@ -169,42 +169,42 @@ func (i *ICoreWebView2DownloadOperation) GetMimeType() (string, error) {
 	// Get result and cleanup
 	mimeType := UTF16PtrToString(_mimeType)
 	CoTaskMemFree(unsafe.Pointer(_mimeType))
-	return mimeType, err
+	return mimeType, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetTotalBytesToReceive() (int64, error) {
 
 	var totalBytesToReceive int64
 
-	hr, _, err := i.Vtbl.GetTotalBytesToReceive.Call(
+	hr, _, _ := i.Vtbl.GetTotalBytesToReceive.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&totalBytesToReceive)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return totalBytesToReceive, err
+	return totalBytesToReceive, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetBytesReceived() (int64, error) {
 
 	var bytesReceived int64
 
-	hr, _, err := i.Vtbl.GetBytesReceived.Call(
+	hr, _, _ := i.Vtbl.GetBytesReceived.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&bytesReceived)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return bytesReceived, err
+	return bytesReceived, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetEstimatedEndTime() (string, error) {
 	// Create *uint16 to hold result
 	var _estimatedEndTime *uint16
 
-	hr, _, err := i.Vtbl.GetEstimatedEndTime.Call(
+	hr, _, _ := i.Vtbl.GetEstimatedEndTime.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_estimatedEndTime)),
 	)
@@ -214,14 +214,14 @@ func (i *ICoreWebView2DownloadOperation) GetEstimatedEndTime() (string, error) {
 	// Get result and cleanup
 	estimatedEndTime := UTF16PtrToString(_estimatedEndTime)
 	CoTaskMemFree(unsafe.Pointer(_estimatedEndTime))
-	return estimatedEndTime, err
+	return estimatedEndTime, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetResultFilePath() (string, error) {
 	// Create *uint16 to hold result
 	var _resultFilePath *uint16
 
-	hr, _, err := i.Vtbl.GetResultFilePath.Call(
+	hr, _, _ := i.Vtbl.GetResultFilePath.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_resultFilePath)),
 	)
@@ -231,75 +231,75 @@ func (i *ICoreWebView2DownloadOperation) GetResultFilePath() (string, error) {
 	// Get result and cleanup
 	resultFilePath := UTF16PtrToString(_resultFilePath)
 	CoTaskMemFree(unsafe.Pointer(_resultFilePath))
-	return resultFilePath, err
+	return resultFilePath, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetState() (COREWEBVIEW2_DOWNLOAD_STATE, error) {
 
 	var downloadState COREWEBVIEW2_DOWNLOAD_STATE
 
-	hr, _, err := i.Vtbl.GetState.Call(
+	hr, _, _ := i.Vtbl.GetState.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&downloadState)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return downloadState, err
+	return downloadState, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetInterruptReason() (COREWEBVIEW2_DOWNLOAD_INTERRUPT_REASON, error) {
 
 	var interruptReason COREWEBVIEW2_DOWNLOAD_INTERRUPT_REASON
 
-	hr, _, err := i.Vtbl.GetInterruptReason.Call(
+	hr, _, _ := i.Vtbl.GetInterruptReason.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&interruptReason)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return interruptReason, err
+	return interruptReason, nil
 }
 
 func (i *ICoreWebView2DownloadOperation) Cancel() error {
 
-	hr, _, err := i.Vtbl.Cancel.Call(
+	hr, _, _ := i.Vtbl.Cancel.Call(
 		uintptr(unsafe.Pointer(i)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2DownloadOperation) Pause() error {
 
-	hr, _, err := i.Vtbl.Pause.Call(
+	hr, _, _ := i.Vtbl.Pause.Call(
 		uintptr(unsafe.Pointer(i)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2DownloadOperation) Resume() error {
 
-	hr, _, err := i.Vtbl.Resume.Call(
+	hr, _, _ := i.Vtbl.Resume.Call(
 		uintptr(unsafe.Pointer(i)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2DownloadOperation) GetCanResume() (bool, error) {
 	// Create int32 to hold bool result
 	var _canResume int32
 
-	hr, _, err := i.Vtbl.GetCanResume.Call(
+	hr, _, _ := i.Vtbl.GetCanResume.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_canResume)),
 	)
@@ -308,5 +308,5 @@ func (i *ICoreWebView2DownloadOperation) GetCanResume() (bool, error) {
 	}
 	// Get result and cleanup
 	canResume := _canResume != 0
-	return canResume, err
+	return canResume, nil
 }

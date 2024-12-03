@@ -38,20 +38,20 @@ func (i *ICoreWebView2) GetICoreWebView2Profile8() *ICoreWebView2Profile8 {
 
 func (i *ICoreWebView2Profile8) Delete() error {
 
-	hr, _, err := i.Vtbl.Delete.Call(
+	hr, _, _ := i.Vtbl.Delete.Call(
 		uintptr(unsafe.Pointer(i)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2Profile8) AddDeleted(eventHandler *ICoreWebView2ProfileDeletedEventHandler) (EventRegistrationToken, error) {
 
 	var token EventRegistrationToken
 
-	hr, _, err := i.Vtbl.AddDeleted.Call(
+	hr, _, _ := i.Vtbl.AddDeleted.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
@@ -59,17 +59,17 @@ func (i *ICoreWebView2Profile8) AddDeleted(eventHandler *ICoreWebView2ProfileDel
 	if windows.Handle(hr) != windows.S_OK {
 		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
-	return token, err
+	return token, nil
 }
 
 func (i *ICoreWebView2Profile8) RemoveDeleted(token EventRegistrationToken) error {
 
-	hr, _, err := i.Vtbl.RemoveDeleted.Call(
+	hr, _, _ := i.Vtbl.RemoveDeleted.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

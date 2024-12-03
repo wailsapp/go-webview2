@@ -65,7 +65,7 @@ func (i *ICoreWebView2Settings5) GetIsPinchZoomEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _enabled int32
 
-	hr, _, err := i.Vtbl.GetIsPinchZoomEnabled.Call(
+	hr, _, _ := i.Vtbl.GetIsPinchZoomEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_enabled)),
 	)
@@ -74,17 +74,17 @@ func (i *ICoreWebView2Settings5) GetIsPinchZoomEnabled() (bool, error) {
 	}
 	// Get result and cleanup
 	enabled := _enabled != 0
-	return enabled, err
+	return enabled, nil
 }
 
 func (i *ICoreWebView2Settings5) PutIsPinchZoomEnabled(enabled bool) error {
 
-	hr, _, err := i.Vtbl.PutIsPinchZoomEnabled.Call(
+	hr, _, _ := i.Vtbl.PutIsPinchZoomEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

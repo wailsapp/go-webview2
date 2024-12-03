@@ -28,7 +28,7 @@ func (i *ICoreWebView2Environment) AddRef() uintptr {
 
 func (i *ICoreWebView2Environment) CreateCoreWebView2Controller(parentWindow HWND, handler *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler) error {
 
-	hr, _, err := i.Vtbl.CreateCoreWebView2Controller.Call(
+	hr, _, _ := i.Vtbl.CreateCoreWebView2Controller.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&parentWindow)),
 		uintptr(unsafe.Pointer(handler)),
@@ -36,7 +36,7 @@ func (i *ICoreWebView2Environment) CreateCoreWebView2Controller(parentWindow HWN
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2Environment) CreateWebResourceResponse(content *IStream, statusCode int, reasonPhrase string, headers string) (*ICoreWebView2WebResourceResponse, error) {
@@ -53,7 +53,7 @@ func (i *ICoreWebView2Environment) CreateWebResourceResponse(content *IStream, s
 	}
 	var response *ICoreWebView2WebResourceResponse
 
-	hr, _, err := i.Vtbl.CreateWebResourceResponse.Call(
+	hr, _, _ := i.Vtbl.CreateWebResourceResponse.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(content)),
 		uintptr(statusCode),
@@ -64,14 +64,14 @@ func (i *ICoreWebView2Environment) CreateWebResourceResponse(content *IStream, s
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return response, err
+	return response, nil
 }
 
 func (i *ICoreWebView2Environment) GetBrowserVersionString() (string, error) {
 	// Create *uint16 to hold result
 	var _versionInfo *uint16
 
-	hr, _, err := i.Vtbl.GetBrowserVersionString.Call(
+	hr, _, _ := i.Vtbl.GetBrowserVersionString.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_versionInfo)),
 	)
@@ -81,14 +81,14 @@ func (i *ICoreWebView2Environment) GetBrowserVersionString() (string, error) {
 	// Get result and cleanup
 	versionInfo := UTF16PtrToString(_versionInfo)
 	CoTaskMemFree(unsafe.Pointer(_versionInfo))
-	return versionInfo, err
+	return versionInfo, nil
 }
 
 func (i *ICoreWebView2Environment) AddNewBrowserVersionAvailable(eventHandler *ICoreWebView2NewBrowserVersionAvailableEventHandler) (EventRegistrationToken, error) {
 
 	var token EventRegistrationToken
 
-	hr, _, err := i.Vtbl.AddNewBrowserVersionAvailable.Call(
+	hr, _, _ := i.Vtbl.AddNewBrowserVersionAvailable.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
@@ -96,17 +96,17 @@ func (i *ICoreWebView2Environment) AddNewBrowserVersionAvailable(eventHandler *I
 	if windows.Handle(hr) != windows.S_OK {
 		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
-	return token, err
+	return token, nil
 }
 
 func (i *ICoreWebView2Environment) RemoveNewBrowserVersionAvailable(token EventRegistrationToken) error {
 
-	hr, _, err := i.Vtbl.RemoveNewBrowserVersionAvailable.Call(
+	hr, _, _ := i.Vtbl.RemoveNewBrowserVersionAvailable.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

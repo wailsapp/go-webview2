@@ -39,7 +39,7 @@ func (i *ICoreWebView2HttpResponseHeaders) AppendHeader(name string, value strin
 		return err
 	}
 
-	hr, _, err := i.Vtbl.AppendHeader.Call(
+	hr, _, _ := i.Vtbl.AppendHeader.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 		uintptr(unsafe.Pointer(_value)),
@@ -55,11 +55,11 @@ func (i *ICoreWebView2HttpResponseHeaders) Contains(name string) (bool, error) {
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return false, err
+		return false, nil
 	} // Create int32 to hold bool result
 	var _value int32
 
-	hr, _, err := i.Vtbl.Contains.Call(
+	hr, _, _ := i.Vtbl.Contains.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 		uintptr(unsafe.Pointer(&_value)),
@@ -69,7 +69,7 @@ func (i *ICoreWebView2HttpResponseHeaders) Contains(name string) (bool, error) {
 	}
 	// Get result and cleanup
 	value := _value != 0
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2HttpResponseHeaders) GetHeader(name string) (string, error) {
@@ -77,11 +77,11 @@ func (i *ICoreWebView2HttpResponseHeaders) GetHeader(name string) (string, error
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return "", err
+		return "", nil
 	} // Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetHeader.Call(
+	hr, _, _ := i.Vtbl.GetHeader.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 		uintptr(unsafe.Pointer(_value)),
@@ -92,7 +92,7 @@ func (i *ICoreWebView2HttpResponseHeaders) GetHeader(name string) (string, error
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2HttpResponseHeaders) GetHeaders(name string) (*ICoreWebView2HttpHeadersCollectionIterator, error) {
@@ -104,7 +104,7 @@ func (i *ICoreWebView2HttpResponseHeaders) GetHeaders(name string) (*ICoreWebVie
 	}
 	var value *ICoreWebView2HttpHeadersCollectionIterator
 
-	hr, _, err := i.Vtbl.GetHeaders.Call(
+	hr, _, _ := i.Vtbl.GetHeaders.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 		uintptr(unsafe.Pointer(&value)),
@@ -112,19 +112,19 @@ func (i *ICoreWebView2HttpResponseHeaders) GetHeaders(name string) (*ICoreWebVie
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2HttpResponseHeaders) GetIterator() (*ICoreWebView2HttpHeadersCollectionIterator, error) {
 
 	var value *ICoreWebView2HttpHeadersCollectionIterator
 
-	hr, _, err := i.Vtbl.GetIterator.Call(
+	hr, _, _ := i.Vtbl.GetIterator.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }

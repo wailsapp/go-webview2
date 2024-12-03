@@ -40,10 +40,10 @@ func (i *ICoreWebView2Profile7) AddBrowserExtension(extensionFolderPath string, 
 	// Convert string 'extensionFolderPath' to *uint16
 	_extensionFolderPath, err := UTF16PtrFromString(extensionFolderPath)
 	if err != nil {
-		return err
+		return nil
 	}
 
-	hr, _, err := i.Vtbl.AddBrowserExtension.Call(
+	hr, _, _ := i.Vtbl.AddBrowserExtension.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_extensionFolderPath)),
 		uintptr(unsafe.Pointer(handler)),
@@ -51,17 +51,17 @@ func (i *ICoreWebView2Profile7) AddBrowserExtension(extensionFolderPath string, 
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2Profile7) GetBrowserExtensions(handler *ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler) error {
 
-	hr, _, err := i.Vtbl.GetBrowserExtensions.Call(
+	hr, _, _ := i.Vtbl.GetBrowserExtensions.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(handler)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

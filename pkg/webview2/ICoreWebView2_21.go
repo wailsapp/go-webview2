@@ -39,10 +39,10 @@ func (i *ICoreWebView2_21) ExecuteScriptWithResult(javaScript string, handler *I
 	// Convert string 'javaScript' to *uint16
 	_javaScript, err := UTF16PtrFromString(javaScript)
 	if err != nil {
-		return err
+		return nil
 	}
 
-	hr, _, err := i.Vtbl.ExecuteScriptWithResult.Call(
+	hr, _, _ := i.Vtbl.ExecuteScriptWithResult.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_javaScript)),
 		uintptr(unsafe.Pointer(handler)),
@@ -50,5 +50,5 @@ func (i *ICoreWebView2_21) ExecuteScriptWithResult(javaScript string, handler *I
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

@@ -2,6 +2,10 @@
 
 package edge
 
+import (
+	"unsafe"
+)
+
 type _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerVtbl struct {
 	_IUnknownVtbl
 	Invoke ComProc
@@ -12,9 +16,12 @@ type iCoreWebView2CreateCoreWebView2ControllerCompletedHandler struct {
 	impl _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerImpl
 }
 
-func (i *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler) AddRef() uintptr {
-	return i.AddRef()
+func (i *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
 }
+
 func _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownQueryInterface(this *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }

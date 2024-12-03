@@ -32,14 +32,12 @@ type IUnknownVtbl struct {
 	Release        ComProc
 }
 
-func (i *IUnknownVtbl) CallRelease(this unsafe.Pointer) error {
-	_, _, err := i.Release.Call(
+func (i *IUnknownVtbl) CallRelease(this unsafe.Pointer) uint32 {
+	ret, _, _ := i.Release.Call(
 		uintptr(this),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
-	}
-	return nil
+
+	return uint32(ret)
 }
 
 type IUnknownImpl interface {
@@ -49,6 +47,7 @@ type IUnknownImpl interface {
 }
 
 // Call calls a COM procedure.
+//
 //go:uintptrescapes
 func (p ComProc) Call(a ...uintptr) (r1, r2 uintptr, lastErr error) {
 	return syscall.SyscallN(uintptr(p), a...)
@@ -329,7 +328,7 @@ type IStream struct {
 	Vtbl *IStreamVtbl
 }
 
-func (i *IStream) Release() error {
+func (i *IStream) Release() uint32 {
 	return i.Vtbl.CallRelease(unsafe.Pointer(i))
 }
 

@@ -45,7 +45,7 @@ func (i *ICoreWebView2Environment14) CreateWebFileSystemFileHandle(path string, 
 	}
 	var value *ICoreWebView2FileSystemHandle
 
-	hr, _, err := i.Vtbl.CreateWebFileSystemFileHandle.Call(
+	hr, _, _ := i.Vtbl.CreateWebFileSystemFileHandle.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_path)),
 		uintptr(permission),
@@ -54,7 +54,7 @@ func (i *ICoreWebView2Environment14) CreateWebFileSystemFileHandle(path string, 
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2Environment14) CreateWebFileSystemDirectoryHandle(path string, permission COREWEBVIEW2_FILE_SYSTEM_HANDLE_PERMISSION) (*ICoreWebView2FileSystemHandle, error) {
@@ -66,7 +66,7 @@ func (i *ICoreWebView2Environment14) CreateWebFileSystemDirectoryHandle(path str
 	}
 	var value *ICoreWebView2FileSystemHandle
 
-	hr, _, err := i.Vtbl.CreateWebFileSystemDirectoryHandle.Call(
+	hr, _, _ := i.Vtbl.CreateWebFileSystemDirectoryHandle.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_path)),
 		uintptr(permission),
@@ -75,14 +75,14 @@ func (i *ICoreWebView2Environment14) CreateWebFileSystemDirectoryHandle(path str
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2Environment14) CreateObjectCollection(length uint32, items **IUnknown) (*ICoreWebView2ObjectCollection, error) {
 
 	var objectCollection *ICoreWebView2ObjectCollection
 
-	hr, _, err := i.Vtbl.CreateObjectCollection.Call(
+	hr, _, _ := i.Vtbl.CreateObjectCollection.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&length)),
 		uintptr(unsafe.Pointer(&items)),
@@ -91,5 +91,5 @@ func (i *ICoreWebView2Environment14) CreateObjectCollection(length uint32, items
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return objectCollection, err
+	return objectCollection, nil
 }

@@ -41,7 +41,7 @@ func (i *ICoreWebView2CompositionController4) GetNonClientRegionAtPoint(point PO
 
 	var value COREWEBVIEW2_NON_CLIENT_REGION_KIND
 
-	hr, _, err := i.Vtbl.GetNonClientRegionAtPoint.Call(
+	hr, _, _ := i.Vtbl.GetNonClientRegionAtPoint.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&point)),
 		uintptr(unsafe.Pointer(&value)),
@@ -49,14 +49,14 @@ func (i *ICoreWebView2CompositionController4) GetNonClientRegionAtPoint(point PO
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2CompositionController4) QueryNonClientRegion(kind COREWEBVIEW2_NON_CLIENT_REGION_KIND) (*ICoreWebView2RegionRectCollectionView, error) {
 
 	var rects *ICoreWebView2RegionRectCollectionView
 
-	hr, _, err := i.Vtbl.QueryNonClientRegion.Call(
+	hr, _, _ := i.Vtbl.QueryNonClientRegion.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(kind),
 		uintptr(unsafe.Pointer(&rects)),
@@ -64,14 +64,14 @@ func (i *ICoreWebView2CompositionController4) QueryNonClientRegion(kind COREWEBV
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return rects, err
+	return rects, nil
 }
 
 func (i *ICoreWebView2CompositionController4) AddNonClientRegionChanged(eventHandler *ICoreWebView2NonClientRegionChangedEventHandler) (EventRegistrationToken, error) {
 
 	var token EventRegistrationToken
 
-	hr, _, err := i.Vtbl.AddNonClientRegionChanged.Call(
+	hr, _, _ := i.Vtbl.AddNonClientRegionChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
@@ -79,17 +79,17 @@ func (i *ICoreWebView2CompositionController4) AddNonClientRegionChanged(eventHan
 	if windows.Handle(hr) != windows.S_OK {
 		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
-	return token, err
+	return token, nil
 }
 
 func (i *ICoreWebView2CompositionController4) RemoveNonClientRegionChanged(token EventRegistrationToken) error {
 
-	hr, _, err := i.Vtbl.RemoveNonClientRegionChanged.Call(
+	hr, _, _ := i.Vtbl.RemoveNonClientRegionChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

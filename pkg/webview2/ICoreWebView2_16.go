@@ -38,7 +38,7 @@ func (i *ICoreWebView2) GetICoreWebView2_16() *ICoreWebView2_16 {
 
 func (i *ICoreWebView2_16) Print(printSettings *ICoreWebView2PrintSettings, handler *ICoreWebView2PrintCompletedHandler) error {
 
-	hr, _, err := i.Vtbl.Print.Call(
+	hr, _, _ := i.Vtbl.Print.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(printSettings)),
 		uintptr(unsafe.Pointer(handler)),
@@ -46,24 +46,24 @@ func (i *ICoreWebView2_16) Print(printSettings *ICoreWebView2PrintSettings, hand
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2_16) ShowPrintUI(printDialogKind COREWEBVIEW2_PRINT_DIALOG_KIND) error {
 
-	hr, _, err := i.Vtbl.ShowPrintUI.Call(
+	hr, _, _ := i.Vtbl.ShowPrintUI.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(printDialogKind),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2_16) PrintToPdfStream(printSettings *ICoreWebView2PrintSettings, handler *ICoreWebView2PrintToPdfStreamCompletedHandler) error {
 
-	hr, _, err := i.Vtbl.PrintToPdfStream.Call(
+	hr, _, _ := i.Vtbl.PrintToPdfStream.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(printSettings)),
 		uintptr(unsafe.Pointer(handler)),
@@ -71,5 +71,5 @@ func (i *ICoreWebView2_16) PrintToPdfStream(printSettings *ICoreWebView2PrintSet
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

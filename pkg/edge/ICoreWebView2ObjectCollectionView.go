@@ -18,33 +18,41 @@ type ICoreWebView2ObjectCollectionView struct {
 	vtbl *_ICoreWebView2ObjectCollectionViewVtbl
 }
 
-func (i *ICoreWebView2ObjectCollectionView) Release() error {
-	return i.vtbl.CallRelease(unsafe.Pointer(i))
+func (i *ICoreWebView2ObjectCollectionView) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+func (i *ICoreWebView2ObjectCollectionView) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
 }
 
 func (i *ICoreWebView2ObjectCollectionView) GetCount() (uint32, error) {
-	var err error
+	
 	var value uint32
-	_, _, err = i.vtbl.GetCount.Call(
+	hr, _, _ := i.vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return 0, err
+	if windows.Handle(hr) != windows.S_OK {
+		return 0, nil
 	}
 	return value, nil
 }
 
 func (i *ICoreWebView2ObjectCollectionView) GetValueAtIndex(index uint32) (*_IUnknownVtbl, error) {
-	var err error
+	
 	var value *_IUnknownVtbl
-	_, _, err = i.vtbl.GetValueAtIndex.Call(
+	hr, _, _ := i.vtbl.GetValueAtIndex.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(index),
 		uintptr(unsafe.Pointer(&value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, windows.Errno(hr)
 	}
 	return value, nil
 }

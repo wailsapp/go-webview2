@@ -158,6 +158,19 @@ func SHCreateMemStream(data []byte) (uintptr, error) {
 
 const CW_USEDEFAULT = 0x80000000
 
+// GetClientRect retrieves the coordinates of a window's client area. The client coordinates specify the upper-left and lower-right corners of the
+// client area. Because client coordinates are relative to the upper-left corner of a window's client area, the coordinates of the upper-left
+// corner are (0,0).
+func GetClientRect(hwnd uintptr) (Rect, error) {
+	var rect Rect
+	ret, _, err := User32GetClientRect.Call(hwnd, uintptr(unsafe.Pointer(&rect)))
+	if ret == 0 {
+		return Rect{}, err
+	}
+
+	return rect, nil
+}
+
 // DefWindowProc calls the default window procedure to provide default processing for any window messages that an application does not process.
 func DefWindowProc(hwnd, msg, wparam, lparam uintptr) uintptr {
 	ret, _, _ := User32DefWindowProcW.Call(hwnd, msg, wparam, lparam)

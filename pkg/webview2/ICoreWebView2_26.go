@@ -2,17 +2,15 @@
 
 package webview2
 
-import 
-	"syscall"
-rg/x/sys/windows"
-	"syscall"
-
+import (
 	"golang.org/x/sys/windows"
+	"syscall"
+	"unsafe"
 )
 
-	AddSaveFileSecurityCheckStarting    ComProc
+type ICoreWebView2_26Vtbl struct {
 	IUnknownVtbl
-	AddSaveFileSecurityCheckStarting ComProc
+	AddSaveFileSecurityCheckStarting    ComProc
 	RemoveSaveFileSecurityCheckStarting ComProc
 }
 
@@ -23,7 +21,7 @@ type ICoreWebView2_26 struct {
 func (i *ICoreWebView2_26) AddRef() uintptr {
 	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
 	return refCounter
-
+}
 
 func (i *ICoreWebView2) GetICoreWebView2_26() *ICoreWebView2_26 {
 	var result *ICoreWebView2_26
@@ -35,13 +33,12 @@ func (i *ICoreWebView2) GetICoreWebView2_26() *ICoreWebView2_26 {
 		uintptr(unsafe.Pointer(&result)))
 
 	return result
-
+}
 
 func (i *ICoreWebView2_26) AddSaveFileSecurityCheckStarting(eventHandler *ICoreWebView2SaveFileSecurityCheckStartingEventHandler) (EventRegistrationToken, error) {
-
 	var token EventRegistrationToken
 
-	hr, _, err := i.Vtbl.AddSaveFileSecurityCheckStarting.Call(
+	hr, _, _ := i.Vtbl.AddSaveFileSecurityCheckStarting.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
@@ -49,17 +46,16 @@ func (i *ICoreWebView2_26) AddSaveFileSecurityCheckStarting(eventHandler *ICoreW
 	if windows.Handle(hr) != windows.S_OK {
 		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
-	return token, err
+	return token, nil
 }
 
-
-
-	hr, _, err := i.Vtbl.RemoveSaveFileSecurityCheckStarting.Call(
+func (i *ICoreWebView2_26) RemoveSaveFileSecurityCheckStarting(token EventRegistrationToken) error {
+	hr, _, _ := i.Vtbl.RemoveSaveFileSecurityCheckStarting.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

@@ -39,10 +39,10 @@ func (i *ICoreWebView2_23) PostWebMessageAsJsonWithAdditionalObjects(webMessageA
 	// Convert string 'webMessageAsJson' to *uint16
 	_webMessageAsJson, err := UTF16PtrFromString(webMessageAsJson)
 	if err != nil {
-		return err
+		return nil
 	}
 
-	hr, _, err := i.Vtbl.PostWebMessageAsJsonWithAdditionalObjects.Call(
+	hr, _, _ := i.Vtbl.PostWebMessageAsJsonWithAdditionalObjects.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_webMessageAsJson)),
 		uintptr(unsafe.Pointer(additionalObjects)),
@@ -50,5 +50,5 @@ func (i *ICoreWebView2_23) PostWebMessageAsJsonWithAdditionalObjects(webMessageA
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
