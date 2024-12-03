@@ -82,12 +82,12 @@ func (i *ICoreWebView2_3) SetVirtualHostNameToFolderMapping(hostName string, fol
 	// Convert string 'hostName' to *uint16
 	_hostName, err := UTF16PtrFromString(hostName)
 	if err != nil {
-		return nil
+		return err
 	}
 	// Convert string 'folderPath' to *uint16
 	_folderPath, err := UTF16PtrFromString(folderPath)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.SetVirtualHostNameToFolderMapping.Call(
@@ -107,7 +107,7 @@ func (i *ICoreWebView2_3) ClearVirtualHostNameToFolderMapping(hostName string) e
 	// Convert string 'hostName' to *uint16
 	_hostName, err := UTF16PtrFromString(hostName)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.ClearVirtualHostNameToFolderMapping.Call(

@@ -125,7 +125,7 @@ func (i *ICoreWebView2SaveAsUIShowingEventArgs) PutSaveAsFilePath(value string) 
 	// Convert string 'value' to *uint16
 	_value, err := UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutSaveAsFilePath.Call(

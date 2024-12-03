@@ -74,7 +74,7 @@ func (i *ICoreWebView2Cookie) GetValue() (string, error) {
 func (i *ICoreWebView2Cookie) PutValue(value string) error {
 	ptr, err := windows.UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 	hr, _, _ := i.vtbl.PutValue.Call(
 		uintptr(unsafe.Pointer(i)),

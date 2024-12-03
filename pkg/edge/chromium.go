@@ -560,13 +560,13 @@ func (e *Chromium) GetIsSwipeNavigationEnabled() (bool, error) {
 	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
-		return false, nil
+		return false, err
 	}
 	webview2Settings6 := webview2Settings.GetICoreWebView2Settings6()
 	var result bool
 	result, err = webview2Settings6.GetIsSwipeNavigationEnabled()
-	if !errors.Is(err, windows.DS_S_SUCCESS) {
-		return false, nil
+	if err != nil {
+		return false, err
 	}
 	return result, nil
 }
@@ -585,7 +585,7 @@ func (e *Chromium) PutIsGeneralAutofillEnabled(value bool) error {
 	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
-		return nil
+		return err
 	}
 	webview2Settings4 := webview2Settings.GetICoreWebView2Settings4()
 	return webview2Settings4.PutIsGeneralAutofillEnabled(value)
@@ -600,7 +600,7 @@ func (e *Chromium) PutIsPasswordAutosaveEnabled(value bool) error {
 	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
-		return nil
+		return err
 	}
 	webview2Settings4 := webview2Settings.GetICoreWebView2Settings4()
 	return webview2Settings4.PutIsPasswordAutosaveEnabled(value)
@@ -612,12 +612,12 @@ func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
 	}
 	webview2Settings, err := e.webview.GetSettings()
 	if err != nil {
-		return nil
+		return err
 	}
 	webview2Settings6 := webview2Settings.GetICoreWebView2Settings6()
 	err = webview2Settings6.PutIsSwipeNavigationEnabled(enabled)
-	if !errors.Is(err, windows.DS_S_SUCCESS) {
-		return nil
+	if err != nil {
+		return err
 	}
 	return nil
 }
@@ -629,8 +629,8 @@ func (e *Chromium) AllowExternalDrag(allow bool) error {
 	controller := e.GetController()
 	controller4 := controller.GetICoreWebView2Controller4()
 	err := controller4.PutAllowExternalDrop(allow)
-	if !errors.Is(err, windows.DS_S_SUCCESS) {
-		return nil
+	if err != nil {
+		return err
 	}
 	return nil
 }
@@ -642,8 +642,8 @@ func (e *Chromium) GetAllowExternalDrag() (bool, error) {
 	controller := e.GetController()
 	controller4 := controller.GetICoreWebView2Controller4()
 	result, err := controller4.GetAllowExternalDrop()
-	if !errors.Is(err, windows.DS_S_SUCCESS) {
-		return false, nil
+	if err != nil {
+		return false, err
 	}
 	return result, nil
 }
@@ -661,14 +661,14 @@ func (e *Chromium) GetCookieManager() (*ICoreWebView2CookieManager, error) {
 	// Get ICoreWebView2_2 interface
 	webview2, err := e.webview.QueryInterface2()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get ICoreWebView2_2: %w\nThis functionality requires WebView2 Runtime version 89.0.721.0 or later. Current version: %s", nil, e.webview2RuntimeVersion)
+		return nil, fmt.Errorf("failed to get ICoreWebView2_2: %w\nThis functionality requires WebView2 Runtime version 89.0.721.0 or later. Current version: %s", err, e.webview2RuntimeVersion)
 	}
 	defer webview2.Release()
 
 	// Get cookie manager
 	cookieManager, err := webview2.GetCookieManager()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get cookie manager: %w", nil)
+		return nil, fmt.Errorf("failed to get cookie manager: %w", err)
 	}
 
 	// Note: The caller is responsible for calling Release() on the returned cookieManager

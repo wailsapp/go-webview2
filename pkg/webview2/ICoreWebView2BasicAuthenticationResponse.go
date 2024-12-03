@@ -47,7 +47,7 @@ func (i *ICoreWebView2BasicAuthenticationResponse) PutUserName(userName string) 
 	// Convert string 'userName' to *uint16
 	_userName, err := UTF16PtrFromString(userName)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutUserName.Call(
@@ -82,7 +82,7 @@ func (i *ICoreWebView2BasicAuthenticationResponse) PutPassword(password string) 
 	// Convert string 'password' to *uint16
 	_password, err := UTF16PtrFromString(password)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutPassword.Call(

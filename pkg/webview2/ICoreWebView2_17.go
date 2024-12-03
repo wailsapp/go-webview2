@@ -39,7 +39,7 @@ func (i *ICoreWebView2_17) PostSharedBufferToScript(sharedBuffer *ICoreWebView2S
 	// Convert string 'additionalDataAsJson' to *uint16
 	_additionalDataAsJson, err := UTF16PtrFromString(additionalDataAsJson)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PostSharedBufferToScript.Call(

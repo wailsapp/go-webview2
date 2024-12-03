@@ -361,7 +361,7 @@ func (i *ICoreWebView2PrintSettings) PutHeaderTitle(headerTitle string) error {
 	// Convert string 'headerTitle' to *uint16
 	_headerTitle, err := UTF16PtrFromString(headerTitle)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutHeaderTitle.Call(
@@ -396,7 +396,7 @@ func (i *ICoreWebView2PrintSettings) PutFooterUri(footerUri string) error {
 	// Convert string 'footerUri' to *uint16
 	_footerUri, err := UTF16PtrFromString(footerUri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutFooterUri.Call(

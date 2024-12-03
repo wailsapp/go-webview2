@@ -50,7 +50,7 @@ func (i *ICoreWebView2WebResourceRequest) PutUri(uri string) error {
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutUri.Call(
@@ -85,7 +85,7 @@ func (i *ICoreWebView2WebResourceRequest) PutMethod(method string) error {
 	// Convert string 'method' to *uint16
 	_method, err := UTF16PtrFromString(method)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutMethod.Call(

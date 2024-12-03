@@ -116,7 +116,7 @@ func (i *ICoreWebView2WebResourceResponse) PutReasonPhrase(reasonPhrase string) 
 	// Convert string 'reasonPhrase' to *uint16
 	_reasonPhrase, err := UTF16PtrFromString(reasonPhrase)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutReasonPhrase.Call(

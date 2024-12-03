@@ -78,12 +78,12 @@ func (i *ICoreWebView2Frame) AddHostObjectToScriptWithOrigins(name string, objec
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 	// Convert string 'origins' to *uint16
 	_origins, err := UTF16PtrFromString(origins)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.AddHostObjectToScriptWithOrigins.Call(
@@ -104,7 +104,7 @@ func (i *ICoreWebView2Frame) RemoveHostObjectFromScript(name string) error {
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.RemoveHostObjectFromScript.Call(

@@ -87,7 +87,7 @@ func (i *ICoreWebView2CookieManager) GetCookies(uri string, handler *ICoreWebVie
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.GetCookies.Call(
@@ -130,12 +130,12 @@ func (i *ICoreWebView2CookieManager) DeleteCookies(name string, uri string) erro
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.DeleteCookies.Call(
@@ -154,17 +154,17 @@ func (i *ICoreWebView2CookieManager) DeleteCookiesWithDomainAndPath(name string,
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 	// Convert string 'domain' to *uint16
 	_domain, err := UTF16PtrFromString(domain)
 	if err != nil {
-		return nil
+		return err
 	}
 	// Convert string 'path' to *uint16
 	_path, err := UTF16PtrFromString(path)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.DeleteCookiesWithDomainAndPath.Call(

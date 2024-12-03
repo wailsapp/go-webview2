@@ -94,7 +94,7 @@ func (i *ICoreWebView2CustomSchemeRegistration) SetAllowedOrigins(allowedOrigins
 	// Convert string 'allowedOrigins' to *uint16
 	_allowedOrigins, err := UTF16PtrFromString(allowedOrigins)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.SetAllowedOrigins.Call(

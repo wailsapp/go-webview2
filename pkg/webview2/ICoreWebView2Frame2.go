@@ -159,7 +159,7 @@ func (i *ICoreWebView2Frame2) ExecuteScript(javaScript string, handler *ICoreWeb
 	// Convert string 'javaScript' to *uint16
 	_javaScript, err := UTF16PtrFromString(javaScript)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.ExecuteScript.Call(
@@ -178,7 +178,7 @@ func (i *ICoreWebView2Frame2) PostWebMessageAsJson(webMessageAsJson string) erro
 	// Convert string 'webMessageAsJson' to *uint16
 	_webMessageAsJson, err := UTF16PtrFromString(webMessageAsJson)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PostWebMessageAsJson.Call(
@@ -196,7 +196,7 @@ func (i *ICoreWebView2Frame2) PostWebMessageAsString(webMessageAsString string) 
 	// Convert string 'webMessageAsString' to *uint16
 	_webMessageAsString, err := UTF16PtrFromString(webMessageAsString)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PostWebMessageAsString.Call(

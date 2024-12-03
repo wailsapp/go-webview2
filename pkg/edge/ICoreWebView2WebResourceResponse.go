@@ -77,7 +77,7 @@ func (i *ICoreWebView2WebResourceResponse) PutStatusCode(statusCode int) error {
 	// Convert string 'reasonPhrase' to *uint16
 	_reasonPhrase, err := UTF16PtrFromString(http.StatusText(statusCode))
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ = i.vtbl.PutReasonPhrase.Call(
@@ -108,7 +108,7 @@ func (i *ICoreWebView2WebResourceResponse) PutByteContent(content []byte) error 
 		// Create stream for response
 		str, err := w32.SHCreateMemStream(content)
 		if err != nil {
-			return nil
+			return err
 		}
 		stream = (*IStream)(unsafe.Pointer(str))
 		defer stream.Release()

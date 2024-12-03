@@ -40,7 +40,7 @@ func (i *ICoreWebView2Profile4) SetPermissionState(PermissionKind COREWEBVIEW2_P
 	// Convert string 'origin' to *uint16
 	_origin, err := UTF16PtrFromString(origin)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.SetPermissionState.Call(

@@ -47,7 +47,7 @@ func (i *ICoreWebView2ControllerOptions) PutProfileName(value string) error {
 	// Convert string 'value' to *uint16
 	_value, err := UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutProfileName.Call(

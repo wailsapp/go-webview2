@@ -36,12 +36,12 @@ func (i *ICoreWebView2_3) Release() uint32 {
 func (i *ICoreWebView2_3) SetVirtualHostNameToFolderMapping(hostName, folderPath string, accessKind COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND) error {
 	_hostName, err := windows.UTF16PtrFromString(hostName)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	_folderPath, err := windows.UTF16PtrFromString(folderPath)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.vtbl.SetVirtualHostNameToFolderMapping.Call(

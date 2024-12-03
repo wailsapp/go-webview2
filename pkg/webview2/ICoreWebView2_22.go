@@ -40,7 +40,7 @@ func (i *ICoreWebView2_22) AddWebResourceRequestedFilterWithRequestSourceKinds(u
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.AddWebResourceRequestedFilterWithRequestSourceKinds.Call(
@@ -60,7 +60,7 @@ func (i *ICoreWebView2_22) RemoveWebResourceRequestedFilterWithRequestSourceKind
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.RemoveWebResourceRequestedFilterWithRequestSourceKinds.Call(

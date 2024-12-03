@@ -41,17 +41,17 @@ func (i *ICoreWebView2_11) CallDevToolsProtocolMethodForSession(sessionId string
 	// Convert string 'sessionId' to *uint16
 	_sessionId, err := UTF16PtrFromString(sessionId)
 	if err != nil {
-		return nil
+		return err
 	}
 	// Convert string 'methodName' to *uint16
 	_methodName, err := UTF16PtrFromString(methodName)
 	if err != nil {
-		return nil
+		return err
 	}
 	// Convert string 'parametersAsJson' to *uint16
 	_parametersAsJson, err := UTF16PtrFromString(parametersAsJson)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.CallDevToolsProtocolMethodForSession.Call(

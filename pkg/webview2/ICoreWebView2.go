@@ -115,7 +115,7 @@ func (i *ICoreWebView2) Navigate(uri string) error {
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.Navigate.Call(
@@ -133,7 +133,7 @@ func (i *ICoreWebView2) NavigateToString(htmlContent string) error {
 	// Convert string 'htmlContent' to *uint16
 	_htmlContent, err := UTF16PtrFromString(htmlContent)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.NavigateToString.Call(
@@ -421,7 +421,7 @@ func (i *ICoreWebView2) AddScriptToExecuteOnDocumentCreated(javaScript string, h
 	// Convert string 'javaScript' to *uint16
 	_javaScript, err := UTF16PtrFromString(javaScript)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.AddScriptToExecuteOnDocumentCreated.Call(
@@ -440,7 +440,7 @@ func (i *ICoreWebView2) RemoveScriptToExecuteOnDocumentCreated(id string) error 
 	// Convert string 'id' to *uint16
 	_id, err := UTF16PtrFromString(id)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.RemoveScriptToExecuteOnDocumentCreated.Call(
@@ -458,7 +458,7 @@ func (i *ICoreWebView2) ExecuteScript(javaScript string, handler *ICoreWebView2E
 	// Convert string 'javaScript' to *uint16
 	_javaScript, err := UTF16PtrFromString(javaScript)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.ExecuteScript.Call(
@@ -502,7 +502,7 @@ func (i *ICoreWebView2) PostWebMessageAsJson(webMessageAsJson string) error {
 	// Convert string 'webMessageAsJson' to *uint16
 	_webMessageAsJson, err := UTF16PtrFromString(webMessageAsJson)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PostWebMessageAsJson.Call(
@@ -520,7 +520,7 @@ func (i *ICoreWebView2) PostWebMessageAsString(webMessageAsString string) error 
 	// Convert string 'webMessageAsString' to *uint16
 	_webMessageAsString, err := UTF16PtrFromString(webMessageAsString)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PostWebMessageAsString.Call(
@@ -565,12 +565,12 @@ func (i *ICoreWebView2) CallDevToolsProtocolMethod(methodName string, parameters
 	// Convert string 'methodName' to *uint16
 	_methodName, err := UTF16PtrFromString(methodName)
 	if err != nil {
-		return nil
+		return err
 	}
 	// Convert string 'parametersAsJson' to *uint16
 	_parametersAsJson, err := UTF16PtrFromString(parametersAsJson)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.CallDevToolsProtocolMethod.Call(
@@ -760,7 +760,7 @@ func (i *ICoreWebView2) AddHostObjectToScript(name string, object *VARIANT) erro
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.AddHostObjectToScript.Call(
@@ -779,7 +779,7 @@ func (i *ICoreWebView2) RemoveHostObjectFromScript(name string) error {
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.RemoveHostObjectFromScript.Call(
@@ -878,7 +878,7 @@ func (i *ICoreWebView2) AddWebResourceRequestedFilter(uri string, resourceContex
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.AddWebResourceRequestedFilter.Call(
@@ -897,7 +897,7 @@ func (i *ICoreWebView2) RemoveWebResourceRequestedFilter(uri string, resourceCon
 	// Convert string 'uri' to *uint16
 	_uri, err := UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.RemoveWebResourceRequestedFilter.Call(

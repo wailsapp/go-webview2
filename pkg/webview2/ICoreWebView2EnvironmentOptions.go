@@ -51,7 +51,7 @@ func (i *ICoreWebView2EnvironmentOptions) PutAdditionalBrowserArguments(value st
 	// Convert string 'value' to *uint16
 	_value, err := UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutAdditionalBrowserArguments.Call(
@@ -86,7 +86,7 @@ func (i *ICoreWebView2EnvironmentOptions) PutLanguage(value string) error {
 	// Convert string 'value' to *uint16
 	_value, err := UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutLanguage.Call(
@@ -121,7 +121,7 @@ func (i *ICoreWebView2EnvironmentOptions) PutTargetCompatibleBrowserVersion(valu
 	// Convert string 'value' to *uint16
 	_value, err := UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutTargetCompatibleBrowserVersion.Call(

@@ -38,12 +38,12 @@ func (i *ICoreWebView2HttpResponseHeaders) AppendHeader(name string, value strin
 	// Convert string 'name' to *uint16
 	_name, err := UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 	// Convert string 'value' to *uint16
 	_value, err := UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.vtbl.AppendHeader.Call(

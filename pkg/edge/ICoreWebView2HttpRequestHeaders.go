@@ -44,7 +44,7 @@ func (i *ICoreWebView2HttpRequestHeaders) Release() uint32 {
 func (i *ICoreWebView2HttpRequestHeaders) GetHeader(name string) (string, error) {
 	_name, err := windows.UTF16PtrFromString(name)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	var _value *uint16
@@ -66,12 +66,12 @@ func (i *ICoreWebView2HttpRequestHeaders) GetHeader(name string) (string, error)
 func (i *ICoreWebView2HttpRequestHeaders) SetHeader(name, value string) error {
 	_name, err := windows.UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	_value, err := windows.UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.vtbl.SetHeader.Call(

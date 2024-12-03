@@ -57,7 +57,7 @@ func (i *ICoreWebView2NavigationStartingEventArgs2) PutAdditionalAllowedFrameAnc
 	// Convert string 'value' to *uint16
 	_value, err := UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutAdditionalAllowedFrameAncestors.Call(

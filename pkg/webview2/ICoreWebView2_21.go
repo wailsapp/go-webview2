@@ -39,7 +39,7 @@ func (i *ICoreWebView2_21) ExecuteScriptWithResult(javaScript string, handler *I
 	// Convert string 'javaScript' to *uint16
 	_javaScript, err := UTF16PtrFromString(javaScript)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.ExecuteScriptWithResult.Call(

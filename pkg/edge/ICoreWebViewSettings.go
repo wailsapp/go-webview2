@@ -287,7 +287,7 @@ func (i *ICoreWebViewSettings) PutUserAgent(userAgent string) error {
 	// Convert string 'userAgent' to *uint16
 	_userAgent, err := windows.UTF16PtrFromString(userAgent)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.vtbl.PutUserAgent.Call(

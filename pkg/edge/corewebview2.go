@@ -624,7 +624,7 @@ func (i *ICoreWebView2) AddWebResourceRequestedFilter(uri string, resourceContex
 	// Convert string 'uri' to *uint16
 	_uri, err := windows.UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 	hr, _, _ := i.vtbl.AddWebResourceRequestedFilter.Call(
 		uintptr(unsafe.Pointer(i)),

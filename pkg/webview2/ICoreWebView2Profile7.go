@@ -40,7 +40,7 @@ func (i *ICoreWebView2Profile7) AddBrowserExtension(extensionFolderPath string, 
 	// Convert string 'extensionFolderPath' to *uint16
 	_extensionFolderPath, err := UTF16PtrFromString(extensionFolderPath)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.AddBrowserExtension.Call(

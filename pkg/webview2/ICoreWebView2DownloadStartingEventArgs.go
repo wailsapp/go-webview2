@@ -93,7 +93,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) PutResultFilePath(resultFilePat
 	// Convert string 'resultFilePath' to *uint16
 	_resultFilePath, err := UTF16PtrFromString(resultFilePath)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutResultFilePath.Call(

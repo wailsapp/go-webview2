@@ -39,7 +39,7 @@ func (i *ICoreWebView2_23) PostWebMessageAsJsonWithAdditionalObjects(webMessageA
 	// Convert string 'webMessageAsJson' to *uint16
 	_webMessageAsJson, err := UTF16PtrFromString(webMessageAsJson)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PostWebMessageAsJsonWithAdditionalObjects.Call(

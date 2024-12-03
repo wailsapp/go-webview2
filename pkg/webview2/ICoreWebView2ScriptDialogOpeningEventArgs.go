@@ -127,7 +127,7 @@ func (i *ICoreWebView2ScriptDialogOpeningEventArgs) PutResultText(resultText str
 	// Convert string 'resultText' to *uint16
 	_resultText, err := UTF16PtrFromString(resultText)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PutResultText.Call(
