@@ -48,7 +48,7 @@ func (i *ICoreWebView2Settings) GetIsScriptEnabled() (bool, error) {
 		uintptr(unsafe.Pointer(&isScriptEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return isScriptEnabled, nil
 }
@@ -61,7 +61,7 @@ func (i *ICoreWebView2Settings) PutIsScriptEnabled(isScriptEnabled bool) error {
 		uintptr(boolToInt(isScriptEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -74,7 +74,7 @@ func (i *ICoreWebView2Settings) GetIsWebMessageEnabled() (bool, error) {
 		uintptr(unsafe.Pointer(&isWebMessageEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return isWebMessageEnabled, nil
 }
@@ -87,7 +87,7 @@ func (i *ICoreWebView2Settings) PutIsWebMessageEnabled(isWebMessageEnabled bool)
 		uintptr(boolToInt(isWebMessageEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -100,7 +100,7 @@ func (i *ICoreWebView2Settings) GetAreDefaultScriptDialogsEnabled() (bool, error
 		uintptr(unsafe.Pointer(&areDefaultScriptDialogsEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return areDefaultScriptDialogsEnabled, nil
 }
@@ -113,7 +113,7 @@ func (i *ICoreWebView2Settings) PutAreDefaultScriptDialogsEnabled(areDefaultScri
 		uintptr(boolToInt(areDefaultScriptDialogsEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -126,7 +126,7 @@ func (i *ICoreWebView2Settings) GetIsStatusBarEnabled() (bool, error) {
 		uintptr(unsafe.Pointer(&isStatusBarEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return isStatusBarEnabled, nil
 }
@@ -139,7 +139,7 @@ func (i *ICoreWebView2Settings) PutIsStatusBarEnabled(isStatusBarEnabled bool) e
 		uintptr(boolToInt(isStatusBarEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -152,7 +152,7 @@ func (i *ICoreWebView2Settings) GetAreDevToolsEnabled() (bool, error) {
 		uintptr(unsafe.Pointer(&areDevToolsEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return areDevToolsEnabled, nil
 }
@@ -164,7 +164,7 @@ func (i *ICoreWebView2Settings) PutAreDevToolsEnabled(areDevToolsEnabled bool) e
 		uintptr(boolToInt(areDevToolsEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -177,7 +177,7 @@ func (i *ICoreWebView2Settings) GetAreDefaultContextMenusEnabled() (bool, error)
 		uintptr(unsafe.Pointer(&enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return enabled, nil
 }
@@ -189,7 +189,7 @@ func (i *ICoreWebView2Settings) PutAreDefaultContextMenusEnabled(enabled bool) e
 		uintptr(boolToInt(enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -202,7 +202,7 @@ func (i *ICoreWebView2Settings) GetAreHostObjectsAllowed() (bool, error) {
 		uintptr(unsafe.Pointer(&allowed)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return allowed, nil
 }
@@ -215,7 +215,7 @@ func (i *ICoreWebView2Settings) PutAreHostObjectsAllowed(allowed bool) error {
 		uintptr(boolToInt(allowed)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -228,7 +228,7 @@ func (i *ICoreWebView2Settings) GetIsZoomControlEnabled() (bool, error) {
 		uintptr(unsafe.Pointer(&enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return enabled, nil
 }
@@ -241,7 +241,7 @@ func (i *ICoreWebView2Settings) PutIsZoomControlEnabled(enabled bool) error {
 		uintptr(boolToInt(enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -254,7 +254,7 @@ func (i *ICoreWebView2Settings) GetIsBuiltInErrorPageEnabled() (bool, error) {
 		uintptr(unsafe.Pointer(&enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return enabled, nil
 }
@@ -267,7 +267,7 @@ func (i *ICoreWebView2Settings) PutIsBuiltInErrorPageEnabled(enabled bool) error
 		uintptr(boolToInt(enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }

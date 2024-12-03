@@ -71,7 +71,7 @@ func (i *ICoreWebView2Controller2) PutDefaultBackgroundColor(backgroundColor COR
 		uintptr(col),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }

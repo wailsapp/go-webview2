@@ -632,7 +632,7 @@ func (i *ICoreWebView2) AddWebResourceRequestedFilter(uri string, resourceContex
 		uintptr(resourceContext),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -643,7 +643,7 @@ func (i *ICoreWebView2) OpenDevToolsWindow() error {
 		uintptr(unsafe.Pointer(i)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }

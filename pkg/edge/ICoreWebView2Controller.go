@@ -84,7 +84,7 @@ func (i *ICoreWebView2Controller) PutBounds(bounds w32.Rect) error {
 		uintptr(unsafe.Pointer(&bounds)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -96,7 +96,7 @@ func (i *ICoreWebView2Controller) MoveFocus(reason COREWEBVIEW2_MOVE_FOCUS_REASO
 		uintptr(reason),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -109,7 +109,7 @@ func (i *ICoreWebView2Controller) AddAcceleratorKeyPressed(eventHandler *ICoreWe
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -121,7 +121,7 @@ func (i *ICoreWebView2Controller) PutIsVisible(isVisible bool) error {
 		uintptr(boolToInt(isVisible)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -145,7 +145,7 @@ func (i *ICoreWebView2Controller) NotifyParentWindowPositionChanged() error {
 		uintptr(unsafe.Pointer(i)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -157,7 +157,7 @@ func (i *ICoreWebView2Controller) PutZoomFactor(zoomFactor float64) error {
 		uintptr(math.Float64bits(zoomFactor)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -170,7 +170,7 @@ func (i *ICoreWebView2Controller) GetZoomFactor() (float64, error) {
 		uintptr(unsafe.Pointer(&zoomFactorUint64)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return 0.0, nil
+		return 0.0, windows.Errno(hr)
 	}
 	return math.Float64frombits(zoomFactorUint64), nil
 }

@@ -39,7 +39,7 @@ func (i *ICoreWebView2_7) PrintToPdf(ResultFilePath string, printSettings *ICore
 	// Convert string 'ResultFilePath' to *uint16
 	_ResultFilePath, err := UTF16PtrFromString(ResultFilePath)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.Vtbl.PrintToPdf.Call(

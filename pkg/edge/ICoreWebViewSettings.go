@@ -67,7 +67,7 @@ func (i *ICoreWebViewSettings) GetIsScriptEnabled() (bool, error) {
 		uintptr(unsafe.Pointer(&isScriptEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, nil
+		return false, windows.Errno(hr)
 	}
 	return isScriptEnabled, nil
 }

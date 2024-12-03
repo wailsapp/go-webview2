@@ -37,7 +37,7 @@ func (i *ICoreWebView2File) GetPath() (string, error) {
 		uintptr(unsafe.Pointer(&_path)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return "", nil
+		return "", windows.Errno(hr)
 	}
 
 	path := windows.UTF16PtrToString(_path)

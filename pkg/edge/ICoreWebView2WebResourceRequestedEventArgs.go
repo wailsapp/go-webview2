@@ -43,7 +43,7 @@ func (i *ICoreWebView2WebResourceRequestedEventArgs) PutResponse(response *ICore
 		uintptr(unsafe.Pointer(response)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil
+		return windows.Errno(hr)
 	}
 	return nil
 }

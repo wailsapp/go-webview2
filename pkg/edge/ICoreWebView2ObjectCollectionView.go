@@ -38,7 +38,7 @@ func (i *ICoreWebView2ObjectCollectionView) GetCount() (uint32, error) {
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return 0, nil
+		return 0, windows.Errno(hr)
 	}
 	return value, nil
 }
