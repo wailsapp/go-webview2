@@ -111,11 +111,11 @@ func (i *ICoreWebView2CookieManager) GetCookies(uri string) (*ICoreWebView2Cooki
 func (i *ICoreWebView2CookieManager) DeleteCookies(name, uri string) error {
 	nameutf16, err := windows.UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 	uriutf16, err := windows.UTF16PtrFromString(uri)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.vtbl.DeleteCookies.Call(
@@ -133,11 +133,11 @@ func (i *ICoreWebView2CookieManager) DeleteCookies(name, uri string) error {
 func (i *ICoreWebView2CookieManager) DeleteCookiesWithDomainAndPath(domain, path string) error {
 	domainutf16, err := windows.UTF16PtrFromString(domain)
 	if err != nil {
-		return nil
+		return err
 	}
 	pathutf16, err := windows.UTF16PtrFromString(path)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	hr, _, _ := i.vtbl.DeleteCookiesWithDomainAndPath.Call(
