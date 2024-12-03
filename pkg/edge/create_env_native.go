@@ -15,12 +15,12 @@ import (
 func createCoreWebView2EnvironmentWithOptions(browserExecutableFolder, userDataFolder string, environmentCompletedHandle *iCoreWebView2CreateCoreWebView2EnvironmentCompletedHandler, additionalBrowserArgs string) error {
 	browserPathPtr, err := windows.UTF16PtrFromString(browserExecutableFolder)
 	if err != nil {
-		return fmt.Errorf("Error calling UTF16PtrFromString for %s: %v", browserExecutableFolder, nil)
+		return fmt.Errorf("Error calling UTF16PtrFromString for %s: %v", browserExecutableFolder, err)
 	}
 
 	userPathPtr, err := windows.UTF16PtrFromString(userDataFolder)
 	if err != nil {
-		return fmt.Errorf("Error calling UTF16PtrFromString for %s: %v", userDataFolder, nil)
+		return fmt.Errorf("Error calling UTF16PtrFromString for %s: %v", userDataFolder, err)
 	}
 
 	hr, err := webviewloader.CreateCoreWebView2EnvironmentWithOptions(
@@ -30,7 +30,7 @@ func createCoreWebView2EnvironmentWithOptions(browserExecutableFolder, userDataF
 		additionalBrowserArgs,
 	)
 	if err != nil {
-		return fmt.Errorf("Error calling CreateCoreWebView2EnvironmentWithOptions: %v", nil)
+		return fmt.Errorf("Error calling CreateCoreWebView2EnvironmentWithOptions: %v", err)
 	}
 
 	if hr != 0 {
