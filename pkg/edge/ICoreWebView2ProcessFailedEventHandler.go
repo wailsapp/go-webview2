@@ -2,6 +2,10 @@
 
 package edge
 
+import (
+	"unsafe"
+)
+
 type _ICoreWebView2ProcessFailedEventHandlerVtbl struct {
 	_IUnknownVtbl
 	Invoke ComProc
@@ -13,7 +17,9 @@ type ICoreWebView2ProcessFailedEventHandler struct {
 }
 
 func (i *ICoreWebView2ProcessFailedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return ret
 }
 func _ICoreWebView2ProcessFailedEventHandlerIUnknownQueryInterface(this *ICoreWebView2ProcessFailedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)

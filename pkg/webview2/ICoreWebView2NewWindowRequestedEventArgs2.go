@@ -38,7 +38,7 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs2) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetName.Call(
+	hr, _, _ := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -48,5 +48,5 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs2) GetName() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }

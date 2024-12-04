@@ -48,252 +48,234 @@ type ICoreWebViewSettings struct {
 	vtbl *_ICoreWebViewSettingsVtbl
 }
 
-func (i *ICoreWebViewSettings) AddRef() uintptr {
-	return i.AddRef()
+func (i *ICoreWebViewSettings) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+func (i *ICoreWebViewSettings) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
 }
 
 func (i *ICoreWebViewSettings) GetIsScriptEnabled() (bool, error) {
-	var err error
 	var isScriptEnabled bool
-	_, _, err = i.vtbl.GetIsScriptEnabled.Call(
+	hr, _, _ := i.vtbl.GetIsScriptEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&isScriptEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return isScriptEnabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutIsScriptEnabled(isScriptEnabled bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutIsScriptEnabled.Call(
+	hr, _, _ := i.vtbl.PutIsScriptEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(isScriptEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetIsWebMessageEnabled() (bool, error) {
-	var err error
 	var isWebMessageEnabled bool
-	_, _, err = i.vtbl.GetIsWebMessageEnabled.Call(
+	hr, _, _ := i.vtbl.GetIsWebMessageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&isWebMessageEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return isWebMessageEnabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutIsWebMessageEnabled(isWebMessageEnabled bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutIsWebMessageEnabled.Call(
+	hr, _, _ := i.vtbl.PutIsWebMessageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(isWebMessageEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetAreDefaultScriptDialogsEnabled() (bool, error) {
-	var err error
 	var areDefaultScriptDialogsEnabled bool
-	_, _, err = i.vtbl.GetAreDefaultScriptDialogsEnabled.Call(
+	hr, _, _ := i.vtbl.GetAreDefaultScriptDialogsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&areDefaultScriptDialogsEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return areDefaultScriptDialogsEnabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutAreDefaultScriptDialogsEnabled(areDefaultScriptDialogsEnabled bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutAreDefaultScriptDialogsEnabled.Call(
+	hr, _, _ := i.vtbl.PutAreDefaultScriptDialogsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(areDefaultScriptDialogsEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetIsStatusBarEnabled() (bool, error) {
-	var err error
 	var isStatusBarEnabled bool
-	_, _, err = i.vtbl.GetIsStatusBarEnabled.Call(
+	hr, _, _ := i.vtbl.GetIsStatusBarEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&isStatusBarEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return isStatusBarEnabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutIsStatusBarEnabled(isStatusBarEnabled bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutIsStatusBarEnabled.Call(
+	hr, _, _ := i.vtbl.PutIsStatusBarEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(isStatusBarEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetAreDevToolsEnabled() (bool, error) {
-	var err error
 	var areDevToolsEnabled bool
-	_, _, err = i.vtbl.GetAreDevToolsEnabled.Call(
+	hr, _, _ := i.vtbl.GetAreDevToolsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&areDevToolsEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return areDevToolsEnabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutAreDevToolsEnabled(areDevToolsEnabled bool) error {
-	var err error
-	_, _, err = i.vtbl.PutAreDevToolsEnabled.Call(
+	hr, _, _ := i.vtbl.PutAreDevToolsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(areDevToolsEnabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetAreDefaultContextMenusEnabled() (bool, error) {
-	var err error
 	var enabled bool
-	_, _, err = i.vtbl.GetAreDefaultContextMenusEnabled.Call(
+	hr, _, _ := i.vtbl.GetAreDefaultContextMenusEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return enabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutAreDefaultContextMenusEnabled(enabled bool) error {
-	var err error
-	_, _, err = i.vtbl.PutAreDefaultContextMenusEnabled.Call(
+	hr, _, _ := i.vtbl.PutAreDefaultContextMenusEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetAreHostObjectsAllowed() (bool, error) {
-	var err error
 	var allowed bool
-	_, _, err = i.vtbl.GetAreHostObjectsAllowed.Call(
+	hr, _, _ := i.vtbl.GetAreHostObjectsAllowed.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&allowed)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return allowed, nil
 }
 
 func (i *ICoreWebViewSettings) PutAreHostObjectsAllowed(allowed bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutAreHostObjectsAllowed.Call(
+	hr, _, _ := i.vtbl.PutAreHostObjectsAllowed.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(allowed)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetIsZoomControlEnabled() (bool, error) {
-	var err error
 	var enabled bool
-	_, _, err = i.vtbl.GetIsZoomControlEnabled.Call(
+	hr, _, _ := i.vtbl.GetIsZoomControlEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return enabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutIsZoomControlEnabled(enabled bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutIsZoomControlEnabled.Call(
+	hr, _, _ := i.vtbl.PutIsZoomControlEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetIsBuiltInErrorPageEnabled() (bool, error) {
-	var err error
 	var enabled bool
-	_, _, err = i.vtbl.GetIsBuiltInErrorPageEnabled.Call(
+	hr, _, _ := i.vtbl.GetIsBuiltInErrorPageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return enabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutIsBuiltInErrorPageEnabled(enabled bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutIsBuiltInErrorPageEnabled.Call(
+	hr, _, _ := i.vtbl.PutIsBuiltInErrorPageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetUserAgent() (string, error) {
-	var err error
 	// Create *uint16 to hold result
 	var _userAgent *uint16
-	_, _, err = i.vtbl.GetUserAgent.Call(
+	hr, _, _ := i.vtbl.GetUserAgent.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_userAgent)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return "", windows.Errno(hr)
 	} // Get result and cleanup
 	userAgent := windows.UTF16PtrToString(_userAgent)
 	windows.CoTaskMemFree(unsafe.Pointer(_userAgent))
@@ -301,97 +283,88 @@ func (i *ICoreWebViewSettings) GetUserAgent() (string, error) {
 }
 
 func (i *ICoreWebViewSettings) PutUserAgent(userAgent string) error {
-	var err error
+	
 	// Convert string 'userAgent' to *uint16
 	_userAgent, err := windows.UTF16PtrFromString(userAgent)
 	if err != nil {
 		return err
 	}
 
-	_, _, err = i.vtbl.PutUserAgent.Call(
+	hr, _, _ := i.vtbl.PutUserAgent.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_userAgent)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetAreBrowserAcceleratorKeysEnabled() (bool, error) {
-	var err error
 	var enabled bool
-	_, _, err = i.vtbl.GetAreBrowserAcceleratorKeysEnabled.Call(
+	hr, _, _ := i.vtbl.GetAreBrowserAcceleratorKeysEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return enabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutAreBrowserAcceleratorKeysEnabled(enabled bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutAreBrowserAcceleratorKeysEnabled.Call(
+	hr, _, _ := i.vtbl.PutAreBrowserAcceleratorKeysEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetIsPinchZoomEnabled() (bool, error) {
-	var err error
 	var enabled bool
-	_, _, err = i.vtbl.GetIsPinchZoomEnabled.Call(
+	hr, _, _ := i.vtbl.GetIsPinchZoomEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return enabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutIsPinchZoomEnabled(enabled bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutIsPinchZoomEnabled.Call(
+	hr, _, _ := i.vtbl.PutIsPinchZoomEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebViewSettings) GetIsSwipeNavigationEnabled() (bool, error) {
-	var err error
 	var enabled bool
-	_, _, err = i.vtbl.GetIsSwipeNavigationEnabled.Call(
+	hr, _, _ := i.vtbl.GetIsSwipeNavigationEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return enabled, nil
 }
 
 func (i *ICoreWebViewSettings) PutIsSwipeNavigationEnabled(enabled bool) error {
-	var err error
-
-	_, _, err = i.vtbl.PutIsSwipeNavigationEnabled.Call(
+	hr, _, _ := i.vtbl.PutIsSwipeNavigationEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(enabled)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }

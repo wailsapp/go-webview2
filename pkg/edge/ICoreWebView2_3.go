@@ -21,6 +21,18 @@ type ICoreWebView2_3 struct {
 	vtbl *iCoreWebView2_3Vtbl
 }
 
+func (i *ICoreWebView2_3) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+func (i *ICoreWebView2_3) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
 func (i *ICoreWebView2_3) SetVirtualHostNameToFolderMapping(hostName, folderPath string, accessKind COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND) error {
 	_hostName, err := windows.UTF16PtrFromString(hostName)
 	if err != nil {
@@ -32,14 +44,14 @@ func (i *ICoreWebView2_3) SetVirtualHostNameToFolderMapping(hostName, folderPath
 		return err
 	}
 
-	_, _, err = i.vtbl.SetVirtualHostNameToFolderMapping.Call(
+	hr, _, _ := i.vtbl.SetVirtualHostNameToFolderMapping.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_hostName)),
 		uintptr(unsafe.Pointer(_folderPath)),
 		uintptr(accessKind),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 
 	return nil

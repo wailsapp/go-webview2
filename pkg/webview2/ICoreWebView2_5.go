@@ -39,7 +39,7 @@ func (i *ICoreWebView2_5) AddClientCertificateRequested(eventHandler *ICoreWebVi
 
 	var token EventRegistrationToken
 
-	hr, _, err := i.Vtbl.AddClientCertificateRequested.Call(
+	hr, _, _ := i.Vtbl.AddClientCertificateRequested.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
@@ -47,17 +47,17 @@ func (i *ICoreWebView2_5) AddClientCertificateRequested(eventHandler *ICoreWebVi
 	if windows.Handle(hr) != windows.S_OK {
 		return EventRegistrationToken{}, syscall.Errno(hr)
 	}
-	return token, err
+	return token, nil
 }
 
 func (i *ICoreWebView2_5) RemoveClientCertificateRequested(token EventRegistrationToken) error {
 
-	hr, _, err := i.Vtbl.RemoveClientCertificateRequested.Call(
+	hr, _, _ := i.Vtbl.RemoveClientCertificateRequested.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&token)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

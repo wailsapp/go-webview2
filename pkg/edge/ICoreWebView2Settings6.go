@@ -67,7 +67,7 @@ func (i *ICoreWebView2Settings6) GetIsSwipeNavigationEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _enabled int32
 
-	hr, _, err := i.Vtbl.GetIsSwipeNavigationEnabled.Call(
+	hr, _, _ := i.Vtbl.GetIsSwipeNavigationEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_enabled)),
 	)
@@ -76,17 +76,17 @@ func (i *ICoreWebView2Settings6) GetIsSwipeNavigationEnabled() (bool, error) {
 	}
 	// Get result and cleanup
 	enabled := _enabled != 0
-	return enabled, err
+	return enabled, nil
 }
 
 func (i *ICoreWebView2Settings6) PutIsSwipeNavigationEnabled(enabled bool) error {
 
-	hr, _, err := i.Vtbl.PutIsSwipeNavigationEnabled.Call(
+	hr, _, _ := i.Vtbl.PutIsSwipeNavigationEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

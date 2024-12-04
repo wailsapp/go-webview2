@@ -21,7 +21,7 @@ type ICoreWebView2ProcessFailedEventArgs struct {
 
 func (i *ICoreWebView2ProcessFailedEventArgs) GetProcessFailedKind() (COREWEBVIEW2_PROCESS_FAILED_KIND, error) {
 	kind := COREWEBVIEW2_PROCESS_FAILED_KIND(0xffffffff)
-	hr, _, err := i.vtbl.GetProcessFailedKind.Call(
+	hr, _, _ := i.vtbl.GetProcessFailedKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&kind)),
 	)
@@ -31,10 +31,7 @@ func (i *ICoreWebView2ProcessFailedEventArgs) GetProcessFailedKind() (COREWEBVIE
 	}
 
 	if kind == 0xffffffff {
-		if err == nil {
-			err = fmt.Errorf("unknown error")
-		}
-		return 0, err
+		return 0, fmt.Errorf("unknown error")
 	}
 
 	return kind, nil

@@ -29,7 +29,7 @@ func (i *ICoreWebView2ExecuteScriptResult) GetSucceeded() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
-	hr, _, err := i.Vtbl.GetSucceeded.Call(
+	hr, _, _ := i.Vtbl.GetSucceeded.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_value)),
 	)
@@ -38,14 +38,14 @@ func (i *ICoreWebView2ExecuteScriptResult) GetSucceeded() (bool, error) {
 	}
 	// Get result and cleanup
 	value := _value != 0
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ExecuteScriptResult) GetResultAsJson() (string, error) {
 	// Create *uint16 to hold result
 	var _jsonResult *uint16
 
-	hr, _, err := i.Vtbl.GetResultAsJson.Call(
+	hr, _, _ := i.Vtbl.GetResultAsJson.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_jsonResult)),
 	)
@@ -55,7 +55,7 @@ func (i *ICoreWebView2ExecuteScriptResult) GetResultAsJson() (string, error) {
 	// Get result and cleanup
 	jsonResult := UTF16PtrToString(_jsonResult)
 	CoTaskMemFree(unsafe.Pointer(_jsonResult))
-	return jsonResult, err
+	return jsonResult, nil
 }
 
 func (i *ICoreWebView2ExecuteScriptResult) TryGetResultAsString() (string, bool, error) {
@@ -64,7 +64,7 @@ func (i *ICoreWebView2ExecuteScriptResult) TryGetResultAsString() (string, bool,
 	// Create int32 to hold bool result
 	var _value int32
 
-	hr, _, err := i.Vtbl.TryGetResultAsString.Call(
+	hr, _, _ := i.Vtbl.TryGetResultAsString.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_stringResult)),
 		uintptr(unsafe.Pointer(&_value)),
@@ -77,19 +77,19 @@ func (i *ICoreWebView2ExecuteScriptResult) TryGetResultAsString() (string, bool,
 	CoTaskMemFree(unsafe.Pointer(_stringResult))
 	// Get result and cleanup
 	value := _value != 0
-	return stringResult, value, err
+	return stringResult, value, nil
 }
 
 func (i *ICoreWebView2ExecuteScriptResult) GetException() (*ICoreWebView2ScriptException, error) {
 
 	var exception *ICoreWebView2ScriptException
 
-	hr, _, err := i.Vtbl.GetException.Call(
+	hr, _, _ := i.Vtbl.GetException.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&exception)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return exception, err
+	return exception, nil
 }

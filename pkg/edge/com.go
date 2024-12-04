@@ -22,14 +22,12 @@ type IUnknownVtbl struct {
 	Release        ComProc
 }
 
-func (i *IUnknownVtbl) CallRelease(this unsafe.Pointer) error {
-	_, _, err := i.Release.Call(
+func (i *IUnknownVtbl) CallRelease(this unsafe.Pointer) uint32 {
+	ret, _, _ := i.Release.Call(
 		uintptr(this),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
-	}
-	return nil
+
+	return uint32(ret)
 }
 
 type IUnknownImpl interface {

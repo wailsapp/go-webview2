@@ -34,7 +34,7 @@ func (i *ICoreWebView2ClientCertificate) GetSubject() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetSubject.Call(
+	hr, _, _ := i.Vtbl.GetSubject.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -44,14 +44,14 @@ func (i *ICoreWebView2ClientCertificate) GetSubject() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ClientCertificate) GetIssuer() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetIssuer.Call(
+	hr, _, _ := i.Vtbl.GetIssuer.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -61,42 +61,42 @@ func (i *ICoreWebView2ClientCertificate) GetIssuer() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ClientCertificate) GetValidFrom() (float64, error) {
 
 	var value float64
 
-	hr, _, err := i.Vtbl.GetValidFrom.Call(
+	hr, _, _ := i.Vtbl.GetValidFrom.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0.0, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ClientCertificate) GetValidTo() (float64, error) {
 
 	var value float64
 
-	hr, _, err := i.Vtbl.GetValidTo.Call(
+	hr, _, _ := i.Vtbl.GetValidTo.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0.0, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ClientCertificate) GetDerEncodedSerialNumber() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetDerEncodedSerialNumber.Call(
+	hr, _, _ := i.Vtbl.GetDerEncodedSerialNumber.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -106,14 +106,14 @@ func (i *ICoreWebView2ClientCertificate) GetDerEncodedSerialNumber() (string, er
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ClientCertificate) GetDisplayName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetDisplayName.Call(
+	hr, _, _ := i.Vtbl.GetDisplayName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -123,14 +123,14 @@ func (i *ICoreWebView2ClientCertificate) GetDisplayName() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ClientCertificate) ToPemEncoding() (string, error) {
 	// Create *uint16 to hold result
 	var _pemEncodedData *uint16
 
-	hr, _, err := i.Vtbl.ToPemEncoding.Call(
+	hr, _, _ := i.Vtbl.ToPemEncoding.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_pemEncodedData)),
 	)
@@ -140,33 +140,33 @@ func (i *ICoreWebView2ClientCertificate) ToPemEncoding() (string, error) {
 	// Get result and cleanup
 	pemEncodedData := UTF16PtrToString(_pemEncodedData)
 	CoTaskMemFree(unsafe.Pointer(_pemEncodedData))
-	return pemEncodedData, err
+	return pemEncodedData, nil
 }
 
 func (i *ICoreWebView2ClientCertificate) GetPemEncodedIssuerCertificateChain() (*ICoreWebView2StringCollection, error) {
 
 	var value *ICoreWebView2StringCollection
 
-	hr, _, err := i.Vtbl.GetPemEncodedIssuerCertificateChain.Call(
+	hr, _, _ := i.Vtbl.GetPemEncodedIssuerCertificateChain.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ClientCertificate) GetKind() (COREWEBVIEW2_CLIENT_CERTIFICATE_KIND, error) {
 
 	var value COREWEBVIEW2_CLIENT_CERTIFICATE_KIND
 
-	hr, _, err := i.Vtbl.GetKind.Call(
+	hr, _, _ := i.Vtbl.GetKind.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }

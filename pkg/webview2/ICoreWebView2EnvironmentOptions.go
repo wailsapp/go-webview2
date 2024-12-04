@@ -33,7 +33,7 @@ func (i *ICoreWebView2EnvironmentOptions) GetAdditionalBrowserArguments() (strin
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetAdditionalBrowserArguments.Call(
+	hr, _, _ := i.Vtbl.GetAdditionalBrowserArguments.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -43,7 +43,7 @@ func (i *ICoreWebView2EnvironmentOptions) GetAdditionalBrowserArguments() (strin
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2EnvironmentOptions) PutAdditionalBrowserArguments(value string) error {
@@ -54,21 +54,21 @@ func (i *ICoreWebView2EnvironmentOptions) PutAdditionalBrowserArguments(value st
 		return err
 	}
 
-	hr, _, err := i.Vtbl.PutAdditionalBrowserArguments.Call(
+	hr, _, _ := i.Vtbl.PutAdditionalBrowserArguments.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2EnvironmentOptions) GetLanguage() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetLanguage.Call(
+	hr, _, _ := i.Vtbl.GetLanguage.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -78,7 +78,7 @@ func (i *ICoreWebView2EnvironmentOptions) GetLanguage() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2EnvironmentOptions) PutLanguage(value string) error {
@@ -89,21 +89,21 @@ func (i *ICoreWebView2EnvironmentOptions) PutLanguage(value string) error {
 		return err
 	}
 
-	hr, _, err := i.Vtbl.PutLanguage.Call(
+	hr, _, _ := i.Vtbl.PutLanguage.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2EnvironmentOptions) GetTargetCompatibleBrowserVersion() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetTargetCompatibleBrowserVersion.Call(
+	hr, _, _ := i.Vtbl.GetTargetCompatibleBrowserVersion.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -113,7 +113,7 @@ func (i *ICoreWebView2EnvironmentOptions) GetTargetCompatibleBrowserVersion() (s
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2EnvironmentOptions) PutTargetCompatibleBrowserVersion(value string) error {
@@ -124,21 +124,21 @@ func (i *ICoreWebView2EnvironmentOptions) PutTargetCompatibleBrowserVersion(valu
 		return err
 	}
 
-	hr, _, err := i.Vtbl.PutTargetCompatibleBrowserVersion.Call(
+	hr, _, _ := i.Vtbl.PutTargetCompatibleBrowserVersion.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2EnvironmentOptions) GetAllowSingleSignOnUsingOSPrimaryAccount() (bool, error) {
 	// Create int32 to hold bool result
 	var _allow int32
 
-	hr, _, err := i.Vtbl.GetAllowSingleSignOnUsingOSPrimaryAccount.Call(
+	hr, _, _ := i.Vtbl.GetAllowSingleSignOnUsingOSPrimaryAccount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_allow)),
 	)
@@ -147,17 +147,17 @@ func (i *ICoreWebView2EnvironmentOptions) GetAllowSingleSignOnUsingOSPrimaryAcco
 	}
 	// Get result and cleanup
 	allow := _allow != 0
-	return allow, err
+	return allow, nil
 }
 
 func (i *ICoreWebView2EnvironmentOptions) PutAllowSingleSignOnUsingOSPrimaryAccount(allow bool) error {
 
-	hr, _, err := i.Vtbl.PutAllowSingleSignOnUsingOSPrimaryAccount.Call(
+	hr, _, _ := i.Vtbl.PutAllowSingleSignOnUsingOSPrimaryAccount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&allow)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

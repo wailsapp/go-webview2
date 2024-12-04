@@ -17,23 +17,27 @@ type ICoreWebView2File struct {
 	vtbl *_ICoreWebView2FileVtbl
 }
 
-func (i *ICoreWebView2File) AddRef() uintptr {
-	return i.AddRef()
+func (i *ICoreWebView2File) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
 }
 
-func (i *ICoreWebView2File) Release() error {
-	return i.vtbl.CallRelease(unsafe.Pointer(i))
+func (i *ICoreWebView2File) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
 }
 
 func (i *ICoreWebView2File) GetPath() (string, error) {
-	var err error
+	
 	var _path *uint16
-	_, _, err = i.vtbl.GetPath.Call(
+	hr, _, _ := i.vtbl.GetPath.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_path)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return "", windows.Errno(hr)
 	}
 
 	path := windows.UTF16PtrToString(_path)

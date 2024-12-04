@@ -72,7 +72,7 @@ func (i *ICoreWebView2Controller4) GetAllowExternalDrop() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
-	hr, _, err := i.Vtbl.GetAllowExternalDrop.Call(
+	hr, _, _ := i.Vtbl.GetAllowExternalDrop.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_value)),
 	)
@@ -81,17 +81,17 @@ func (i *ICoreWebView2Controller4) GetAllowExternalDrop() (bool, error) {
 	}
 	// Get result and cleanup
 	value := _value != 0
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2Controller4) PutAllowExternalDrop(value bool) error {
 
-	hr, _, err := i.Vtbl.PutAllowExternalDrop.Call(
+	hr, _, _ := i.Vtbl.PutAllowExternalDrop.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

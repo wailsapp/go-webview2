@@ -23,32 +23,40 @@ type ICoreWebView2WebResourceRequestedEventArgs struct {
 	vtbl *_ICoreWebView2WebResourceRequestedEventArgsVtbl
 }
 
-func (i *ICoreWebView2WebResourceRequestedEventArgs) AddRef() uintptr {
-	return i.AddRef()
+func (i *ICoreWebView2WebResourceRequestedEventArgs) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+func (i *ICoreWebView2WebResourceRequestedEventArgs) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
 }
 
 func (i *ICoreWebView2WebResourceRequestedEventArgs) PutResponse(response *ICoreWebView2WebResourceResponse) error {
-	var err error
+	
 
-	_, _, err = i.vtbl.PutResponse.Call(
+	hr, _, _ := i.vtbl.PutResponse.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(response)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2WebResourceRequestedEventArgs) GetRequest() (*ICoreWebView2WebResourceRequest, error) {
-	var err error
+	
 	var request *ICoreWebView2WebResourceRequest
-	_, _, err = i.vtbl.GetRequest.Call(
+	hr, _, _ := i.vtbl.GetRequest.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&request)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, windows.Errno(hr)
 	}
 	return request, nil
 }
@@ -56,7 +64,7 @@ func (i *ICoreWebView2WebResourceRequestedEventArgs) GetRequest() (*ICoreWebView
 func (i *ICoreWebView2WebResourceRequestedEventArgs) GetDeferral() (*ICoreWebView2Deferral, error) {
 	var deferral *ICoreWebView2Deferral
 
-	hr, _, err := i.vtbl.GetDeferral.Call(
+	hr, _, _ := i.vtbl.GetDeferral.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&deferral)),
 	)
@@ -65,10 +73,8 @@ func (i *ICoreWebView2WebResourceRequestedEventArgs) GetDeferral() (*ICoreWebVie
 	}
 
 	if deferral == nil {
-		if err == nil {
-			err = fmt.Errorf("unknown error")
-		}
-		return nil, err
+		return nil, fmt.Errorf("unknown error")
 	}
+
 	return deferral, nil
 }

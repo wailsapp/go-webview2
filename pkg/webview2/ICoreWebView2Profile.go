@@ -32,7 +32,7 @@ func (i *ICoreWebView2Profile) GetProfileName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetProfileName.Call(
+	hr, _, _ := i.Vtbl.GetProfileName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -42,14 +42,14 @@ func (i *ICoreWebView2Profile) GetProfileName() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2Profile) GetIsInPrivateModeEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
-	hr, _, err := i.Vtbl.GetIsInPrivateModeEnabled.Call(
+	hr, _, _ := i.Vtbl.GetIsInPrivateModeEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_value)),
 	)
@@ -58,14 +58,14 @@ func (i *ICoreWebView2Profile) GetIsInPrivateModeEnabled() (bool, error) {
 	}
 	// Get result and cleanup
 	value := _value != 0
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2Profile) GetProfilePath() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetProfilePath.Call(
+	hr, _, _ := i.Vtbl.GetProfilePath.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -75,14 +75,14 @@ func (i *ICoreWebView2Profile) GetProfilePath() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2Profile) GetDefaultDownloadFolderPath() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetDefaultDownloadFolderPath.Call(
+	hr, _, _ := i.Vtbl.GetDefaultDownloadFolderPath.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -92,7 +92,7 @@ func (i *ICoreWebView2Profile) GetDefaultDownloadFolderPath() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2Profile) PutDefaultDownloadFolderPath(value string) error {
@@ -103,38 +103,38 @@ func (i *ICoreWebView2Profile) PutDefaultDownloadFolderPath(value string) error 
 		return err
 	}
 
-	hr, _, err := i.Vtbl.PutDefaultDownloadFolderPath.Call(
+	hr, _, _ := i.Vtbl.PutDefaultDownloadFolderPath.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2Profile) GetPreferredColorScheme() (COREWEBVIEW2_PREFERRED_COLOR_SCHEME, error) {
 
 	var value COREWEBVIEW2_PREFERRED_COLOR_SCHEME
 
-	hr, _, err := i.Vtbl.GetPreferredColorScheme.Call(
+	hr, _, _ := i.Vtbl.GetPreferredColorScheme.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
 	}
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2Profile) PutPreferredColorScheme(value COREWEBVIEW2_PREFERRED_COLOR_SCHEME) error {
 
-	hr, _, err := i.Vtbl.PutPreferredColorScheme.Call(
+	hr, _, _ := i.Vtbl.PutPreferredColorScheme.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(value),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

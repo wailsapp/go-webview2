@@ -29,7 +29,7 @@ func (i *ICoreWebView2ControllerOptions) GetProfileName() (string, error) {
 	// Create *uint16 to hold result
 	var _value *uint16
 
-	hr, _, err := i.Vtbl.GetProfileName.Call(
+	hr, _, _ := i.Vtbl.GetProfileName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
@@ -39,7 +39,7 @@ func (i *ICoreWebView2ControllerOptions) GetProfileName() (string, error) {
 	// Get result and cleanup
 	value := UTF16PtrToString(_value)
 	CoTaskMemFree(unsafe.Pointer(_value))
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ControllerOptions) PutProfileName(value string) error {
@@ -50,21 +50,21 @@ func (i *ICoreWebView2ControllerOptions) PutProfileName(value string) error {
 		return err
 	}
 
-	hr, _, err := i.Vtbl.PutProfileName.Call(
+	hr, _, _ := i.Vtbl.PutProfileName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2ControllerOptions) GetIsInPrivateModeEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _value int32
 
-	hr, _, err := i.Vtbl.GetIsInPrivateModeEnabled.Call(
+	hr, _, _ := i.Vtbl.GetIsInPrivateModeEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_value)),
 	)
@@ -73,17 +73,17 @@ func (i *ICoreWebView2ControllerOptions) GetIsInPrivateModeEnabled() (bool, erro
 	}
 	// Get result and cleanup
 	value := _value != 0
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2ControllerOptions) PutIsInPrivateModeEnabled(value bool) error {
 
-	hr, _, err := i.Vtbl.PutIsInPrivateModeEnabled.Call(
+	hr, _, _ := i.Vtbl.PutIsInPrivateModeEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

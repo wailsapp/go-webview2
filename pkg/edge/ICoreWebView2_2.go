@@ -11,8 +11,8 @@ import (
 
 type iCoreWebView2_2Vtbl struct {
 	QueryInterface ComProc
-	AddRef        ComProc
-	Release       ComProc
+	AddRef         ComProc
+	Release        ComProc
 	// ICoreWebView2 methods
 	GetSettings                            ComProc
 	GetSource                              ComProc
@@ -86,23 +86,28 @@ type ICoreWebView2_2 struct {
 	vtbl *iCoreWebView2_2Vtbl
 }
 
+// AddRef increments the reference count of the ICoreWebView2_2 interface
+func (i *ICoreWebView2_2) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+// Release decrements the reference count of the ICoreWebView2_2 interface
+func (i *ICoreWebView2_2) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
 func (i *ICoreWebView2_2) GetCookieManager() (*ICoreWebView2CookieManager, error) {
 	var cookieManager *ICoreWebView2CookieManager
 	hr, _, _ := i.vtbl.GetCookieManager.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&cookieManager)),
 	)
-	if hr != uintptr(windows.ERROR_SUCCESS) {
+	if windows.Handle(hr) != windows.S_OK {
 		return nil, syscall.Errno(hr)
 	}
 	return cookieManager, nil
-}
-
-// Release releases the ICoreWebView2_2 interface
-func (i *ICoreWebView2_2) Release() error {
-	hr, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
-	if hr != 0 {
-		return syscall.Errno(hr)
-	}
-	return nil
 }

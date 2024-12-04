@@ -27,7 +27,7 @@ func (i *ICoreWebView2EnvironmentOptions3) GetIsCustomCrashReportingEnabled() (b
 	// Create int32 to hold bool result
 	var _value int32
 
-	hr, _, err := i.Vtbl.GetIsCustomCrashReportingEnabled.Call(
+	hr, _, _ := i.Vtbl.GetIsCustomCrashReportingEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_value)),
 	)
@@ -36,17 +36,17 @@ func (i *ICoreWebView2EnvironmentOptions3) GetIsCustomCrashReportingEnabled() (b
 	}
 	// Get result and cleanup
 	value := _value != 0
-	return value, err
+	return value, nil
 }
 
 func (i *ICoreWebView2EnvironmentOptions3) PutIsCustomCrashReportingEnabled(value bool) error {
 
-	hr, _, err := i.Vtbl.PutIsCustomCrashReportingEnabled.Call(
+	hr, _, _ := i.Vtbl.PutIsCustomCrashReportingEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

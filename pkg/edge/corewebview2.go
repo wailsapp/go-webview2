@@ -110,16 +110,6 @@ type _IUnknownVtbl struct {
 	Release        ComProc
 }
 
-func (i *_IUnknownVtbl) CallRelease(this unsafe.Pointer) error {
-	_, _, err := i.Release.Call(
-		uintptr(this),
-	)
-	if err != windows.ERROR_SUCCESS {
-		return err
-	}
-	return nil
-}
-
 type _IUnknownImpl interface {
 	QueryInterface(refiid, object uintptr) uintptr
 	AddRef() uintptr
@@ -194,30 +184,206 @@ type ICoreWebView2 struct {
 	vtbl *iCoreWebView2Vtbl
 }
 
+func (i *ICoreWebView2) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+func (i *ICoreWebView2) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+func (i *ICoreWebView2) AddContainsFullScreenElementChanged(eventHandler *ICoreWebView2ContainsFullScreenElementChangedEventHandler, token *_EventRegistrationToken) error {
+	hr, _, _ := i.vtbl.AddContainsFullScreenElementChanged.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(eventHandler)),
+		uintptr(unsafe.Pointer(token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2) AddNavigationCompleted(eventHandler *ICoreWebView2NavigationCompletedEventHandler, token *_EventRegistrationToken) error {
+	hr, _, _ := i.vtbl.AddNavigationCompleted.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(eventHandler)),
+		uintptr(unsafe.Pointer(token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2) AddPermissionRequested(handler *iCoreWebView2PermissionRequestedEventHandler, token *_EventRegistrationToken) error {
+	hr, _, _ := i.vtbl.AddPermissionRequested.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(handler)),
+		uintptr(unsafe.Pointer(token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2) AddProcessFailed(eventHandler *ICoreWebView2ProcessFailedEventHandler, token *_EventRegistrationToken) error {
+	hr, _, _ := i.vtbl.AddProcessFailed.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(eventHandler)),
+		uintptr(unsafe.Pointer(token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2) AddWebMessageReceived(handler *iCoreWebView2WebMessageReceivedEventHandler, token *_EventRegistrationToken) error {
+	hr, _, _ := i.vtbl.AddWebMessageReceived.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(handler)),
+		uintptr(unsafe.Pointer(token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2) AddWebResourceRequested(handler *iCoreWebView2WebResourceRequestedEventHandler, token *_EventRegistrationToken) error {
+	hr, _, _ := i.vtbl.AddWebResourceRequested.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(handler)),
+		uintptr(unsafe.Pointer(token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2) AddScriptToExecuteOnDocumentCreated(javaScript string, handler *iCoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler) error {
+	u16js, err := windows.UTF16PtrFromString(javaScript)
+	if err != nil {
+		return err
+	}
+
+	hr, _, _ := i.vtbl.AddScriptToExecuteOnDocumentCreated.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(u16js)),
+		uintptr(unsafe.Pointer(handler)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2) ExecuteScript(javascript string, handler *iCoreWebView2ExecuteScriptCompletedHandler) error {
+	u16js, err := windows.UTF16PtrFromString(javascript)
+	if err != nil {
+		return err
+	}
+
+	hr, _, _ := i.vtbl.ExecuteScript.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(u16js)),
+		uintptr(unsafe.Pointer(handler)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
 func (i *ICoreWebView2) GetSettings() (*ICoreWebViewSettings, error) {
-	var err error
+
 	var settings *ICoreWebViewSettings
-	_, _, err = i.vtbl.GetSettings.Call(
+	hr, _, _ := i.vtbl.GetSettings.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&settings)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, windows.Errno(hr)
 	}
 	return settings, nil
 }
 
 func (i *ICoreWebView2) GetContainsFullScreenElement() (bool, error) {
-	var err error
 	var result bool
-	_, _, err = i.vtbl.GetContainsFullScreenElement.Call(
+	hr, _, _ := i.vtbl.GetContainsFullScreenElement.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&result)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return false, err
+	if windows.Handle(hr) != windows.S_OK {
+		return false, windows.Errno(hr)
 	}
 	return result, nil
+}
+
+func (i *ICoreWebView2) Navigate(url string) error {
+	u16url, err := windows.UTF16PtrFromString(url)
+	if err != nil {
+		return err
+	}
+
+	hr, _, _ := i.vtbl.Navigate.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(u16url)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2) NavigateToString(htmlContent string) error {
+	u16Html, err := windows.UTF16PtrFromString(htmlContent)
+	if err != nil {
+		return err
+	}
+
+	hr, _, _ := i.vtbl.NavigateToString.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(u16Html)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
+func (i *ICoreWebView2) PostWebMessageAsString(webMessageAsString string) error {
+	u16msg, err := windows.UTF16PtrFromString(webMessageAsString)
+	if err != nil {
+		return err
+	}
+
+	hr, _, _ := i.vtbl.PostWebMessageAsString.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(u16msg)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
 }
 
 func (i *ICoreWebView2) QueryInterface2() (*ICoreWebView2_2, error) {
@@ -252,14 +418,28 @@ type ICoreWebView2Environment struct {
 	vtbl *iCoreWebView2EnvironmentVtbl
 }
 
+// CreateCoreWebView2Controller asynchronously creates a new WebView.
+func (e *ICoreWebView2Environment) CreateCoreWebView2Controller(parentWindow uintptr, handler *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler) error {
+	hr, _, _ := e.vtbl.CreateCoreWebView2Controller.Call(
+		uintptr(unsafe.Pointer(e)),
+		parentWindow,
+		uintptr(unsafe.Pointer(handler)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
+}
+
 // CreateWebResourceResponse creates a new ICoreWebView2WebResourceResponse, it must be released after finishing using it.
 func (e *ICoreWebView2Environment) CreateWebResourceResponse(content []byte, statusCode int, reasonPhrase string, headers string) (*ICoreWebView2WebResourceResponse, error) {
-	var err error
+
 	var stream uintptr
 
 	if len(content) > 0 {
 		// Create stream for response
-		stream, err = w32.SHCreateMemStream(content)
+		stream, err := w32.SHCreateMemStream(content)
 		if err != nil {
 			return nil, err
 		}
@@ -280,7 +460,7 @@ func (e *ICoreWebView2Environment) CreateWebResourceResponse(content []byte, sta
 		return nil, err
 	}
 	var response *ICoreWebView2WebResourceResponse
-	hr, _, err := e.vtbl.CreateWebResourceResponse.Call(
+	hr, _, _ := e.vtbl.CreateWebResourceResponse.Call(
 		uintptr(unsafe.Pointer(e)),
 		stream,
 		uintptr(statusCode),
@@ -293,13 +473,10 @@ func (e *ICoreWebView2Environment) CreateWebResourceResponse(content []byte, sta
 	}
 
 	if response == nil {
-		if err == nil {
-			err = fmt.Errorf("unknown error")
-		}
-		return nil, err
+		return nil, fmt.Errorf("unknown error")
 	}
-	return response, nil
 
+	return response, nil
 }
 
 // ICoreWebView2PermissionRequestedEventArgs
@@ -316,6 +493,32 @@ type iCoreWebView2PermissionRequestedEventArgsVtbl struct {
 
 type iCoreWebView2PermissionRequestedEventArgs struct {
 	vtbl *iCoreWebView2PermissionRequestedEventArgsVtbl
+}
+
+func (i *iCoreWebView2PermissionRequestedEventArgs) GetPermissionKind() (CoreWebView2PermissionKind, error) {
+	var kind CoreWebView2PermissionKind
+
+	hr, _, _ := i.vtbl.GetPermissionKind.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&kind)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return 0, windows.Errno(hr)
+	}
+
+	return kind, nil
+}
+
+func (i *iCoreWebView2PermissionRequestedEventArgs) PutState(state CoreWebView2PermissionState) error {
+	hr, _, _ := i.vtbl.PutState.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(state),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
+	}
+
+	return nil
 }
 
 // ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler
@@ -417,55 +620,30 @@ func newICoreWebView2PermissionRequestedEventHandler(impl iCoreWebView2Permissio
 }
 
 func (i *ICoreWebView2) AddWebResourceRequestedFilter(uri string, resourceContext COREWEBVIEW2_WEB_RESOURCE_CONTEXT) error {
-	var err error
+
 	// Convert string 'uri' to *uint16
 	_uri, err := windows.UTF16PtrFromString(uri)
 	if err != nil {
 		return err
 	}
-	_, _, err = i.vtbl.AddWebResourceRequestedFilter.Call(
+	hr, _, _ := i.vtbl.AddWebResourceRequestedFilter.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_uri)),
 		uintptr(resourceContext),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
-	}
-	return nil
-}
-func (i *ICoreWebView2) AddNavigationCompleted(eventHandler *ICoreWebView2NavigationCompletedEventHandler, token *_EventRegistrationToken) error {
-	var err error
-	_, _, err = i.vtbl.AddNavigationCompleted.Call(
-		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(eventHandler)),
-		uintptr(unsafe.Pointer(&token)),
-	)
-	if err != windows.ERROR_SUCCESS {
-		return err
-	}
-	return nil
-}
-
-func (i *ICoreWebView2) AddProcessFailed(eventHandler *ICoreWebView2ProcessFailedEventHandler, token *_EventRegistrationToken) error {
-	var err error
-	_, _, err = i.vtbl.AddProcessFailed.Call(
-		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(eventHandler)),
-		uintptr(unsafe.Pointer(&token)),
-	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2) OpenDevToolsWindow() error {
-	var err error
-	_, _, err = i.vtbl.OpenDevToolsWindow.Call(
+
+	hr, _, _ := i.vtbl.OpenDevToolsWindow.Call(
 		uintptr(unsafe.Pointer(i)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }

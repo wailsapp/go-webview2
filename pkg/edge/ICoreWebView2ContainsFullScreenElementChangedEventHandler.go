@@ -2,6 +2,10 @@
 
 package edge
 
+import (
+	"unsafe"
+)
+
 type _ICoreWebView2ContainsFullScreenElementChangedEventHandlerVtbl struct {
 	_IUnknownVtbl
 	Invoke ComProc
@@ -13,7 +17,9 @@ type ICoreWebView2ContainsFullScreenElementChangedEventHandler struct {
 }
 
 func (i *ICoreWebView2ContainsFullScreenElementChangedEventHandler) AddRef() uintptr {
-	return i.AddRef()
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return ret
 }
 func _ICoreWebView2ContainsFullScreenElementChangedEventHandlerIUnknownQueryInterface(this *ICoreWebView2ContainsFullScreenElementChangedEventHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)

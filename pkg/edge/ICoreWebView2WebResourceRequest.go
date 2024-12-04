@@ -3,7 +3,6 @@
 package edge
 
 import (
-	"syscall"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
@@ -25,21 +24,26 @@ type ICoreWebView2WebResourceRequest struct {
 }
 
 func (i *ICoreWebView2WebResourceRequest) AddRef() uintptr {
-	return i.AddRef()
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return ret
+}
+
+func (i *ICoreWebView2WebResourceRequest) Release() uintptr {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return ret
 }
 
 func (i *ICoreWebView2WebResourceRequest) GetMethod() (string, error) {
 	// Create *uint16 to hold result
 	var _method *uint16
-	res, _, err := i.vtbl.GetMethod.Call(
+	hr, _, _ := i.vtbl.GetMethod.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_method)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
-	}
-	if windows.Handle(res) != windows.S_OK {
-		return "", syscall.Errno(res)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", windows.Errno(hr)
 	}
 	// Get result and cleanup
 	uri := windows.UTF16PtrToString(_method)
@@ -48,15 +52,15 @@ func (i *ICoreWebView2WebResourceRequest) GetMethod() (string, error) {
 }
 
 func (i *ICoreWebView2WebResourceRequest) GetUri() (string, error) {
-	var err error
+	
 	// Create *uint16 to hold result
 	var _uri *uint16
-	_, _, err = i.vtbl.GetUri.Call(
+	hr, _, _ := i.vtbl.GetUri.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&_uri)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
+	if windows.Handle(hr) != windows.S_OK {
+		return "", windows.Errno(hr)
 	} // Get result and cleanup
 	uri := windows.UTF16PtrToString(_uri)
 	windows.CoTaskMemFree(unsafe.Pointer(_uri))
@@ -67,15 +71,12 @@ func (i *ICoreWebView2WebResourceRequest) GetUri() (string, error) {
 // Release on the returned IStream after finished using it.
 func (i *ICoreWebView2WebResourceRequest) GetContent() (*IStream, error) {
 	var stream *IStream
-	res, _, err := i.vtbl.GetContent.Call(
+	hr, _, _ := i.vtbl.GetContent.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&stream)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
-	}
-	if windows.Handle(res) != windows.S_OK {
-		return nil, syscall.Errno(res)
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, windows.Errno(hr)
 	}
 	return stream, nil
 }
@@ -84,19 +85,12 @@ func (i *ICoreWebView2WebResourceRequest) GetContent() (*IStream, error) {
 // Release on the returned Object after finished using it.
 func (i *ICoreWebView2WebResourceRequest) GetHeaders() (*ICoreWebView2HttpRequestHeaders, error) {
 	var headers *ICoreWebView2HttpRequestHeaders
-	res, _, err := i.vtbl.GetHeaders.Call(
+	hr, _, _ := i.vtbl.GetHeaders.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&headers)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
-	}
-	if windows.Handle(res) != windows.S_OK {
-		return nil, syscall.Errno(res)
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, windows.Errno(hr)
 	}
 	return headers, nil
-}
-
-func (i *ICoreWebView2WebResourceRequest) Release() error {
-	return i.vtbl.CallRelease(unsafe.Pointer(i))
 }

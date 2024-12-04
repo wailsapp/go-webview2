@@ -22,8 +22,16 @@ type ICoreWebView2HttpResponseHeaders struct {
 	vtbl *_ICoreWebView2HttpResponseHeadersVtbl
 }
 
-func (i *ICoreWebView2HttpResponseHeaders) Release() error {
-	return i.vtbl.CallRelease(unsafe.Pointer(i))
+func (i *ICoreWebView2HttpResponseHeaders) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+func (i *ICoreWebView2HttpResponseHeaders) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
 }
 
 func (i *ICoreWebView2HttpResponseHeaders) AppendHeader(name string, value string) error {

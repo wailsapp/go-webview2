@@ -42,70 +42,86 @@ type ICoreWebView2Controller struct {
 }
 
 func (i *ICoreWebView2Controller) AddRef() uintptr {
-	return i.AddRef()
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return ret
+}
+
+func (i *ICoreWebView2Controller) Release() uintptr {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return ret
+}
+
+func (i *ICoreWebView2Controller) GetCoreWebView2() (*ICoreWebView2, error) {
+	var wv2Ptr *ICoreWebView2
+	hr, _, _ := i.vtbl.GetCoreWebView2.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&wv2Ptr)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, windows.Errno(hr)
+	}
+
+	return wv2Ptr, nil
 }
 
 func (i *ICoreWebView2Controller) GetBounds() (*w32.Rect, error) {
-	var err error
 	var bounds w32.Rect
-	_, _, err = i.vtbl.GetBounds.Call(
+	hr, _, _ := i.vtbl.GetBounds.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&bounds)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, windows.Errno(hr)
 	}
 	return &bounds, nil
 }
 
 func (i *ICoreWebView2Controller) PutBounds(bounds w32.Rect) error {
-	var err error
-
-	_, _, err = i.vtbl.PutBounds.Call(
+	hr, _, _ := i.vtbl.PutBounds.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&bounds)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Controller) MoveFocus(reason COREWEBVIEW2_MOVE_FOCUS_REASON) error {
-	var err error
 
-	_, _, err = i.vtbl.MoveFocus.Call(
+	hr, _, _ := i.vtbl.MoveFocus.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(reason),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Controller) AddAcceleratorKeyPressed(eventHandler *ICoreWebView2AcceleratorKeyPressedEventHandler, token *_EventRegistrationToken) error {
-	var err error
-	_, _, err = i.vtbl.AddAcceleratorKeyPressed.Call(
+
+	hr, _, _ := i.vtbl.AddAcceleratorKeyPressed.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(eventHandler)),
 		uintptr(unsafe.Pointer(&token)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Controller) PutIsVisible(isVisible bool) error {
-	var err error
 
-	_, _, err = i.vtbl.PutIsVisible.Call(
+	hr, _, _ := i.vtbl.PutIsVisible.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(boolToInt(isVisible)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
@@ -124,37 +140,37 @@ func (i *ICoreWebView2Controller) GetICoreWebView2Controller2() *ICoreWebView2Co
 }
 
 func (i *ICoreWebView2Controller) NotifyParentWindowPositionChanged() error {
-	var err error
-	_, _, err = i.vtbl.NotifyParentWindowPositionChanged.Call(
+
+	hr, _, _ := i.vtbl.NotifyParentWindowPositionChanged.Call(
 		uintptr(unsafe.Pointer(i)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Controller) PutZoomFactor(zoomFactor float64) error {
-	var err error
-	_, _, err = i.vtbl.PutZoomFactor.Call(
+
+	hr, _, _ := i.vtbl.PutZoomFactor.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(math.Float64bits(zoomFactor)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Controller) GetZoomFactor() (float64, error) {
-	var err error
+
 	var zoomFactorUint64 uint64
-	_, _, err = i.vtbl.GetZoomFactor.Call(
+	hr, _, _ := i.vtbl.GetZoomFactor.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&zoomFactorUint64)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return 0.0, err
+	if windows.Handle(hr) != windows.S_OK {
+		return 0.0, windows.Errno(hr)
 	}
 	return math.Float64frombits(zoomFactorUint64), nil
 }

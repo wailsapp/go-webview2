@@ -29,7 +29,7 @@ func (i *ICoreWebView2BasicAuthenticationResponse) GetUserName() (string, error)
 	// Create *uint16 to hold result
 	var _userName *uint16
 
-	hr, _, err := i.Vtbl.GetUserName.Call(
+	hr, _, _ := i.Vtbl.GetUserName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_userName)),
 	)
@@ -39,7 +39,7 @@ func (i *ICoreWebView2BasicAuthenticationResponse) GetUserName() (string, error)
 	// Get result and cleanup
 	userName := UTF16PtrToString(_userName)
 	CoTaskMemFree(unsafe.Pointer(_userName))
-	return userName, err
+	return userName, nil
 }
 
 func (i *ICoreWebView2BasicAuthenticationResponse) PutUserName(userName string) error {
@@ -50,21 +50,21 @@ func (i *ICoreWebView2BasicAuthenticationResponse) PutUserName(userName string) 
 		return err
 	}
 
-	hr, _, err := i.Vtbl.PutUserName.Call(
+	hr, _, _ := i.Vtbl.PutUserName.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_userName)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }
 
 func (i *ICoreWebView2BasicAuthenticationResponse) GetPassword() (string, error) {
 	// Create *uint16 to hold result
 	var _password *uint16
 
-	hr, _, err := i.Vtbl.GetPassword.Call(
+	hr, _, _ := i.Vtbl.GetPassword.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_password)),
 	)
@@ -74,7 +74,7 @@ func (i *ICoreWebView2BasicAuthenticationResponse) GetPassword() (string, error)
 	// Get result and cleanup
 	password := UTF16PtrToString(_password)
 	CoTaskMemFree(unsafe.Pointer(_password))
-	return password, err
+	return password, nil
 }
 
 func (i *ICoreWebView2BasicAuthenticationResponse) PutPassword(password string) error {
@@ -85,12 +85,12 @@ func (i *ICoreWebView2BasicAuthenticationResponse) PutPassword(password string) 
 		return err
 	}
 
-	hr, _, err := i.Vtbl.PutPassword.Call(
+	hr, _, _ := i.Vtbl.PutPassword.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_password)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
 	}
-	return err
+	return nil
 }

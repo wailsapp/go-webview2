@@ -27,8 +27,16 @@ type ICoreWebView2HttpRequestHeaders struct {
 	vtbl *_ICoreWebView2HttpRequestHeadersVtbl
 }
 
-func (i *ICoreWebView2HttpRequestHeaders) Release() error {
-	return i.vtbl.CallRelease(unsafe.Pointer(i))
+func (i *ICoreWebView2HttpRequestHeaders) AddRef() uint32 {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
+}
+
+func (i *ICoreWebView2HttpRequestHeaders) Release() uint32 {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return uint32(ret)
 }
 
 // GetHeader returns the value of the specified header. If the header is not found
@@ -36,20 +44,17 @@ func (i *ICoreWebView2HttpRequestHeaders) Release() error {
 func (i *ICoreWebView2HttpRequestHeaders) GetHeader(name string) (string, error) {
 	_name, err := windows.UTF16PtrFromString(name)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	var _value *uint16
-	res, _, err := i.vtbl.GetHeader.Call(
+	hr, _, _ := i.vtbl.GetHeader.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 		uintptr(unsafe.Pointer(&_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return "", err
-	}
-	if windows.Handle(res) != windows.S_OK {
-		return "", syscall.Errno(res)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", windows.Errno(hr)
 	}
 
 	value := windows.UTF16PtrToString(_value)
@@ -61,25 +66,23 @@ func (i *ICoreWebView2HttpRequestHeaders) GetHeader(name string) (string, error)
 func (i *ICoreWebView2HttpRequestHeaders) SetHeader(name, value string) error {
 	_name, err := windows.UTF16PtrFromString(name)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	_value, err := windows.UTF16PtrFromString(value)
 	if err != nil {
-		return nil
+		return err
 	}
 
-	res, _, err := i.vtbl.SetHeader.Call(
+	hr, _, _ := i.vtbl.SetHeader.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 		uintptr(unsafe.Pointer(_value)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return err
+	if windows.Handle(hr) != windows.S_OK {
+		return windows.Errno(hr)
 	}
-	if windows.Handle(res) != windows.S_OK {
-		return syscall.Errno(res)
-	}
+
 	return nil
 }
 
@@ -87,15 +90,13 @@ func (i *ICoreWebView2HttpRequestHeaders) SetHeader(name, value string) error {
 // Release on the returned Object after finished using it.
 func (i *ICoreWebView2HttpRequestHeaders) GetIterator() (*ICoreWebView2HttpHeadersCollectionIterator, error) {
 	var headers *ICoreWebView2HttpHeadersCollectionIterator
-	res, _, err := i.vtbl.GetIterator.Call(
+	hr, _, _ := i.vtbl.GetIterator.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&headers)),
 	)
-	if err != windows.ERROR_SUCCESS {
-		return nil, err
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, windows.Errno(hr)
 	}
-	if windows.Handle(res) != windows.S_OK {
-		return nil, syscall.Errno(res)
-	}
+
 	return headers, nil
 }

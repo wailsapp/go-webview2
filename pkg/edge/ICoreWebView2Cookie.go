@@ -30,6 +30,20 @@ type ICoreWebView2Cookie struct {
 	vtbl *iCoreWebView2CookieVtbl
 }
 
+// Addref increments refernce count of the ICoreWebView2Cookie interface
+func (i *ICoreWebView2Cookie) AddRef() uintptr {
+	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+
+	return ret
+}
+
+// Release decrements reference count of the ICoreWebView2Cookie interface
+func (i *ICoreWebView2Cookie) Release() uintptr {
+	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+
+	return ret
+}
+
 // GetName gets the cookie name
 func (i *ICoreWebView2Cookie) GetName() (string, error) {
 	var name *uint16
@@ -204,17 +218,6 @@ func (i *ICoreWebView2Cookie) PutIsSecure(isSecure bool) error {
 		return windows.Errno(hr)
 	}
 	return nil
-}
-
-// Release releases the ICoreWebView2Cookie interface
-func (i *ICoreWebView2Cookie) Release() error {
-	return i.vtbl.CallRelease(unsafe.Pointer(i))
-}
-
-// AddRef adds a reference to the ICoreWebView2Cookie interface
-func (i *ICoreWebView2Cookie) AddRef() uintptr {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-	return ret
 }
 
 // QueryInterface queries for a specific interface
