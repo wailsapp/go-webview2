@@ -18,16 +18,16 @@ type ICoreWebView2ObjectCollectionView struct {
 	vtbl *_ICoreWebView2ObjectCollectionViewVtbl
 }
 
-func (i *ICoreWebView2ObjectCollectionView) AddRef() uint32 {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+func (i *ICoreWebView2ObjectCollectionView) AddRef() error {
+	i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
 
-	return uint32(ret)
+	return nil
 }
 
-func (i *ICoreWebView2ObjectCollectionView) Release() uint32 {
-	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+func (i *ICoreWebView2ObjectCollectionView) Release() error {
+	i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
 
-	return uint32(ret)
+	return nil
 }
 
 func (i *ICoreWebView2ObjectCollectionView) GetCount() (uint32, error) {
