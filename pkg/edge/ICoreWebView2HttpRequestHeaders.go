@@ -27,16 +27,16 @@ type ICoreWebView2HttpRequestHeaders struct {
 	vtbl *_ICoreWebView2HttpRequestHeadersVtbl
 }
 
-func (i *ICoreWebView2HttpRequestHeaders) AddRef() uint32 {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+func (i *ICoreWebView2HttpRequestHeaders) AddRef() error {
+	i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
 
-	return uint32(ret)
+	return nil
 }
 
-func (i *ICoreWebView2HttpRequestHeaders) Release() uint32 {
-	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+func (i *ICoreWebView2HttpRequestHeaders) Release() error {
+	i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
 
-	return uint32(ret)
+	return nil
 }
 
 // GetHeader returns the value of the specified header. If the header is not found
