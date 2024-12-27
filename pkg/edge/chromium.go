@@ -13,6 +13,7 @@ import (
 	"strings"
 	"sync/atomic"
 	"syscall"
+	"time"
 	"unsafe"
 
 	"github.com/wailsapp/go-webview2/internal/w32"
@@ -46,7 +47,14 @@ func globalErrorHandler(err error) {
 }
 
 type Chromium struct {
-	hwnd                             uintptr
+	hwnd    uintptr
+	padding struct {
+		Left   int32
+		Top    int32
+		Right  int32
+		Bottom int32
+	}
+
 	controller                       *ICoreWebView2Controller
 	webview                          *ICoreWebView2
 	inited                           uintptr
@@ -61,7 +69,6 @@ type Chromium struct {
 	processFailed                    *ICoreWebView2ProcessFailedEventHandler
 
 	environment            *ICoreWebView2Environment
-	padding                Rect
 	webview2RuntimeVersion string
 
 	// Settings
@@ -85,6 +92,12 @@ type Chromium struct {
 
 	// Error handling
 	globalErrorCallback func(error)
+
+	shuttingDown bool
+
+	// Resize debouncing
+	lastBounds  *w32.Rect
+	resizeTimer *time.Timer
 }
 
 func NewChromium() *Chromium {
@@ -127,8 +140,11 @@ func NewChromium() *Chromium {
 	*/
 	e.permissions = make(map[CoreWebView2PermissionKind]CoreWebView2PermissionState)
 	e.globalErrorCallback = globalErrorHandler
-
 	return e
+}
+
+func (e *Chromium) ShuttingDown() {
+	e.shuttingDown = true
 }
 
 func (e *Chromium) errorCallback(err error) {
@@ -197,14 +213,30 @@ func (e *Chromium) Embed(hwnd uintptr) bool {
 }
 
 func (e *Chromium) SetPadding(padding Rect) {
-	if e.padding.Top == padding.Top && e.padding.Bottom == padding.Bottom &&
-		e.padding.Left == padding.Left && e.padding.Right == padding.Right {
+	if e.padding.Left == padding.Left && e.padding.Top == padding.Top &&
+		e.padding.Right == padding.Right && e.padding.Bottom == padding.Bottom {
 
 		return
 	}
 
-	e.padding = padding
+	e.padding.Left = padding.Left
+	e.padding.Top = padding.Top
+	e.padding.Right = padding.Right
+	e.padding.Bottom = padding.Bottom
 	e.Resize()
+}
+
+func (e *Chromium) ResizeWithBounds(bounds *Rect) {
+    if e.hwnd == 0 {
+        return
+    }
+
+    bounds.Top += e.padding.Top
+    bounds.Bottom -= e.padding.Bottom
+    bounds.Left += e.padding.Left
+    bounds.Right -= e.padding.Right
+
+    e.SetSize(*bounds)
 }
 
 func (e *Chromium) Resize() {
@@ -215,14 +247,10 @@ func (e *Chromium) Resize() {
 	bounds, err := w32.GetClientRect(e.hwnd)
 	if err != nil {
 		e.errorCallback(err)
+		return
 	}
 
-	bounds.Top += e.padding.Top
-	bounds.Bottom -= e.padding.Bottom
-	bounds.Left += e.padding.Left
-	bounds.Right -= e.padding.Right
-
-	e.SetSize(bounds)
+	e.ResizeWithBounds(&bounds)
 }
 
 func (e *Chromium) Navigate(url string) {
@@ -247,7 +275,7 @@ func (e *Chromium) Init(script string) {
 }
 
 func (e *Chromium) Eval(script string) {
-	if e.webview == nil {
+	if e.webview == nil || e.shuttingDown {
 		return
 	}
 
@@ -309,6 +337,23 @@ func (e *Chromium) CreateCoreWebView2ControllerCompleted(res uintptr, controller
 	controller.vtbl.AddRef.Call(uintptr(unsafe.Pointer(controller)))
 	e.controller = controller
 
+	// Try to get ICoreWebView2Controller3 interface for better performance
+	if controller3 := e.controller.GetICoreWebView2Controller3(); controller3 != nil {
+		// Use raw pixels mode for better performance during resize
+		if err := controller3.PutBoundsMode(COREWEBVIEW2_BOUNDS_MODE_USE_RAW_PIXELS); err != nil {
+			e.errorCallback(err)
+		}
+
+		// Disable monitor scale changes since we're using raw pixels
+		if err := controller3.PutShouldDetectMonitorScaleChanges(false); err != nil {
+			e.errorCallback(err)
+		}
+
+		// Set a fixed rasterization scale for better performance
+		if err := controller3.PutRasterizationScale(1.0); err != nil {
+			e.errorCallback(err)
+		}
+	}
 	var token _EventRegistrationToken
 	e.webview, err = e.controller.GetCoreWebView2()
 	if err != nil {
