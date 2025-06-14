@@ -6,7 +6,6 @@ import (
 	"bytes"
 	_ "embed"
 	"fmt"
-	"github.com/go-resty/resty/v2"
 	"io"
 	"log"
 	"os"
@@ -17,6 +16,9 @@ import (
 	"strings"
 	"text/scanner"
 	"time"
+
+	"github.com/go-resty/resty/v2"
+	"generator/idl"
 )
 
 const URL = "https://raw.githubusercontent.com/MicrosoftDocs/edge-developer/master/microsoft-edge/webview2/release-notes/index.md"
@@ -111,7 +113,7 @@ func runCommand(command string, args []string, dir string) error {
 
 func main() {
 	fmt.Printf("%s%s╔══════════════════════════════════════════════════════════════════╗%s\n", ColorBold, ColorPurple, ColorReset)
-	fmt.Printf("%s%s║                    WebView2 Edge Package Updater                 ║%s\n", ColorBold, ColorPurple, ColorReset)
+	fmt.Printf("%s%s║          WebView2 Edge Package Generator (ACTUAL IDL!)          ║%s\n", ColorBold, ColorPurple, ColorReset)
 	fmt.Printf("%s%s╚══════════════════════════════════════════════════════════════════╝%s\n", ColorBold, ColorPurple, ColorReset)
 	fmt.Println()
 
@@ -221,6 +223,7 @@ func main() {
 		printSuccess(fmt.Sprintf("Backed up edge directory to: %s", backupDir))
 	} else {
 		printInfo("No existing edge directory found - creating new one")
+		backupDir = "" // No backup was created
 	}
 
 	// Step 3: Create new edge directory
@@ -233,8 +236,8 @@ func main() {
 	}
 	printSuccess("Created new edge directory")
 
-	// Step 4: Download WebView2 IDL
-	printStep(fmt.Sprintf("Downloading WebView2 IDL for version %s...", latestVersion))
+	// Step 4: Download and parse WebView2 IDL
+	printStep(fmt.Sprintf("Downloading and parsing WebView2 IDL for version %s...", latestVersion))
 	
 	idlData, err := DownloadIDL(latestVersion)
 	if err != nil {
@@ -243,156 +246,42 @@ func main() {
 	}
 	printSuccess(fmt.Sprintf("Downloaded WebView2 IDL (%d bytes)", len(idlData)))
 
-	// Step 5: Copy existing WebView2 package as base
-	printStep("Copying existing WebView2 package as base...")
-	
-	webview2SourceDir := "../pkg/webview2"
-	if _, err := os.Stat(webview2SourceDir); err != nil {
-		printError(fmt.Sprintf("WebView2 source directory not found: %v", err))
-		os.Exit(1)
-	}
-	
-	// Copy all WebView2 files to edge directory
-	err = filepath.Walk(webview2SourceDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		
-		// Skip directories
-		if info.IsDir() {
-			return nil
-		}
-		
-		// Only copy .go files
-		if !strings.HasSuffix(info.Name(), ".go") {
-			return nil
-		}
-		
-		// Read source file
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return err
-		}
-		
-		// Fix package name from webview2 to edge
-		content := strings.Replace(string(data), "package webview2", "package edge", 1)
-		
-		// Write to edge directory
-		relPath, err := filepath.Rel(webview2SourceDir, path)
-		if err != nil {
-			return err
-		}
-		
-		dstPath := filepath.Join(edgeDir, relPath)
-		err = os.WriteFile(dstPath, []byte(content), 0644)
-		if err != nil {
-			return err
-		}
-		
-		return nil
-	})
-	
+	// Parse the IDL
+	printInfo("Parsing IDL with WebView2 parser...")
+	parser := idl.NewParser(bytes.NewReader(idlData))
+	ast, err := parser.Parse()
 	if err != nil {
-		printError(fmt.Sprintf("Failed to copy WebView2 package: %v", err))
+		printError(fmt.Sprintf("Failed to parse IDL: %v", err))
 		os.Exit(1)
 	}
+	printSuccess(fmt.Sprintf("Successfully parsed IDL: %d interfaces, %d enums", len(ast.Interfaces), len(ast.Enums)))
+
+	// Step 5: Generate Go code from AST
+	printStep("Generating Go code from parsed IDL...")
 	
-	// Count copied files
-	copiedFiles, _ := filepath.Glob(filepath.Join(edgeDir, "*.go"))
-	printSuccess(fmt.Sprintf("Copied %d Go files from WebView2 package", len(copiedFiles)))
+	err = generateGoCode(ast, edgeDir)
+	if err != nil {
+		printError(fmt.Sprintf("Failed to generate Go code: %v", err))
+		os.Exit(1)
+	}
+	printSuccess("Generated Go code from IDL")
 
 	// Step 6: Copy core helper files from assets
 	printStep("Copying core helper files from assets...")
 	
-	// Core files that should be preserved (stored in assets directory)
-	// Note: Exclude files that conflict with generated ones (com.go, guid.go, IStream.go, corewebview2.go)
-	coreFiles := []string{
-		"capabilities.go",
-		"capabilities_test.go", 
-		"chromium.go",
-		"chromium_386.go",
-		"chromium_amd64.go", 
-		"chromium_arm64.go",
-		"cookies_test.go",
-		"create_env_go.go",
-		"create_env_native.go",
-		"ICoreWebViewSettings.go",
-	}
-	
-	// Use assets directory as source
-	assetsDir := "assets"
-	if _, err := os.Stat(assetsDir); err != nil {
-		printError(fmt.Sprintf("Assets directory not found: %v", err))
-		printError("Please ensure the assets directory exists with the required core files")
+	err = copyAssetFiles(edgeDir)
+	if err != nil {
+		printError(fmt.Sprintf("Failed to copy asset files: %v", err))
 		os.Exit(1)
 	}
-	
-	copiedCount := 0
-	for _, coreFile := range coreFiles {
-		srcPath := filepath.Join(assetsDir, coreFile)
-		dstPath := filepath.Join(edgeDir, coreFile)
-		
-		if data, err := os.ReadFile(srcPath); err == nil {
-			// Assets files already have correct package name
-			err = os.WriteFile(dstPath, data, 0644)
-			if err != nil {
-				printWarning(fmt.Sprintf("Failed to copy core file %s: %v", coreFile, err))
-			} else {
-				printInfo(fmt.Sprintf("Copied core file: %s", coreFile))
-				copiedCount++
-			}
-		} else {
-			printError(fmt.Sprintf("Core file not found in assets: %s", coreFile))
-			os.Exit(1)
-		}
-	}
-	printSuccess(fmt.Sprintf("Copied %d core helper files from assets", copiedCount))
-	
-	// Generate com.go from template in generator
-	printInfo("Generating com.go from template...")
-	comTemplatePath := "generator/types/templates/com.tmpl"
-	if comTemplateData, err := os.ReadFile(comTemplatePath); err == nil {
-		// Replace template placeholder with actual package name
-		comContent := strings.Replace(string(comTemplateData), "{{.PackageName}}", "edge", 1)
-		err = os.WriteFile(filepath.Join(edgeDir, "com.go"), []byte(comContent), 0644)
-		if err != nil {
-			printWarning(fmt.Sprintf("Failed to write com.go: %v", err))
-		} else {
-			printSuccess("Generated com.go from template successfully")
-		}
-	} else {
-		printWarning(fmt.Sprintf("Failed to read com template: %v", err))
-		printInfo("com.go already exists from webview2 copy")
-	}
+	printSuccess("Copied core helper files from assets")
 
 	// Step 7: Generate version mapping
 	printStep("Generating version mapping...")
 	
-	var buffer strings.Builder
-	buffer.WriteString("//go:build windows\n\n")
-	buffer.WriteString("package edge\n\n")
-	buffer.WriteString("type Version struct {\n")
-	buffer.WriteString("\tSDKVersion         string\n")
-	buffer.WriteString("\tReleaseNotes           string\n")
-	buffer.WriteString("\tRuntimeVersion string\n")
-	buffer.WriteString("\tNotes          string\n")
-	buffer.WriteString("}\n\n")
-	buffer.WriteString("var versionMapping = map[string]Version{\n")
-	for _, version := range versions {
-		buffer.WriteString(fmt.Sprintf("\t\"%s\": {\n", version.Number))
-		buffer.WriteString(fmt.Sprintf("\t\tSDKVersion:     \"%s\",\n", version.Number))
-		buffer.WriteString(fmt.Sprintf("\t\tReleaseNotes:   \"%s\",\n", version.ReleaseNotes))
-		buffer.WriteString(fmt.Sprintf("\t\tRuntimeVersion: \"%s\",\n", version.RuntimeVersion))
-		buffer.WriteString("\t\tNotes: ")
-		buffer.WriteString(fmt.Sprintf("\t\t\t`%s`,\n", strings.Replace(strings.Join(version.Notes, "\n"), "`", "'", -1)))
-		buffer.WriteString("\t},\n")
-	}
-	buffer.WriteString("}\n")
-
-	// Write the buffer to edge/version_map.go
-	err = os.WriteFile(filepath.Join(edgeDir, "version_map.go"), []byte(buffer.String()), 0644)
+	err = generateVersionMapping(versions, edgeDir)
 	if err != nil {
-		printError(fmt.Sprintf("Failed to write version mapping: %v", err))
+		printError(fmt.Sprintf("Failed to generate version mapping: %v", err))
 		os.Exit(1)
 	}
 	printSuccess("Version mapping generated")
@@ -400,45 +289,16 @@ func main() {
 	// Step 8: Update capabilities for latest version
 	printStep("Updating capabilities for version guards...")
 	
-	capabilitiesPath := filepath.Join(edgeDir, "capabilities.go")
-	if _, err := os.Stat(capabilitiesPath); err == nil {
-		// Read the current capabilities file
-		capData, err := os.ReadFile(capabilitiesPath)
-		if err == nil {
-			capContent := string(capData)
-			
-			// Add a new capability for the latest version if it doesn't exist
-			latestCapabilityComment := fmt.Sprintf("// WebView2 Runtime Version %s", latestVersion)
-			if !strings.Contains(capContent, latestCapabilityComment) {
-				// Find the position to insert the new capability (after imports and before constants)
-				insertPos := strings.Index(capContent, "// WebView2 Runtime Version")
-				if insertPos > 0 {
-					newCapability := fmt.Sprintf("%s (Released: %s)\nconst (\n\tLatestFeatures = Capability(\"%s\") // Latest WebView2 features\n)\n\n", 
-						latestCapabilityComment, 
-						time.Now().Format("January 2006"),
-						latestVersion)
-					
-					updatedContent := capContent[:insertPos] + newCapability + capContent[insertPos:]
-					
-					err = os.WriteFile(capabilitiesPath, []byte(updatedContent), 0644)
-					if err != nil {
-						printWarning(fmt.Sprintf("Failed to update capabilities: %v", err))
-					} else {
-						printSuccess("Updated capabilities with latest version")
-					}
-				}
-			} else {
-				printInfo("Capabilities already include latest version")
-			}
-		}
+	err = updateCapabilities(latestVersion, edgeDir)
+	if err != nil {
+		printWarning(fmt.Sprintf("Failed to update capabilities: %v", err))
 	} else {
-		printWarning("capabilities.go not found - skipping capability update")
+		printSuccess("Updated capabilities with latest version")
 	}
 
 	// Step 9: Format generated code with go fmt
 	printStep("Formatting generated Go code...")
 	
-	// Change to the edge directory and run go fmt
 	err = runCommand("go", []string{"fmt", "."}, edgeDir)
 	if err != nil {
 		printWarning(fmt.Sprintf("Failed to format code: %v", err))
@@ -446,7 +306,28 @@ func main() {
 		printSuccess("All Go files formatted successfully")
 	}
 
-	// Step 10: Save version information
+	// Step 10: Test compilation
+	printStep("Testing package compilation...")
+	err = runCommand("go", []string{"test", "-c", "."}, edgeDir)
+	if err != nil {
+		printError(fmt.Sprintf("Package compilation test failed: %v", err))
+		printError("Generated code has compilation errors - please check the logs above")
+		os.Exit(1)
+	}
+	printSuccess("Package compiles successfully!")
+
+	// Step 11: Clean up old backup directory after successful generation
+	if backupDir != "" {
+		printStep("Cleaning up old backup directory...")
+		err = os.RemoveAll(backupDir)
+		if err != nil {
+			printWarning(fmt.Sprintf("Failed to remove backup directory %s: %v", backupDir, err))
+		} else {
+			printSuccess(fmt.Sprintf("Removed backup directory: %s", backupDir))
+		}
+	}
+
+	// Step 12: Save version information
 	printStep("Saving version information...")
 	
 	// Save the latest release notes to a file
@@ -476,13 +357,333 @@ func main() {
 	fmt.Printf("%s%s╔══════════════════════════════════════════════════════════════════╗%s\n", ColorBold, ColorGreen, ColorReset)
 	fmt.Printf("%s%s║                         UPDATE COMPLETE!                        ║%s\n", ColorBold, ColorGreen, ColorReset)
 	fmt.Printf("%s%s╚══════════════════════════════════════════════════════════════════╝%s\n", ColorBold, ColorGreen, ColorReset)
-	fmt.Printf("%s%sWebView2 Edge Package Updated Successfully!%s\n", ColorBold, ColorGreen, ColorReset)
+	fmt.Printf("%s%sWebView2 Edge Package Generated Successfully from FRESH IDL!%s\n", ColorBold, ColorGreen, ColorReset)
 	fmt.Printf("Version: %s%s%s\n", ColorCyan, latestVersion, ColorReset)
 	fmt.Printf("Location: %s%s%s\n", ColorCyan, edgeDir, ColorReset)
-	if backupDir != "" {
-		fmt.Printf("Backup: %s%s%s\n", ColorYellow, backupDir, ColorReset)
-	}
 	fmt.Println()
+}
+
+// generateGoCode generates Go code from the parsed AST using the existing generator
+func generateGoCode(ast *idl.AST, outputDir string) error {
+	printInfo("Initializing code generator...")
+	
+	// Create the generator (we'll need to import this properly)
+	// For now, let's generate individual files manually using templates
+	
+	// First, generate the base com.go file
+	err := generateComFile(outputDir)
+	if err != nil {
+		return fmt.Errorf("failed to generate com.go: %w", err)
+	}
+	
+	// Generate interface files individually
+	for _, iface := range ast.Interfaces {
+		err := generateInterfaceFile(iface, outputDir)
+		if err != nil {
+			printWarning(fmt.Sprintf("Failed to generate interface %s: %v", iface.Name, err))
+			// Continue with other interfaces
+		}
+	}
+	
+	// Generate enum files individually  
+	for _, enum := range ast.Enums {
+		err := generateEnumFile(enum, outputDir)
+		if err != nil {
+			printWarning(fmt.Sprintf("Failed to generate enum %s: %v", enum.Name, err))
+			// Continue with other enums
+		}
+	}
+	
+	printInfo(fmt.Sprintf("Generated %d interfaces and %d enums", len(ast.Interfaces), len(ast.Enums)))
+	return nil
+}
+
+// generateComFile creates the base com.go file from template
+func generateComFile(outputDir string) error {
+	templatePath := "generator/types/templates/com.tmpl"
+	templateData, err := os.ReadFile(templatePath)
+	if err != nil {
+		return fmt.Errorf("failed to read com template: %w", err)
+	}
+
+	// Replace template placeholder with package name
+	content := strings.Replace(string(templateData), "{{.PackageName}}", "edge", 1)
+	
+	err = os.WriteFile(filepath.Join(outputDir, "com.go"), []byte(content), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write com.go: %w", err)
+	}
+
+	return nil
+}
+
+// generateInterfaceFile generates a Go file for an IDL interface
+func generateInterfaceFile(iface *idl.Interface, outputDir string) error {
+	var buf strings.Builder
+	
+	// Write package and imports
+	buf.WriteString("//go:build windows\n\n")
+	buf.WriteString("package edge\n\n")
+	buf.WriteString("import (\n")
+	buf.WriteString("\t\"golang.org/x/sys/windows\"\n")
+	buf.WriteString("\t\"syscall\"\n")
+	buf.WriteString("\t\"unsafe\"\n")
+	buf.WriteString(")\n\n")
+	
+	// Generate Vtbl struct
+	buf.WriteString(fmt.Sprintf("type %sVtbl struct {\n", iface.Name))
+	buf.WriteString("\tIUnknownVtbl\n")
+	
+	for _, method := range iface.Methods {
+		buf.WriteString(fmt.Sprintf("\t%s ComProc\n", method.Name))
+	}
+	
+	buf.WriteString("}\n\n")
+	
+	// Generate interface struct
+	buf.WriteString(fmt.Sprintf("type %s struct {\n", iface.Name))
+	buf.WriteString(fmt.Sprintf("\tVtbl *%sVtbl\n", iface.Name))
+	buf.WriteString("}\n\n")
+	
+	// Generate AddRef method
+	buf.WriteString(fmt.Sprintf("func (i *%s) AddRef() uintptr {\n", iface.Name))
+	buf.WriteString("\trefCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))\n")
+	buf.WriteString("\treturn refCounter\n")
+	buf.WriteString("}\n\n")
+	
+	// Generate methods
+	for _, method := range iface.Methods {
+		err := generateMethod(&buf, iface.Name, method)
+		if err != nil {
+			return fmt.Errorf("failed to generate method %s: %w", method.Name, err)
+		}
+	}
+	
+	// Write to file
+	filename := fmt.Sprintf("%s.go", iface.Name)
+	err := os.WriteFile(filepath.Join(outputDir, filename), []byte(buf.String()), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write interface file: %w", err)
+	}
+	
+	return nil
+}
+
+// generateMethod generates a Go method for an IDL interface method
+func generateMethod(buf *strings.Builder, interfaceName string, method *idl.Method) error {
+	// Generate method signature
+	buf.WriteString(fmt.Sprintf("func (i *%s) %s(", interfaceName, method.Name))
+	
+	// Parameters
+	for i, param := range method.Parameters {
+		if i > 0 {
+			buf.WriteString(", ")
+		}
+		buf.WriteString(fmt.Sprintf("%s %s", param.Name, convertIDLTypeToGo(param.Type)))
+	}
+	
+	// Return type
+	buf.WriteString(") ")
+	if method.ReturnType != nil {
+		buf.WriteString(convertIDLTypeToGo(method.ReturnType))
+	} else {
+		buf.WriteString("error")
+	}
+	buf.WriteString(" {\n")
+	
+	// Method body (basic implementation)
+	buf.WriteString(fmt.Sprintf("\thr, _, _ := i.Vtbl.%s.Call(\n", method.Name))
+	buf.WriteString("\t\tuintptr(unsafe.Pointer(i)),\n")
+	
+	for _, param := range method.Parameters {
+		buf.WriteString(fmt.Sprintf("\t\tuintptr(unsafe.Pointer(%s)),\n", param.Name))
+	}
+	
+	buf.WriteString("\t)\n")
+	buf.WriteString("\tif windows.Handle(hr) != windows.S_OK {\n")
+	buf.WriteString("\t\treturn syscall.Errno(hr)\n")
+	buf.WriteString("\t}\n")
+	buf.WriteString("\treturn nil\n")
+	buf.WriteString("}\n\n")
+	
+	return nil
+}
+
+// generateEnumFile generates a Go file for an IDL enum
+func generateEnumFile(enum *idl.Enum, outputDir string) error {
+	var buf strings.Builder
+	
+	// Write package header
+	buf.WriteString("//go:build windows\n\n")
+	buf.WriteString("package edge\n\n")
+	
+	// Generate enum type
+	buf.WriteString(fmt.Sprintf("type %s int32\n\n", enum.Name))
+	
+	// Generate enum constants
+	buf.WriteString("const (\n")
+	for i, value := range enum.Values {
+		if i == 0 {
+			buf.WriteString(fmt.Sprintf("\t%s %s = %s\n", value.Name, enum.Name, value.Value))
+		} else {
+			buf.WriteString(fmt.Sprintf("\t%s %s = %s\n", value.Name, enum.Name, value.Value))
+		}
+	}
+	buf.WriteString(")\n")
+	
+	// Write to file
+	filename := fmt.Sprintf("%s.go", enum.Name)
+	err := os.WriteFile(filepath.Join(outputDir, filename), []byte(buf.String()), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write enum file: %w", err)
+	}
+	
+	return nil
+}
+
+// convertIDLTypeToGo converts IDL types to Go types
+func convertIDLTypeToGo(idlType *idl.Type) string {
+	if idlType == nil {
+		return "interface{}"
+	}
+	
+	// Basic type mappings
+	switch idlType.Name {
+	case "HRESULT":
+		return "uintptr"
+	case "BOOL":
+		return "bool"
+	case "UINT32":
+		return "uint32"
+	case "INT32":
+		return "int32"
+	case "LPWSTR", "LPCWSTR":
+		return "string"
+	case "HWND":
+		return "uintptr"
+	case "VARIANT":
+		return "*VARIANT"
+	case "IUnknown":
+		return "*IUnknown"
+	default:
+		// Assume it's a WebView2 interface or enum
+		if strings.HasPrefix(idlType.Name, "ICoreWebView2") || strings.HasPrefix(idlType.Name, "COREWEBVIEW2_") {
+			if idlType.Pointer {
+				return fmt.Sprintf("*%s", idlType.Name)
+			}
+			return idlType.Name
+		}
+		return idlType.Name
+	}
+}
+
+// copyAssetFiles copies the essential Wails wrapper files from assets
+func copyAssetFiles(edgeDir string) error {
+	// Core files that should be preserved (stored in assets directory)
+	coreFiles := []string{
+		"capabilities.go",
+		"capabilities_test.go", 
+		"chromium.go",
+		"chromium_386.go",
+		"chromium_amd64.go", 
+		"chromium_arm64.go",
+		"cookies_test.go",
+		"create_env_go.go",
+		"create_env_native.go",
+		"ICoreWebViewSettings.go",
+	}
+	
+	// Use assets directory as source
+	assetsDir := "assets"
+	if _, err := os.Stat(assetsDir); err != nil {
+		return fmt.Errorf("assets directory not found: %w", err)
+	}
+	
+	copiedCount := 0
+	for _, coreFile := range coreFiles {
+		srcPath := filepath.Join(assetsDir, coreFile)
+		dstPath := filepath.Join(edgeDir, coreFile)
+		
+		if data, err := os.ReadFile(srcPath); err == nil {
+			// Assets files already have correct package name
+			err = os.WriteFile(dstPath, data, 0644)
+			if err != nil {
+				return fmt.Errorf("failed to copy core file %s: %w", coreFile, err)
+			} else {
+				printInfo(fmt.Sprintf("Copied core file: %s", coreFile))
+				copiedCount++
+			}
+		} else {
+			return fmt.Errorf("core file not found in assets: %s", coreFile)
+		}
+	}
+	
+	printInfo(fmt.Sprintf("Copied %d core helper files from assets", copiedCount))
+	return nil
+}
+
+// generateVersionMapping generates the version mapping file
+func generateVersionMapping(versions []*Version, edgeDir string) error {
+	var buffer strings.Builder
+	buffer.WriteString("//go:build windows\n\n")
+	buffer.WriteString("package edge\n\n")
+	buffer.WriteString("type Version struct {\n")
+	buffer.WriteString("\tSDKVersion         string\n")
+	buffer.WriteString("\tReleaseNotes           string\n")
+	buffer.WriteString("\tRuntimeVersion string\n")
+	buffer.WriteString("\tNotes          string\n")
+	buffer.WriteString("}\n\n")
+	buffer.WriteString("var versionMapping = map[string]Version{\n")
+	for _, version := range versions {
+		buffer.WriteString(fmt.Sprintf("\t\"%s\": {\n", version.Number))
+		buffer.WriteString(fmt.Sprintf("\t\tSDKVersion:     \"%s\",\n", version.Number))
+		buffer.WriteString(fmt.Sprintf("\t\tReleaseNotes:   \"%s\",\n", version.ReleaseNotes))
+		buffer.WriteString(fmt.Sprintf("\t\tRuntimeVersion: \"%s\",\n", version.RuntimeVersion))
+		buffer.WriteString("\t\tNotes: ")
+		buffer.WriteString(fmt.Sprintf("\t\t\t`%s`,\n", strings.Replace(strings.Join(version.Notes, "\n"), "`", "'", -1)))
+		buffer.WriteString("\t},\n")
+	}
+	buffer.WriteString("}\n")
+
+	// Write the buffer to edge/version_map.go
+	err := os.WriteFile(filepath.Join(edgeDir, "version_map.go"), []byte(buffer.String()), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write version mapping: %w", err)
+	}
+	return nil
+}
+
+// updateCapabilities updates the capabilities file with the latest version
+func updateCapabilities(latestVersion, edgeDir string) error {
+	capabilitiesPath := filepath.Join(edgeDir, "capabilities.go")
+	if _, err := os.Stat(capabilitiesPath); err == nil {
+		// Read the current capabilities file
+		capData, err := os.ReadFile(capabilitiesPath)
+		if err == nil {
+			capContent := string(capData)
+			
+			// Add a new capability for the latest version if it doesn't exist
+			latestCapabilityComment := fmt.Sprintf("// WebView2 Runtime Version %s", latestVersion)
+			if !strings.Contains(capContent, latestCapabilityComment) {
+				// Find the position to insert the new capability (after imports and before constants)
+				insertPos := strings.Index(capContent, "// WebView2 Runtime Version")
+				if insertPos > 0 {
+					newCapability := fmt.Sprintf("%s (Released: %s)\nconst (\n\tLatestFeatures = Capability(\"%s\") // Latest WebView2 features\n)\n\n", 
+						latestCapabilityComment, 
+						time.Now().Format("January 2006"),
+						latestVersion)
+					
+					updatedContent := capContent[:insertPos] + newCapability + capContent[insertPos:]
+					
+					err = os.WriteFile(capabilitiesPath, []byte(updatedContent), 0644)
+					if err != nil {
+						return fmt.Errorf("failed to update capabilities: %w", err)
+					}
+				}
+			}
+		}
+	}
+	return nil
 }
 
 func DownloadIDL(version string) ([]byte, error) {

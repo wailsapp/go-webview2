@@ -2,3 +2,4 @@
 pkg/edge_generated
 /.aider.tags.cache.v3/
 .aider*
+.claude/
