@@ -1,0 +1,14 @@
+import "oaidl.idl";
+
+typedef enum COREWEBVIEW2_BOUNDS_MODE {
+    COREWEBVIEW2_BOUNDS_MODE_USE_RAW_PIXELS = 0,
+    COREWEBVIEW2_BOUNDS_MODE_USE_RASTERIZATION_SCALE = 1
+} COREWEBVIEW2_BOUNDS_MODE;
+
+[uuid("b96d755e-0319-4e92-a296-23436f46a1fc"), object, pointer_default(unique)]
+interface ICoreWebView2Environment : IUnknown {
+    HRESULT CreateCoreWebView2Controller(
+        [in] HWND parentWindow,
+        [in] ICoreWebView2CreateCoreWebView2ControllerCompletedHandler* handler
+    );
+}

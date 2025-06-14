@@ -1,0 +1,20 @@
+// {{.Name}} represents the {{.Name}} enum from WebView2
+type {{.Name}} uint32
+
+const (
+{{- range $index, $value := .Values}}
+    {{$value.Name}} {{$.Name}} = {{$value.Value}}
+{{- end}}
+)
+
+// String returns the string representation of {{.Name}}
+func (e {{.Name}}) String() string {
+    switch e {
+{{- range .Values}}
+    case {{.Name}}:
+        return "{{.Name}}"
+{{- end}}
+    default:
+        return fmt.Sprintf("{{.Name}}(%d)", uint32(e))
+    }
+}

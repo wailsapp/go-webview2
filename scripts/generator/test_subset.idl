@@ -1,0 +1,193 @@
+import "oaidl.idl";
+import "ocidl.idl";
+
+/// WebView2 IDL subset for testing the generator
+/// This represents a realistic subset of the actual WebView2 IDL
+
+typedef enum COREWEBVIEW2_BOUNDS_MODE {
+    COREWEBVIEW2_BOUNDS_MODE_USE_RAW_PIXELS = 0,
+    COREWEBVIEW2_BOUNDS_MODE_USE_RASTERIZATION_SCALE = 1
+} COREWEBVIEW2_BOUNDS_MODE;
+
+typedef enum COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT {
+    COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT_PNG = 0,
+    COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT_JPEG = 1
+} COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT;
+
+typedef enum COREWEBVIEW2_WEB_ERROR_STATUS {
+    COREWEBVIEW2_WEB_ERROR_STATUS_UNKNOWN = 0,
+    COREWEBVIEW2_WEB_ERROR_STATUS_CERTIFICATE_COMMON_NAME_IS_INCORRECT = 1,
+    COREWEBVIEW2_WEB_ERROR_STATUS_CERTIFICATE_EXPIRED = 2,
+    COREWEBVIEW2_WEB_ERROR_STATUS_CLIENT_CERTIFICATE_CONTAINS_ERRORS = 3
+} COREWEBVIEW2_WEB_ERROR_STATUS;
+
+/// Represents the WebView2 Environment
+[uuid("b96d755e-0319-4e92-a296-23436f46a1fc"), object, pointer_default(unique)]
+interface ICoreWebView2Environment : IUnknown {
+    /// Creates a new WebView2 controller
+    HRESULT CreateCoreWebView2Controller(
+        [in] HWND parentWindow,
+        [in] ICoreWebView2CreateCoreWebView2ControllerCompletedHandler* handler
+    );
+    
+    /// Creates a new WebView2 with options
+    HRESULT CreateCoreWebView2ControllerWithOptions(
+        [in] HWND parentWindow,
+        [in] ICoreWebView2ControllerOptions* options,
+        [in] ICoreWebView2CreateCoreWebView2ControllerCompletedHandler* handler
+    );
+    
+    /// Creates a WebResourceRequest object
+    HRESULT CreateWebResourceRequest(
+        [in] LPCWSTR uri,
+        [in] LPCWSTR method,
+        [in] IStream* postData,
+        [in] LPCWSTR headers,
+        [out, retval] ICoreWebView2WebResourceRequest* request
+    );
+}
+
+/// The main WebView2 controller interface
+[uuid("4d00c0d1-9434-4eb6-8078-8697a560334f"), object, pointer_default(unique)]
+interface ICoreWebView2Controller : IUnknown {
+    /// Gets whether the WebView is visible
+    HRESULT get_IsVisible([out, retval] BOOL* isVisible);
+    
+    /// Sets whether the WebView is visible
+    HRESULT put_IsVisible([in] BOOL isVisible);
+    
+    /// Gets the WebView bounds
+    HRESULT get_Bounds([out, retval] RECT* bounds);
+    
+    /// Sets the WebView bounds
+    HRESULT put_Bounds([in] RECT bounds);
+    
+    /// Gets the zoom factor
+    HRESULT get_ZoomFactor([out, retval] double* zoomFactor);
+    
+    /// Sets the zoom factor
+    HRESULT put_ZoomFactor([in] double zoomFactor);
+    
+    /// Adds an event handler for the ZoomFactorChanged event
+    HRESULT add_ZoomFactorChanged(
+        [in] ICoreWebView2ZoomFactorChangedEventHandler* eventHandler,
+        [out] EventRegistrationToken* token
+    );
+    
+    /// Removes an event handler for the ZoomFactorChanged event
+    HRESULT remove_ZoomFactorChanged([in] EventRegistrationToken token);
+    
+    /// Sets bounds with proper scaling mode
+    HRESULT SetBoundsAndZoomFactor(
+        [in] RECT bounds,
+        [in] double zoomFactor
+    );
+    
+    /// Moves focus into WebView
+    HRESULT MoveFocus([in] COREWEBVIEW2_MOVE_FOCUS_REASON reason);
+    
+    /// Gets the associated CoreWebView2
+    HRESULT get_CoreWebView2([out, retval] ICoreWebView2* coreWebView2);
+}
+
+/// The core WebView2 interface
+[uuid("76eceacb-0462-4d94-ac83-423a6793775e"), object, pointer_default(unique)]
+interface ICoreWebView2 : IUnknown {
+    /// Gets the current document title
+    HRESULT get_DocumentTitle([out, retval] LPWSTR* title);
+    
+    /// Navigates to the specified URI
+    HRESULT Navigate([in] LPCWSTR uri);
+    
+    /// Navigates to the specified URI with additional headers
+    HRESULT NavigateWithWebResourceRequest([in] ICoreWebView2WebResourceRequest* request);
+    
+    /// Executes JavaScript in the current document
+    HRESULT ExecuteScript(
+        [in] LPCWSTR javaScript,
+        [in] ICoreWebView2ExecuteScriptCompletedHandler* handler
+    );
+    
+    /// Captures a preview image of the page
+    HRESULT CapturePreview(
+        [in] COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT imageFormat,
+        [in] IStream* imageStream,
+        [in] ICoreWebView2CapturePreviewCompletedHandler* handler
+    );
+    
+    /// Reloads the current page
+    HRESULT Reload();
+    
+    /// Posts a web message to the top-level document
+    HRESULT PostWebMessageAsJson([in] LPCWSTR webMessageAsJson);
+    
+    /// Posts a web message as string
+    HRESULT PostWebMessageAsString([in] LPCWSTR webMessageAsString);
+    
+    /// Adds an event handler for the WebMessageReceived event
+    HRESULT add_WebMessageReceived(
+        [in] ICoreWebView2WebMessageReceivedEventHandler* handler,
+        [out] EventRegistrationToken* token
+    );
+    
+    /// Removes an event handler for the WebMessageReceived event
+    HRESULT remove_WebMessageReceived([in] EventRegistrationToken token);
+    
+    /// Gets the current source URI
+    HRESULT get_Source([out, retval] LPWSTR* uri);
+    
+    /// Navigates to the previous page in history
+    HRESULT GoBack();
+    
+    /// Navigates to the next page in history
+    HRESULT GoForward();
+    
+    /// Gets whether the WebView can go back
+    HRESULT get_CanGoBack([out, retval] BOOL* canGoBack);
+    
+    /// Gets whether the WebView can go forward
+    HRESULT get_CanGoForward([out, retval] BOOL* canGoForward);
+    
+    /// Gets the current settings
+    HRESULT get_Settings([out, retval] ICoreWebView2Settings* settings);
+}
+
+/// WebView2 settings interface
+[uuid("e562e4f0-d7fa-43ac-8d71-c05150499f00"), object, pointer_default(unique)]
+interface ICoreWebView2Settings : IUnknown {
+    /// Gets whether script is enabled
+    HRESULT get_IsScriptEnabled([out, retval] BOOL* isScriptEnabled);
+    
+    /// Sets whether script is enabled
+    HRESULT put_IsScriptEnabled([in] BOOL isScriptEnabled);
+    
+    /// Gets whether web messaging is enabled
+    HRESULT get_IsWebMessageEnabled([out, retval] BOOL* isWebMessageEnabled);
+    
+    /// Sets whether web messaging is enabled
+    HRESULT put_IsWebMessageEnabled([in] BOOL isWebMessageEnabled);
+    
+    /// Gets whether dev tools are enabled
+    HRESULT get_AreDevToolsEnabled([out, retval] BOOL* areDevToolsEnabled);
+    
+    /// Sets whether dev tools are enabled
+    HRESULT put_AreDevToolsEnabled([in] BOOL areDevToolsEnabled);
+}
+
+// Event handler interfaces (forward declarations for completeness)
+interface ICoreWebView2CreateCoreWebView2ControllerCompletedHandler;
+interface ICoreWebView2ZoomFactorChangedEventHandler;
+interface ICoreWebView2ExecuteScriptCompletedHandler;
+interface ICoreWebView2CapturePreviewCompletedHandler;
+interface ICoreWebView2WebMessageReceivedEventHandler;
+
+// Additional supporting interfaces
+interface ICoreWebView2ControllerOptions;
+interface ICoreWebView2WebResourceRequest;
+
+// Move focus reason enum
+typedef enum COREWEBVIEW2_MOVE_FOCUS_REASON {
+    COREWEBVIEW2_MOVE_FOCUS_REASON_PROGRAMMATIC = 0,
+    COREWEBVIEW2_MOVE_FOCUS_REASON_NEXT = 1,
+    COREWEBVIEW2_MOVE_FOCUS_REASON_PREVIOUS = 2
+} COREWEBVIEW2_MOVE_FOCUS_REASON;

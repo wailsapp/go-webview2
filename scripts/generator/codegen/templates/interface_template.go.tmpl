@@ -1,0 +1,51 @@
+// {{.Name}} represents the {{.Name}} COM interface
+type {{.Name}} struct {
+    *combridge.IUnknown
+}
+
+// New{{.Name}} creates a new {{.Name}} instance
+func New{{.Name}}(unknown *combridge.IUnknown) *{{.Name}} {
+    return &{{.Name}}{IUnknown: unknown}
+}
+
+{{- range .Methods}}
+
+// {{.Name}} {{.Comment}}
+func (obj *{{$.Name}}) {{.Name}}({{range $index, $param := .Parameters}}{{if $index}}, {{end}}{{$param.Name}} {{$param.GoType}}{{end}}) {{.ReturnType}} {
+    {{- if eq .ReturnType "error"}}
+    ret, _, _ := syscall.SyscallN(
+        obj.VTable().{{.Name}},
+        uintptr(unsafe.Pointer(obj)),
+        {{- range .Parameters}}
+        {{.SyscallConversion}},
+        {{- end}}
+    )
+    if ret != 0 {
+        return syscall.Errno(ret)
+    }
+    return nil
+    {{- else}}
+    ret, _, _ := syscall.SyscallN(
+        obj.VTable().{{.Name}},
+        uintptr(unsafe.Pointer(obj)),
+        {{- range .Parameters}}
+        {{.SyscallConversion}},
+        {{- end}}
+    )
+    return {{.ReturnConversion}}
+    {{- end}}
+}
+{{- end}}
+
+// {{.Name}}VTable represents the virtual method table for {{.Name}}
+type {{.Name}}VTable struct {
+    *combridge.IUnknownVTable
+{{- range .Methods}}
+    {{.Name}} uintptr
+{{- end}}
+}
+
+// VTable returns the virtual method table for {{.Name}}
+func (obj *{{.Name}}) VTable() *{{.Name}}VTable {
+    return (*{{.Name}}VTable)(obj.IUnknown.VTable())
+}
