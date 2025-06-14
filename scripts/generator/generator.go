@@ -31,7 +31,7 @@ func NewGenerator() (*Generator, error) {
 
 // loadTemplates loads all Go code generation templates
 func (g *Generator) loadTemplates() error {
-	templateDir := filepath.Join("codegen", "templates")
+	templateDir := filepath.Join("generator", "codegen", "templates")
 
 	templateFiles := map[string]string{
 		"package":   filepath.Join(templateDir, "package_template.go.tmpl"),
@@ -227,4 +227,40 @@ func (g *Generator) generateInterface(w io.Writer, iface *idl.Interface) error {
 	}
 
 	return g.templates["interface"].Execute(w, data)
+}
+
+// GeneratedFile represents a generated Go file
+type GeneratedFile struct {
+	FileName string
+	Content  *bytes.Buffer
+}
+
+// ParseIDL parses IDL data and generates Go files for the webview2 package
+func ParseIDL(idlData []byte) ([]*GeneratedFile, error) {
+	// Parse the IDL data using the existing idl parser
+	parser := idl.NewParser(bytes.NewReader(idlData))
+	ast, err := parser.Parse()
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse IDL: %w", err)
+	}
+
+	// Generate code using our template-based generator
+	generator, err := NewGenerator()
+	if err != nil {
+		return nil, fmt.Errorf("failed to create generator: %w", err)
+	}
+
+	// Generate Go code from the AST
+	code, err := generator.GenerateCode(ast, "latest")
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate code: %w", err)
+	}
+
+	// Create the main generated file
+	mainFile := &GeneratedFile{
+		FileName: "webview2_generated.go",
+		Content:  bytes.NewBufferString(code),
+	}
+
+	return []*GeneratedFile{mainFile}, nil
 }

@@ -10,11 +10,12 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 	"text/scanner"
-	"updater/generator"
+	"generator"
 )
 
 const URL = "https://raw.githubusercontent.com/MicrosoftDocs/edge-developer/master/microsoft-edge/webview2/release-notes/index.md"
@@ -189,16 +190,62 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Write the files to the ../pkg/webview2 directory
-	_ = os.Mkdir("../pkg/webview2", 0755)
+	// Preserve non-generated files
+	webview2Dir := "../pkg/webview2"
+	preservedFiles := []string{"com.go"} // Files to preserve during regeneration
+	
+	// Backup preserved files
+	backupDir := webview2Dir + "_backup"
+	_ = os.RemoveAll(backupDir) // Remove any existing backup
+	_ = os.Mkdir(backupDir, 0755)
+	
+	for _, preservedFile := range preservedFiles {
+		srcPath := filepath.Join(webview2Dir, preservedFile)
+		dstPath := filepath.Join(backupDir, preservedFile)
+		
+		data, err := os.ReadFile(srcPath)
+		if err == nil { // Only backup if file exists
+			err = os.WriteFile(dstPath, data, 0644)
+			if err != nil {
+				log.Printf("Warning: Failed to backup %s: %v", preservedFile, err)
+			} else {
+				println("Backed up:", preservedFile)
+			}
+		}
+	}
+	
+	// Clear the webview2 directory and recreate it
+	_ = os.RemoveAll(webview2Dir)
+	_ = os.Mkdir(webview2Dir, 0755)
+	
+	// Write the generated files
 	for _, file := range files {
-		fileName := "../pkg/webview2/" + file.FileName
+		fileName := filepath.Join(webview2Dir, file.FileName)
 		println("Writing: ", fileName)
 		err = os.WriteFile(fileName, file.Content.Bytes(), 0644)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
+	
+	// Restore preserved files
+	for _, preservedFile := range preservedFiles {
+		srcPath := filepath.Join(backupDir, preservedFile)
+		dstPath := filepath.Join(webview2Dir, preservedFile)
+		
+		data, err := os.ReadFile(srcPath)
+		if err == nil { // Only restore if backup exists
+			err = os.WriteFile(dstPath, data, 0644)
+			if err != nil {
+				log.Printf("Warning: Failed to restore %s: %v", preservedFile, err)
+			} else {
+				println("Restored:", preservedFile)
+			}
+		}
+	}
+	
+	// Clean up backup directory
+	_ = os.RemoveAll(backupDir)
 
 	// Save the version to latest_version.txt
 	err = os.WriteFile("latest_version.txt", []byte(latestVersion), 0644)
