@@ -155,15 +155,15 @@ func (p *Parser) parseLibrary() error {
 
 	library := &Library{Name: name}
 
-	// Parse library body (skip for now)
-	braceCount := 1
-	for braceCount > 0 && p.current.Type != TokenEOF {
-		if p.current.Type == TokenLBrace {
-			braceCount++
-		} else if p.current.Type == TokenRBrace {
-			braceCount--
+	// Parse library body contents
+	for p.current.Type != TokenRBrace && p.current.Type != TokenEOF {
+		if err := p.parseTopLevel(); err != nil {
+			return err
 		}
-		p.nextToken()
+	}
+
+	if !p.expectToken(TokenRBrace) {
+		return fmt.Errorf("expected '}' to close library")
 	}
 
 	p.ast.Library = library
@@ -419,6 +419,16 @@ func (p *Parser) parseEnum() error {
 	// Parse enum values
 	currentValue := int64(0)
 	for p.current.Type != TokenRBrace && p.current.Type != TokenEOF {
+		// Skip all comments inside enum
+		for p.current.Type == TokenComment {
+			p.nextToken()
+		}
+
+		// Check if we've reached the end after skipping comments
+		if p.current.Type == TokenRBrace {
+			break
+		}
+
 		if p.current.Type != TokenIdentifier {
 			return fmt.Errorf("expected enum value name")
 		}
@@ -531,10 +541,14 @@ func (p *Parser) parseTypedefEnum() error {
 	// Parse enum values
 	currentValue := int64(0)
 	for p.current.Type != TokenRBrace && p.current.Type != TokenEOF {
-		// Skip comments inside enum
-		if p.current.Type == TokenComment {
+		// Skip all comments inside enum
+		for p.current.Type == TokenComment {
 			p.nextToken()
-			continue
+		}
+
+		// Check if we've reached the end after skipping comments
+		if p.current.Type == TokenRBrace {
+			break
 		}
 
 		if p.current.Type != TokenIdentifier {
@@ -583,6 +597,13 @@ func (p *Parser) parseTypedefEnum() error {
 			enum.Name = finalName
 		}
 		p.nextToken()
+	}
+
+	// Skip any cpp_quote directives that might appear before the semicolon
+	for p.current.Type == TokenIdentifier && p.current.Value == "cpp_quote" {
+		if err := p.skipCppQuote(); err != nil {
+			return fmt.Errorf("failed to skip cpp_quote: %w", err)
+		}
 	}
 
 	if !p.expectToken(TokenSemicolon) {
@@ -930,10 +951,14 @@ func (p *Parser) parseTypedefEnumWithAttributes(attrs []*Attribute) (*Enum, erro
 	// Parse enum values
 	currentValue := int64(0)
 	for p.current.Type != TokenRBrace && p.current.Type != TokenEOF {
-		// Skip comments inside enum
-		if p.current.Type == TokenComment {
+		// Skip all comments inside enum
+		for p.current.Type == TokenComment {
 			p.nextToken()
-			continue
+		}
+
+		// Check if we've reached the end after skipping comments
+		if p.current.Type == TokenRBrace {
+			break
 		}
 
 		if p.current.Type != TokenIdentifier {
@@ -982,6 +1007,13 @@ func (p *Parser) parseTypedefEnumWithAttributes(attrs []*Attribute) (*Enum, erro
 			enum.Name = finalName
 		}
 		p.nextToken()
+	}
+
+	// Skip any cpp_quote directives that might appear before the semicolon
+	for p.current.Type == TokenIdentifier && p.current.Value == "cpp_quote" {
+		if err := p.skipCppQuote(); err != nil {
+			return nil, fmt.Errorf("failed to skip cpp_quote: %w", err)
+		}
 	}
 
 	if !p.expectToken(TokenSemicolon) {

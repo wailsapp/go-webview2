@@ -3,56 +3,51 @@
 package edge
 
 import (
-	"unsafe"
-
 	"golang.org/x/sys/windows"
+	"syscall"
+	"unsafe"
 )
 
-type _ICoreWebView2ObjectCollectionViewVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2ObjectCollectionViewVtbl struct {
+	IUnknownVtbl
 	GetCount        ComProc
 	GetValueAtIndex ComProc
 }
 
 type ICoreWebView2ObjectCollectionView struct {
-	vtbl *_ICoreWebView2ObjectCollectionViewVtbl
+	Vtbl *ICoreWebView2ObjectCollectionViewVtbl
 }
 
-func (i *ICoreWebView2ObjectCollectionView) AddRef() error {
-	i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-
-	return nil
-}
-
-func (i *ICoreWebView2ObjectCollectionView) Release() error {
-	i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
-
-	return nil
+func (i *ICoreWebView2ObjectCollectionView) AddRef() uintptr {
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2ObjectCollectionView) GetCount() (uint32, error) {
-	
+
 	var value uint32
-	hr, _, _ := i.vtbl.GetCount.Call(
+
+	hr, _, _ := i.Vtbl.GetCount.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return 0, windows.Errno(hr)
+		return 0, syscall.Errno(hr)
 	}
 	return value, nil
 }
 
-func (i *ICoreWebView2ObjectCollectionView) GetValueAtIndex(index uint32) (*_IUnknownVtbl, error) {
-	
-	var value *_IUnknownVtbl
-	hr, _, _ := i.vtbl.GetValueAtIndex.Call(
+func (i *ICoreWebView2ObjectCollectionView) GetValueAtIndex(index uint32) (*IUnknown, error) {
+
+	var value *IUnknown
+
+	hr, _, _ := i.Vtbl.GetValueAtIndex.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(index),
+		uintptr(unsafe.Pointer(&index)),
 		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, windows.Errno(hr)
+		return nil, syscall.Errno(hr)
 	}
 	return value, nil
 }

@@ -9,32 +9,7 @@ import (
 )
 
 type ICoreWebView2Controller3Vtbl struct {
-	_IUnknownVtbl
-	GetIsVisible                       ComProc
-	PutIsVisible                       ComProc
-	GetBounds                          ComProc
-	PutBounds                          ComProc
-	GetZoomFactor                      ComProc
-	PutZoomFactor                      ComProc
-	AddZoomFactorChanged               ComProc
-	RemoveZoomFactorChanged            ComProc
-	SetBoundsAndZoomFactor             ComProc
-	MoveFocus                          ComProc
-	AddMoveFocusRequested              ComProc
-	RemoveMoveFocusRequested           ComProc
-	AddGotFocus                        ComProc
-	RemoveGotFocus                     ComProc
-	AddLostFocus                       ComProc
-	RemoveLostFocus                    ComProc
-	AddAcceleratorKeyPressed           ComProc
-	RemoveAcceleratorKeyPressed        ComProc
-	GetParentWindow                    ComProc
-	PutParentWindow                    ComProc
-	NotifyParentWindowPositionChanged  ComProc
-	Close                              ComProc
-	GetCoreWebView2                    ComProc
-	GetDefaultBackgroundColor          ComProc
-	PutDefaultBackgroundColor          ComProc
+	IUnknownVtbl
 	GetRasterizationScale              ComProc
 	PutRasterizationScale              ComProc
 	GetShouldDetectMonitorScaleChanges ComProc
@@ -54,11 +29,11 @@ func (i *ICoreWebView2Controller3) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2Controller) GetICoreWebView2Controller3() *ICoreWebView2Controller3 {
+func (i *ICoreWebView2) GetICoreWebView2Controller3() *ICoreWebView2Controller3 {
 	var result *ICoreWebView2Controller3
 
 	iidICoreWebView2Controller3 := NewGUID("{f9614724-5d2b-41dc-aef7-73d62b51543b}")
-	_, _, _ = i.vtbl.QueryInterface.Call(
+	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2Controller3)),
 		uintptr(unsafe.Pointer(&result)))

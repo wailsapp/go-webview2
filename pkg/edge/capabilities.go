@@ -16,6 +16,11 @@ func (u *unsupportedCapabilityError) Error() string {
 // Internal Capabilities are not exposed to the user
 // Larger capabilities such as DragAndDrop should be exported with a capital letter
 
+// WebView2 Runtime Version 1.0.3296.44 (Released: June 2025)
+const (
+	LatestFeatures = Capability("1.0.3296.44") // Latest WebView2 features
+)
+
 // WebView2 Runtime Version 131.0.2903.40 (Released: September 2023)
 const (
 	ScreenCapture       = Capability("131.0.2903.40") // Screen capture support

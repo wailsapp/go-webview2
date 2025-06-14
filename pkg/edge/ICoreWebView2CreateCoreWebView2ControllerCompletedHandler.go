@@ -6,55 +6,54 @@ import (
 	"unsafe"
 )
 
-type _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
-type iCoreWebView2CreateCoreWebView2ControllerCompletedHandler struct {
-	vtbl *_ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerVtbl
-	impl _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerImpl
+type ICoreWebView2CreateCoreWebView2ControllerCompletedHandler struct {
+	Vtbl *ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerVtbl
+	impl ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerImpl
 }
 
-func (i *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler) AddRef() uint32 {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-
-	return uint32(ret)
+func (i *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler) AddRef() uintptr {
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownQueryInterface(this *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler, refiid, object uintptr) uintptr {
+func ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownQueryInterface(this *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownAddRef(this *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler) uintptr {
+func ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownAddRef(this *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownRelease(this *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler) uintptr {
+func ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownRelease(this *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler) uintptr {
 	return this.impl.Release()
 }
 
-func _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerInvoke(this *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler, errorCode uintptr, createdController *ICoreWebView2Controller) uintptr {
-	return this.impl.CreateCoreWebView2ControllerCompleted(errorCode, createdController)
+func ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerInvoke(this *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler, errorCode uintptr, result *ICoreWebView2Controller) uintptr {
+	return this.impl.CreateCoreWebView2ControllerCompleted(errorCode, result)
 }
 
-type _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerImpl interface {
-	_IUnknownImpl
-	CreateCoreWebView2ControllerCompleted(errorCode uintptr, createdController *ICoreWebView2Controller) uintptr
+type ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerImpl interface {
+	IUnknownImpl
+	CreateCoreWebView2ControllerCompleted(errorCode uintptr, result *ICoreWebView2Controller) uintptr
 }
 
-var _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerFn = _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownRelease),
+var ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerFn = ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerIUnknownRelease),
 	},
-	NewComProc(_ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerInvoke),
+	NewComProc(ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerInvoke),
 }
 
-func newICoreWebView2CreateCoreWebView2ControllerCompletedHandler(impl _ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerImpl) *iCoreWebView2CreateCoreWebView2ControllerCompletedHandler {
-	return &iCoreWebView2CreateCoreWebView2ControllerCompletedHandler{
-		vtbl: &_ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerFn,
+func NewICoreWebView2CreateCoreWebView2ControllerCompletedHandler(impl ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerImpl) *ICoreWebView2CreateCoreWebView2ControllerCompletedHandler {
+	return &ICoreWebView2CreateCoreWebView2ControllerCompletedHandler{
+		Vtbl: &ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerFn,
 		impl: impl,
 	}
 }

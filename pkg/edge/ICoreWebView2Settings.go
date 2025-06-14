@@ -3,13 +3,13 @@
 package edge
 
 import (
-	"unsafe"
-
 	"golang.org/x/sys/windows"
+	"syscall"
+	"unsafe"
 )
 
-type _ICoreWebView2SettingsVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2SettingsVtbl struct {
+	IUnknownVtbl
 	GetIsScriptEnabled                ComProc
 	PutIsScriptEnabled                ComProc
 	GetIsWebMessageEnabled            ComProc
@@ -31,243 +31,262 @@ type _ICoreWebView2SettingsVtbl struct {
 }
 
 type ICoreWebView2Settings struct {
-	vtbl *_ICoreWebView2SettingsVtbl
+	Vtbl *ICoreWebView2SettingsVtbl
 }
 
 func (i *ICoreWebView2Settings) AddRef() uintptr {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-
-	return ret
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2Settings) GetIsScriptEnabled() (bool, error) {
-	
-	var isScriptEnabled bool
-	hr, _, _ := i.vtbl.GetIsScriptEnabled.Call(
+	// Create int32 to hold bool result
+	var _isScriptEnabled int32
+
+	hr, _, _ := i.Vtbl.GetIsScriptEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isScriptEnabled)),
+		uintptr(unsafe.Pointer(&_isScriptEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, windows.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
+	// Get result and cleanup
+	isScriptEnabled := _isScriptEnabled != 0
 	return isScriptEnabled, nil
 }
 
 func (i *ICoreWebView2Settings) PutIsScriptEnabled(isScriptEnabled bool) error {
-	
 
-	hr, _, _ := i.vtbl.PutIsScriptEnabled.Call(
+	hr, _, _ := i.Vtbl.PutIsScriptEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(boolToInt(isScriptEnabled)),
+		uintptr(unsafe.Pointer(&isScriptEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Settings) GetIsWebMessageEnabled() (bool, error) {
-	
-	var isWebMessageEnabled bool
-	hr, _, _ := i.vtbl.GetIsWebMessageEnabled.Call(
+	// Create int32 to hold bool result
+	var _isWebMessageEnabled int32
+
+	hr, _, _ := i.Vtbl.GetIsWebMessageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isWebMessageEnabled)),
+		uintptr(unsafe.Pointer(&_isWebMessageEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, windows.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
+	// Get result and cleanup
+	isWebMessageEnabled := _isWebMessageEnabled != 0
 	return isWebMessageEnabled, nil
 }
 
 func (i *ICoreWebView2Settings) PutIsWebMessageEnabled(isWebMessageEnabled bool) error {
-	
 
-	hr, _, _ := i.vtbl.PutIsWebMessageEnabled.Call(
+	hr, _, _ := i.Vtbl.PutIsWebMessageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(boolToInt(isWebMessageEnabled)),
+		uintptr(unsafe.Pointer(&isWebMessageEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Settings) GetAreDefaultScriptDialogsEnabled() (bool, error) {
-	
-	var areDefaultScriptDialogsEnabled bool
-	hr, _, _ := i.vtbl.GetAreDefaultScriptDialogsEnabled.Call(
+	// Create int32 to hold bool result
+	var _areDefaultScriptDialogsEnabled int32
+
+	hr, _, _ := i.Vtbl.GetAreDefaultScriptDialogsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&areDefaultScriptDialogsEnabled)),
+		uintptr(unsafe.Pointer(&_areDefaultScriptDialogsEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, windows.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
+	// Get result and cleanup
+	areDefaultScriptDialogsEnabled := _areDefaultScriptDialogsEnabled != 0
 	return areDefaultScriptDialogsEnabled, nil
 }
 
 func (i *ICoreWebView2Settings) PutAreDefaultScriptDialogsEnabled(areDefaultScriptDialogsEnabled bool) error {
-	
 
-	hr, _, _ := i.vtbl.PutAreDefaultScriptDialogsEnabled.Call(
+	hr, _, _ := i.Vtbl.PutAreDefaultScriptDialogsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(boolToInt(areDefaultScriptDialogsEnabled)),
+		uintptr(unsafe.Pointer(&areDefaultScriptDialogsEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Settings) GetIsStatusBarEnabled() (bool, error) {
-	
-	var isStatusBarEnabled bool
-	hr, _, _ := i.vtbl.GetIsStatusBarEnabled.Call(
+	// Create int32 to hold bool result
+	var _isStatusBarEnabled int32
+
+	hr, _, _ := i.Vtbl.GetIsStatusBarEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isStatusBarEnabled)),
+		uintptr(unsafe.Pointer(&_isStatusBarEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, windows.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
+	// Get result and cleanup
+	isStatusBarEnabled := _isStatusBarEnabled != 0
 	return isStatusBarEnabled, nil
 }
 
 func (i *ICoreWebView2Settings) PutIsStatusBarEnabled(isStatusBarEnabled bool) error {
-	
 
-	hr, _, _ := i.vtbl.PutIsStatusBarEnabled.Call(
+	hr, _, _ := i.Vtbl.PutIsStatusBarEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(boolToInt(isStatusBarEnabled)),
+		uintptr(unsafe.Pointer(&isStatusBarEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Settings) GetAreDevToolsEnabled() (bool, error) {
-	
-	var areDevToolsEnabled bool
-	hr, _, _ := i.vtbl.GetAreDevToolsEnabled.Call(
+	// Create int32 to hold bool result
+	var _areDevToolsEnabled int32
+
+	hr, _, _ := i.Vtbl.GetAreDevToolsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&areDevToolsEnabled)),
+		uintptr(unsafe.Pointer(&_areDevToolsEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, windows.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
+	// Get result and cleanup
+	areDevToolsEnabled := _areDevToolsEnabled != 0
 	return areDevToolsEnabled, nil
 }
 
 func (i *ICoreWebView2Settings) PutAreDevToolsEnabled(areDevToolsEnabled bool) error {
-	
-	hr, _, _ := i.vtbl.PutAreDevToolsEnabled.Call(
+
+	hr, _, _ := i.Vtbl.PutAreDevToolsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(boolToInt(areDevToolsEnabled)),
+		uintptr(unsafe.Pointer(&areDevToolsEnabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Settings) GetAreDefaultContextMenusEnabled() (bool, error) {
-	
-	var enabled bool
-	hr, _, _ := i.vtbl.GetAreDefaultContextMenusEnabled.Call(
+	// Create int32 to hold bool result
+	var _enabled int32
+
+	hr, _, _ := i.Vtbl.GetAreDefaultContextMenusEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&enabled)),
+		uintptr(unsafe.Pointer(&_enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, windows.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
+	// Get result and cleanup
+	enabled := _enabled != 0
 	return enabled, nil
 }
 
 func (i *ICoreWebView2Settings) PutAreDefaultContextMenusEnabled(enabled bool) error {
-	
-	hr, _, _ := i.vtbl.PutAreDefaultContextMenusEnabled.Call(
+
+	hr, _, _ := i.Vtbl.PutAreDefaultContextMenusEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(boolToInt(enabled)),
+		uintptr(unsafe.Pointer(&enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Settings) GetAreHostObjectsAllowed() (bool, error) {
-	
-	var allowed bool
-	hr, _, _ := i.vtbl.GetAreHostObjectsAllowed.Call(
+	// Create int32 to hold bool result
+	var _allowed int32
+
+	hr, _, _ := i.Vtbl.GetAreHostObjectsAllowed.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&allowed)),
+		uintptr(unsafe.Pointer(&_allowed)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, windows.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
+	// Get result and cleanup
+	allowed := _allowed != 0
 	return allowed, nil
 }
 
 func (i *ICoreWebView2Settings) PutAreHostObjectsAllowed(allowed bool) error {
-	
 
-	hr, _, _ := i.vtbl.PutAreHostObjectsAllowed.Call(
+	hr, _, _ := i.Vtbl.PutAreHostObjectsAllowed.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(boolToInt(allowed)),
+		uintptr(unsafe.Pointer(&allowed)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Settings) GetIsZoomControlEnabled() (bool, error) {
-	
-	var enabled bool
-	hr, _, _ := i.vtbl.GetIsZoomControlEnabled.Call(
+	// Create int32 to hold bool result
+	var _enabled int32
+
+	hr, _, _ := i.Vtbl.GetIsZoomControlEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&enabled)),
+		uintptr(unsafe.Pointer(&_enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, windows.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
+	// Get result and cleanup
+	enabled := _enabled != 0
 	return enabled, nil
 }
 
 func (i *ICoreWebView2Settings) PutIsZoomControlEnabled(enabled bool) error {
-	
 
-	hr, _, _ := i.vtbl.PutIsZoomControlEnabled.Call(
+	hr, _, _ := i.Vtbl.PutIsZoomControlEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(boolToInt(enabled)),
+		uintptr(unsafe.Pointer(&enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
 func (i *ICoreWebView2Settings) GetIsBuiltInErrorPageEnabled() (bool, error) {
-	
-	var enabled bool
-	hr, _, _ := i.vtbl.GetIsBuiltInErrorPageEnabled.Call(
+	// Create int32 to hold bool result
+	var _enabled int32
+
+	hr, _, _ := i.Vtbl.GetIsBuiltInErrorPageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&enabled)),
+		uintptr(unsafe.Pointer(&_enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return false, windows.Errno(hr)
+		return false, syscall.Errno(hr)
 	}
+	// Get result and cleanup
+	enabled := _enabled != 0
 	return enabled, nil
 }
 
 func (i *ICoreWebView2Settings) PutIsBuiltInErrorPageEnabled(enabled bool) error {
-	
 
-	hr, _, _ := i.vtbl.PutIsBuiltInErrorPageEnabled.Call(
+	hr, _, _ := i.Vtbl.PutIsBuiltInErrorPageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(boolToInt(enabled)),
+		uintptr(unsafe.Pointer(&enabled)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }

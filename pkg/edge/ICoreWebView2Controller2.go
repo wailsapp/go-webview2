@@ -3,75 +3,60 @@
 package edge
 
 import (
-	"unsafe"
-
 	"golang.org/x/sys/windows"
+	"syscall"
+	"unsafe"
 )
 
-type _ICoreWebView2Controller2Vtbl struct {
-	_IUnknownVtbl
-	GetIsVisible                      ComProc
-	PutIsVisible                      ComProc
-	GetBounds                         ComProc
-	PutBounds                         ComProc
-	GetZoomFactor                     ComProc
-	PutZoomFactor                     ComProc
-	AddZoomFactorChanged              ComProc
-	RemoveZoomFactorChanged           ComProc
-	SetBoundsAndZoomFactor            ComProc
-	MoveFocus                         ComProc
-	AddMoveFocusRequested             ComProc
-	RemoveMoveFocusRequested          ComProc
-	AddGotFocus                       ComProc
-	RemoveGotFocus                    ComProc
-	AddLostFocus                      ComProc
-	RemoveLostFocus                   ComProc
-	AddAcceleratorKeyPressed          ComProc
-	RemoveAcceleratorKeyPressed       ComProc
-	GetParentWindow                   ComProc
-	PutParentWindow                   ComProc
-	NotifyParentWindowPositionChanged ComProc
-	Close                             ComProc
-	GetCoreWebView2                   ComProc
-	GetDefaultBackgroundColor         ComProc
-	PutDefaultBackgroundColor         ComProc
+type ICoreWebView2Controller2Vtbl struct {
+	IUnknownVtbl
+	GetDefaultBackgroundColor ComProc
+	PutDefaultBackgroundColor ComProc
 }
 
 type ICoreWebView2Controller2 struct {
-	vtbl *_ICoreWebView2Controller2Vtbl
+	Vtbl *ICoreWebView2Controller2Vtbl
 }
 
 func (i *ICoreWebView2Controller2) AddRef() uintptr {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-
-	return ret
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2Controller2) GetDefaultBackgroundColor() (*COREWEBVIEW2_COLOR, error) {
-	
-	var backgroundColor *COREWEBVIEW2_COLOR
-	hr, _, _ := i.vtbl.GetDefaultBackgroundColor.Call(
+func (i *ICoreWebView2) GetICoreWebView2Controller2() *ICoreWebView2Controller2 {
+	var result *ICoreWebView2Controller2
+
+	iidICoreWebView2Controller2 := NewGUID("{c979903e-d4ca-4228-92eb-47ee3fa96eab}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&backgroundColor)),
+		uintptr(unsafe.Pointer(iidICoreWebView2Controller2)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
+}
+
+func (i *ICoreWebView2Controller2) GetDefaultBackgroundColor() (COREWEBVIEW2_COLOR, error) {
+
+	var value COREWEBVIEW2_COLOR
+
+	hr, _, _ := i.Vtbl.GetDefaultBackgroundColor.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, windows.Errno(hr)
+		return COREWEBVIEW2_COLOR{}, syscall.Errno(hr)
 	}
-	return backgroundColor, nil
+	return value, nil
 }
 
-func (i *ICoreWebView2Controller2) PutDefaultBackgroundColor(backgroundColor COREWEBVIEW2_COLOR) error {
-	
+func (i *ICoreWebView2Controller2) PutDefaultBackgroundColor(value COREWEBVIEW2_COLOR) error {
 
-	// Cast to a uint32 as that's what the call is expecting
-	col := *(*uint32)(unsafe.Pointer(&backgroundColor))
-
-	hr, _, _ := i.vtbl.PutDefaultBackgroundColor.Call(
+	hr, _, _ := i.Vtbl.PutDefaultBackgroundColor.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(col),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return windows.Errno(hr)
+		return syscall.Errno(hr)
 	}
 	return nil
 }

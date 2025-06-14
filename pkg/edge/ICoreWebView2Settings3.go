@@ -9,27 +9,7 @@ import (
 )
 
 type ICoreWebView2Settings3Vtbl struct {
-	_IUnknownVtbl
-	GetIsScriptEnabled                  ComProc
-	PutIsScriptEnabled                  ComProc
-	GetIsWebMessageEnabled              ComProc
-	PutIsWebMessageEnabled              ComProc
-	GetAreDefaultScriptDialogsEnabled   ComProc
-	PutAreDefaultScriptDialogsEnabled   ComProc
-	GetIsStatusBarEnabled               ComProc
-	PutIsStatusBarEnabled               ComProc
-	GetAreDevToolsEnabled               ComProc
-	PutAreDevToolsEnabled               ComProc
-	GetAreDefaultContextMenusEnabled    ComProc
-	PutAreDefaultContextMenusEnabled    ComProc
-	GetAreHostObjectsAllowed            ComProc
-	PutAreHostObjectsAllowed            ComProc
-	GetIsZoomControlEnabled             ComProc
-	PutIsZoomControlEnabled             ComProc
-	GetIsBuiltInErrorPageEnabled        ComProc
-	PutIsBuiltInErrorPageEnabled        ComProc
-	GetUserAgent                        ComProc
-	PutUserAgent                        ComProc
+	IUnknownVtbl
 	GetAreBrowserAcceleratorKeysEnabled ComProc
 	PutAreBrowserAcceleratorKeysEnabled ComProc
 }
@@ -43,11 +23,11 @@ func (i *ICoreWebView2Settings3) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebViewSettings) GetICoreWebView2Settings3() *ICoreWebView2Settings3 {
+func (i *ICoreWebView2) GetICoreWebView2Settings3() *ICoreWebView2Settings3 {
 	var result *ICoreWebView2Settings3
 
 	iidICoreWebView2Settings3 := NewGUID("{fdb5ab74-af33-4854-84f0-0a631deb5eba}")
-	_, _, _ = i.vtbl.QueryInterface.Call(
+	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2Settings3)),
 		uintptr(unsafe.Pointer(&result)))
@@ -57,25 +37,25 @@ func (i *ICoreWebViewSettings) GetICoreWebView2Settings3() *ICoreWebView2Setting
 
 func (i *ICoreWebView2Settings3) GetAreBrowserAcceleratorKeysEnabled() (bool, error) {
 	// Create int32 to hold bool result
-	var _areBrowserAcceleratorKeysEnabled int32
+	var _value int32
 
 	hr, _, _ := i.Vtbl.GetAreBrowserAcceleratorKeysEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&_areBrowserAcceleratorKeysEnabled)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return false, syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	areBrowserAcceleratorKeysEnabled := _areBrowserAcceleratorKeysEnabled != 0
-	return areBrowserAcceleratorKeysEnabled, nil
+	value := _value != 0
+	return value, nil
 }
 
-func (i *ICoreWebView2Settings3) PutAreBrowserAcceleratorKeysEnabled(areBrowserAcceleratorKeysEnabled bool) error {
+func (i *ICoreWebView2Settings3) PutAreBrowserAcceleratorKeysEnabled(value bool) error {
 
 	hr, _, _ := i.Vtbl.PutAreBrowserAcceleratorKeysEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&areBrowserAcceleratorKeysEnabled)),
+		uintptr(unsafe.Pointer(&value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

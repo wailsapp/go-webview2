@@ -3,106 +3,114 @@
 package edge
 
 import (
+	"golang.org/x/sys/windows"
 	"syscall"
 	"unsafe"
-
-	"golang.org/x/sys/windows"
 )
 
-type iCoreWebView2_2Vtbl struct {
-	QueryInterface ComProc
-	AddRef         ComProc
-	Release        ComProc
-	// ICoreWebView2 methods
-	GetSettings                            ComProc
-	GetSource                              ComProc
-	Navigate                               ComProc
-	NavigateToString                       ComProc
-	AddNavigationStarting                  ComProc
-	RemoveNavigationStarting               ComProc
-	AddContentLoading                      ComProc
-	RemoveContentLoading                   ComProc
-	AddSourceChanged                       ComProc
-	RemoveSourceChanged                    ComProc
-	AddHistoryChanged                      ComProc
-	RemoveHistoryChanged                   ComProc
-	AddNavigationCompleted                 ComProc
-	RemoveNavigationCompleted              ComProc
-	AddFrameNavigationStarting             ComProc
-	RemoveFrameNavigationStarting          ComProc
-	AddFrameNavigationCompleted            ComProc
-	RemoveFrameNavigationCompleted         ComProc
-	AddScriptDialogOpening                 ComProc
-	RemoveScriptDialogOpening              ComProc
-	AddPermissionRequested                 ComProc
-	RemovePermissionRequested              ComProc
-	AddProcessFailed                       ComProc
-	RemoveProcessFailed                    ComProc
-	AddScriptToExecuteOnDocumentCreated    ComProc
-	RemoveScriptToExecuteOnDocumentCreated ComProc
-	ExecuteScript                          ComProc
-	CapturePreview                         ComProc
-	Reload                                 ComProc
-	PostWebMessageAsJSON                   ComProc
-	PostWebMessageAsString                 ComProc
-	AddWebMessageReceived                  ComProc
-	RemoveWebMessageReceived               ComProc
-	CallDevToolsProtocolMethod             ComProc
-	GetBrowserProcessID                    ComProc
-	GetCanGoBack                           ComProc
-	GetCanGoForward                        ComProc
-	GoBack                                 ComProc
-	GoForward                              ComProc
-	GetDevToolsProtocolEventReceiver       ComProc
-	Stop                                   ComProc
-	AddNewWindowRequested                  ComProc
-	RemoveNewWindowRequested               ComProc
-	AddDocumentTitleChanged                ComProc
-	RemoveDocumentTitleChanged             ComProc
-	GetDocumentTitle                       ComProc
-	AddHostObjectToScript                  ComProc
-	RemoveHostObjectFromScript             ComProc
-	OpenDevToolsWindow                     ComProc
-	AddContainsFullScreenElementChanged    ComProc
-	RemoveContainsFullScreenElementChanged ComProc
-	GetContainsFullScreenElement           ComProc
-	AddWebResourceRequested                ComProc
-	RemoveWebResourceRequested             ComProc
-	AddWebResourceRequestedFilter          ComProc
-	RemoveWebResourceRequestedFilter       ComProc
-	AddWindowCloseRequested                ComProc
-	RemoveWindowCloseRequested             ComProc
-	// ICoreWebView2_2 methods
+type ICoreWebView2_2Vtbl struct {
+	IUnknownVtbl
 	AddWebResourceResponseReceived    ComProc
 	RemoveWebResourceResponseReceived ComProc
 	NavigateWithWebResourceRequest    ComProc
-	AddDomContentLoaded               ComProc
-	RemoveDomContentLoaded            ComProc
+	AddDOMContentLoaded               ComProc
+	RemoveDOMContentLoaded            ComProc
 	GetCookieManager                  ComProc
 	GetEnvironment                    ComProc
 }
 
 type ICoreWebView2_2 struct {
-	vtbl *iCoreWebView2_2Vtbl
+	Vtbl *ICoreWebView2_2Vtbl
 }
 
-// AddRef increments the reference count of the ICoreWebView2_2 interface
-func (i *ICoreWebView2_2) AddRef() uint32 {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-
-	return uint32(ret)
+func (i *ICoreWebView2_2) AddRef() uintptr {
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-// Release decrements the reference count of the ICoreWebView2_2 interface
-func (i *ICoreWebView2_2) Release() uint32 {
-	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+func (i *ICoreWebView2) GetICoreWebView2_2() *ICoreWebView2_2 {
+	var result *ICoreWebView2_2
 
-	return uint32(ret)
+	iidICoreWebView2_2 := NewGUID("{9E8F0CF8-E670-4B5E-B2BC-73E061E3184C}")
+	_, _, _ = i.Vtbl.QueryInterface.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(iidICoreWebView2_2)),
+		uintptr(unsafe.Pointer(&result)))
+
+	return result
+}
+
+func (i *ICoreWebView2_2) AddWebResourceResponseReceived(eventHandler *ICoreWebView2WebResourceResponseReceivedEventHandler) (EventRegistrationToken, error) {
+
+	var token EventRegistrationToken
+
+	hr, _, _ := i.Vtbl.AddWebResourceResponseReceived.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(eventHandler)),
+		uintptr(unsafe.Pointer(&token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return EventRegistrationToken{}, syscall.Errno(hr)
+	}
+	return token, nil
+}
+
+func (i *ICoreWebView2_2) RemoveWebResourceResponseReceived(token EventRegistrationToken) error {
+
+	hr, _, _ := i.Vtbl.RemoveWebResourceResponseReceived.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
+	}
+	return nil
+}
+
+func (i *ICoreWebView2_2) NavigateWithWebResourceRequest(request *ICoreWebView2WebResourceRequest) error {
+
+	hr, _, _ := i.Vtbl.NavigateWithWebResourceRequest.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(request)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
+	}
+	return nil
+}
+
+func (i *ICoreWebView2_2) AddDOMContentLoaded(eventHandler *ICoreWebView2DOMContentLoadedEventHandler) (EventRegistrationToken, error) {
+
+	var token EventRegistrationToken
+
+	hr, _, _ := i.Vtbl.AddDOMContentLoaded.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(eventHandler)),
+		uintptr(unsafe.Pointer(&token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return EventRegistrationToken{}, syscall.Errno(hr)
+	}
+	return token, nil
+}
+
+func (i *ICoreWebView2_2) RemoveDOMContentLoaded(token EventRegistrationToken) error {
+
+	hr, _, _ := i.Vtbl.RemoveDOMContentLoaded.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&token)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
+	}
+	return nil
 }
 
 func (i *ICoreWebView2_2) GetCookieManager() (*ICoreWebView2CookieManager, error) {
+
 	var cookieManager *ICoreWebView2CookieManager
-	hr, _, _ := i.vtbl.GetCookieManager.Call(
+
+	hr, _, _ := i.Vtbl.GetCookieManager.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&cookieManager)),
 	)
@@ -110,4 +118,18 @@ func (i *ICoreWebView2_2) GetCookieManager() (*ICoreWebView2CookieManager, error
 		return nil, syscall.Errno(hr)
 	}
 	return cookieManager, nil
+}
+
+func (i *ICoreWebView2_2) GetEnvironment() (*ICoreWebView2Environment, error) {
+
+	var environment *ICoreWebView2Environment
+
+	hr, _, _ := i.Vtbl.GetEnvironment.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&environment)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	}
+	return environment, nil
 }

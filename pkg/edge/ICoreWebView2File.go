@@ -3,44 +3,38 @@
 package edge
 
 import (
-	"unsafe"
-
 	"golang.org/x/sys/windows"
+	"syscall"
+	"unsafe"
 )
 
-type _ICoreWebView2FileVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2FileVtbl struct {
+	IUnknownVtbl
 	GetPath ComProc
 }
 
 type ICoreWebView2File struct {
-	vtbl *_ICoreWebView2FileVtbl
+	Vtbl *ICoreWebView2FileVtbl
 }
 
-func (i *ICoreWebView2File) AddRef() uint32 {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-
-	return uint32(ret)
-}
-
-func (i *ICoreWebView2File) Release() uint32 {
-	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
-
-	return uint32(ret)
+func (i *ICoreWebView2File) AddRef() uintptr {
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
 func (i *ICoreWebView2File) GetPath() (string, error) {
-	
-	var _path *uint16
-	hr, _, _ := i.vtbl.GetPath.Call(
+	// Create *uint16 to hold result
+	var _value *uint16
+
+	hr, _, _ := i.Vtbl.GetPath.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&_path)),
+		uintptr(unsafe.Pointer(_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return "", windows.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
-
-	path := windows.UTF16PtrToString(_path)
-	windows.CoTaskMemFree(unsafe.Pointer(_path))
-	return path, nil
+	// Get result and cleanup
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return value, nil
 }

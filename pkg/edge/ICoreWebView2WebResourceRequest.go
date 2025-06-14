@@ -3,13 +3,13 @@
 package edge
 
 import (
-	"unsafe"
-
 	"golang.org/x/sys/windows"
+	"syscall"
+	"unsafe"
 )
 
-type _ICoreWebView2WebResourceRequestVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2WebResourceRequestVtbl struct {
+	IUnknownVtbl
 	GetUri     ComProc
 	PutUri     ComProc
 	GetMethod  ComProc
@@ -20,77 +20,120 @@ type _ICoreWebView2WebResourceRequestVtbl struct {
 }
 
 type ICoreWebView2WebResourceRequest struct {
-	vtbl *_ICoreWebView2WebResourceRequestVtbl
+	Vtbl *ICoreWebView2WebResourceRequestVtbl
 }
 
 func (i *ICoreWebView2WebResourceRequest) AddRef() uintptr {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-
-	return ret
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *ICoreWebView2WebResourceRequest) Release() uintptr {
-	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
+func (i *ICoreWebView2WebResourceRequest) GetUri() (string, error) {
+	// Create *uint16 to hold result
+	var _uri *uint16
 
-	return ret
+	hr, _, _ := i.Vtbl.GetUri.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(_uri)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", syscall.Errno(hr)
+	}
+	// Get result and cleanup
+	uri := UTF16PtrToString(_uri)
+	CoTaskMemFree(unsafe.Pointer(_uri))
+	return uri, nil
+}
+
+func (i *ICoreWebView2WebResourceRequest) PutUri(uri string) error {
+
+	// Convert string 'uri' to *uint16
+	_uri, err := UTF16PtrFromString(uri)
+	if err != nil {
+		return err
+	}
+
+	hr, _, _ := i.Vtbl.PutUri.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(_uri)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
+	}
+	return nil
 }
 
 func (i *ICoreWebView2WebResourceRequest) GetMethod() (string, error) {
 	// Create *uint16 to hold result
 	var _method *uint16
-	hr, _, _ := i.vtbl.GetMethod.Call(
+
+	hr, _, _ := i.Vtbl.GetMethod.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&_method)),
+		uintptr(unsafe.Pointer(_method)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return "", windows.Errno(hr)
+		return "", syscall.Errno(hr)
 	}
 	// Get result and cleanup
-	uri := windows.UTF16PtrToString(_method)
-	windows.CoTaskMemFree(unsafe.Pointer(_method))
-	return uri, nil
+	method := UTF16PtrToString(_method)
+	CoTaskMemFree(unsafe.Pointer(_method))
+	return method, nil
 }
 
-func (i *ICoreWebView2WebResourceRequest) GetUri() (string, error) {
-	
-	// Create *uint16 to hold result
-	var _uri *uint16
-	hr, _, _ := i.vtbl.GetUri.Call(
-		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&_uri)),
-	)
-	if windows.Handle(hr) != windows.S_OK {
-		return "", windows.Errno(hr)
-	} // Get result and cleanup
-	uri := windows.UTF16PtrToString(_uri)
-	windows.CoTaskMemFree(unsafe.Pointer(_uri))
-	return uri, nil
-}
+func (i *ICoreWebView2WebResourceRequest) PutMethod(method string) error {
 
-// GetContent returns the body of the request. Returns nil if there's no body. Make sure to call
-// Release on the returned IStream after finished using it.
-func (i *ICoreWebView2WebResourceRequest) GetContent() (*IStream, error) {
-	var stream *IStream
-	hr, _, _ := i.vtbl.GetContent.Call(
-		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&stream)),
-	)
-	if windows.Handle(hr) != windows.S_OK {
-		return nil, windows.Errno(hr)
+	// Convert string 'method' to *uint16
+	_method, err := UTF16PtrFromString(method)
+	if err != nil {
+		return err
 	}
-	return stream, nil
+
+	hr, _, _ := i.Vtbl.PutMethod.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(_method)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
+	}
+	return nil
 }
 
-// GetHeaders returns the mutable HTTP request headers. Make sure to call
-// Release on the returned Object after finished using it.
+func (i *ICoreWebView2WebResourceRequest) GetContent() (*IStream, error) {
+
+	var content *IStream
+
+	hr, _, _ := i.Vtbl.GetContent.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&content)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	}
+	return content, nil
+}
+
+func (i *ICoreWebView2WebResourceRequest) PutContent(content *IStream) error {
+
+	hr, _, _ := i.Vtbl.PutContent.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(content)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
+	}
+	return nil
+}
+
 func (i *ICoreWebView2WebResourceRequest) GetHeaders() (*ICoreWebView2HttpRequestHeaders, error) {
+
 	var headers *ICoreWebView2HttpRequestHeaders
-	hr, _, _ := i.vtbl.GetHeaders.Call(
+
+	hr, _, _ := i.Vtbl.GetHeaders.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&headers)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
-		return nil, windows.Errno(hr)
+		return nil, syscall.Errno(hr)
 	}
 	return headers, nil
 }

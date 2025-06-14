@@ -1,15 +1,15 @@
+//go:build windows
+
 package edge
 
 import (
-	"unsafe"
-	"math"
-
 	"golang.org/x/sys/windows"
+	"syscall"
+	"unsafe"
 )
 
-// ICoreWebView2Cookie vtable
-type iCoreWebView2CookieVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2CookieVtbl struct {
+	IUnknownVtbl
 	GetName       ComProc
 	GetValue      ComProc
 	PutValue      ComProc
@@ -23,212 +23,224 @@ type iCoreWebView2CookieVtbl struct {
 	PutSameSite   ComProc
 	GetIsSecure   ComProc
 	PutIsSecure   ComProc
+	GetIsSession  ComProc
 }
 
-// ICoreWebView2Cookie represents a cookie
 type ICoreWebView2Cookie struct {
-	vtbl *iCoreWebView2CookieVtbl
+	Vtbl *ICoreWebView2CookieVtbl
 }
 
-// Addref increments refernce count of the ICoreWebView2Cookie interface
 func (i *ICoreWebView2Cookie) AddRef() uintptr {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-
-	return ret
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-// Release decrements reference count of the ICoreWebView2Cookie interface
-func (i *ICoreWebView2Cookie) Release() uintptr {
-	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
-
-	return ret
-}
-
-// GetName gets the cookie name
 func (i *ICoreWebView2Cookie) GetName() (string, error) {
-	var name *uint16
-	hr, _, _ := i.vtbl.GetName.Call(
+	// Create *uint16 to hold result
+	var _name *uint16
+
+	hr, _, _ := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&name)),
+		uintptr(unsafe.Pointer(_name)),
 	)
-	if hr != 0 {
-		return "", windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", syscall.Errno(hr)
 	}
-	return windows.UTF16PtrToString(name), nil
+	// Get result and cleanup
+	name := UTF16PtrToString(_name)
+	CoTaskMemFree(unsafe.Pointer(_name))
+	return name, nil
 }
 
-// GetValue gets the cookie value
 func (i *ICoreWebView2Cookie) GetValue() (string, error) {
-	var value *uint16
-	hr, _, _ := i.vtbl.GetValue.Call(
+	// Create *uint16 to hold result
+	var _value *uint16
+
+	hr, _, _ := i.Vtbl.GetValue.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		uintptr(unsafe.Pointer(_value)),
 	)
-	if hr != 0 {
-		return "", windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", syscall.Errno(hr)
 	}
-	return windows.UTF16PtrToString(value), nil
+	// Get result and cleanup
+	value := UTF16PtrToString(_value)
+	CoTaskMemFree(unsafe.Pointer(_value))
+	return value, nil
 }
 
-// PutValue sets the cookie value
 func (i *ICoreWebView2Cookie) PutValue(value string) error {
-	ptr, err := windows.UTF16PtrFromString(value)
+
+	// Convert string 'value' to *uint16
+	_value, err := UTF16PtrFromString(value)
 	if err != nil {
 		return err
 	}
-	hr, _, _ := i.vtbl.PutValue.Call(
+
+	hr, _, _ := i.Vtbl.PutValue.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(ptr)),
+		uintptr(unsafe.Pointer(_value)),
 	)
-	if hr != 0 {
-		return windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
-// GetDomain gets the cookie domain
 func (i *ICoreWebView2Cookie) GetDomain() (string, error) {
-	var domain *uint16
-	hr, _, _ := i.vtbl.GetDomain.Call(
+	// Create *uint16 to hold result
+	var _domain *uint16
+
+	hr, _, _ := i.Vtbl.GetDomain.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&domain)),
+		uintptr(unsafe.Pointer(_domain)),
 	)
-	if hr != 0 {
-		return "", windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", syscall.Errno(hr)
 	}
-	return windows.UTF16PtrToString(domain), nil
+	// Get result and cleanup
+	domain := UTF16PtrToString(_domain)
+	CoTaskMemFree(unsafe.Pointer(_domain))
+	return domain, nil
 }
 
-// GetPath gets the cookie path
 func (i *ICoreWebView2Cookie) GetPath() (string, error) {
-	var path *uint16
-	hr, _, _ := i.vtbl.GetPath.Call(
+	// Create *uint16 to hold result
+	var _path *uint16
+
+	hr, _, _ := i.Vtbl.GetPath.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&path)),
+		uintptr(unsafe.Pointer(_path)),
 	)
-	if hr != 0 {
-		return "", windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", syscall.Errno(hr)
 	}
-	return windows.UTF16PtrToString(path), nil
+	// Get result and cleanup
+	path := UTF16PtrToString(_path)
+	CoTaskMemFree(unsafe.Pointer(_path))
+	return path, nil
 }
 
-// GetExpires gets the cookie expiration time
 func (i *ICoreWebView2Cookie) GetExpires() (float64, error) {
-	var expiresUint64 uint64
-	hr, _, _ := i.vtbl.GetExpires.Call(
+
+	var expires float64
+
+	hr, _, _ := i.Vtbl.GetExpires.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&expiresUint64)),
+		uintptr(unsafe.Pointer(&expires)),
 	)
-	if hr != 0 {
-		return 0.0, windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return 0.0, syscall.Errno(hr)
 	}
-	return math.Float64frombits(expiresUint64), nil
+	return expires, nil
 }
 
-// PutExpires sets the cookie expiration time
 func (i *ICoreWebView2Cookie) PutExpires(expires float64) error {
-	hr, _, _ := i.vtbl.PutExpires.Call(
+
+	hr, _, _ := i.Vtbl.PutExpires.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(math.Float64bits(expires)),
+		uintptr(unsafe.Pointer(&expires)),
 	)
-	if hr != 0 {
-		return windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
-// GetIsHttpOnly gets whether the cookie is HTTP-only
 func (i *ICoreWebView2Cookie) GetIsHttpOnly() (bool, error) {
-	var isHttpOnly int32
-	hr, _, _ := i.vtbl.GetIsHttpOnly.Call(
+	// Create int32 to hold bool result
+	var _isHttpOnly int32
+
+	hr, _, _ := i.Vtbl.GetIsHttpOnly.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&_isHttpOnly)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return false, syscall.Errno(hr)
+	}
+	// Get result and cleanup
+	isHttpOnly := _isHttpOnly != 0
+	return isHttpOnly, nil
+}
+
+func (i *ICoreWebView2Cookie) PutIsHttpOnly(isHttpOnly bool) error {
+
+	hr, _, _ := i.Vtbl.PutIsHttpOnly.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&isHttpOnly)),
 	)
-	if hr != 0 {
-		return false, windows.Errno(hr)
-	}
-	return isHttpOnly != 0, nil
-}
-
-// PutIsHttpOnly sets whether the cookie is HTTP-only
-func (i *ICoreWebView2Cookie) PutIsHttpOnly(isHttpOnly bool) error {
-	value := int32(0)
-	if isHttpOnly {
-		value = 1
-	}
-	hr, _, _ := i.vtbl.PutIsHttpOnly.Call(
-		uintptr(unsafe.Pointer(i)),
-		uintptr(value),
-	)
-	if hr != 0 {
-		return windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
-// GetSameSite gets the cookie's SameSite attribute
-func (i *ICoreWebView2Cookie) GetSameSite() (int32, error) {
-	var sameSite int32
-	hr, _, _ := i.vtbl.GetSameSite.Call(
+func (i *ICoreWebView2Cookie) GetSameSite() (COREWEBVIEW2_COOKIE_SAME_SITE_KIND, error) {
+
+	var sameSite COREWEBVIEW2_COOKIE_SAME_SITE_KIND
+
+	hr, _, _ := i.Vtbl.GetSameSite.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&sameSite)),
 	)
-	if hr != 0 {
-		return 0, windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return 0, syscall.Errno(hr)
 	}
 	return sameSite, nil
 }
 
-// PutSameSite sets the cookie's SameSite attribute
-func (i *ICoreWebView2Cookie) PutSameSite(sameSite int32) error {
-	hr, _, _ := i.vtbl.PutSameSite.Call(
+func (i *ICoreWebView2Cookie) PutSameSite(sameSite COREWEBVIEW2_COOKIE_SAME_SITE_KIND) error {
+
+	hr, _, _ := i.Vtbl.PutSameSite.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(sameSite),
 	)
-	if hr != 0 {
-		return windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
-// GetIsSecure gets whether the cookie is secure
 func (i *ICoreWebView2Cookie) GetIsSecure() (bool, error) {
-	var isSecure int32
-	hr, _, _ := i.vtbl.GetIsSecure.Call(
+	// Create int32 to hold bool result
+	var _isSecure int32
+
+	hr, _, _ := i.Vtbl.GetIsSecure.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&_isSecure)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return false, syscall.Errno(hr)
+	}
+	// Get result and cleanup
+	isSecure := _isSecure != 0
+	return isSecure, nil
+}
+
+func (i *ICoreWebView2Cookie) PutIsSecure(isSecure bool) error {
+
+	hr, _, _ := i.Vtbl.PutIsSecure.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&isSecure)),
 	)
-	if hr != 0 {
-		return false, windows.Errno(hr)
-	}
-	return isSecure != 0, nil
-}
-
-// PutIsSecure sets whether the cookie is secure
-func (i *ICoreWebView2Cookie) PutIsSecure(isSecure bool) error {
-	value := int32(0)
-	if isSecure {
-		value = 1
-	}
-	hr, _, _ := i.vtbl.PutIsSecure.Call(
-		uintptr(unsafe.Pointer(i)),
-		uintptr(value),
-	)
-	if hr != 0 {
-		return windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return syscall.Errno(hr)
 	}
 	return nil
 }
 
-// QueryInterface queries for a specific interface
-func (i *ICoreWebView2Cookie) QueryInterface(riid *windows.GUID, ppvObject *unsafe.Pointer) error {
-	hr, _, _ := i.vtbl.QueryInterface.Call(
+func (i *ICoreWebView2Cookie) GetIsSession() (bool, error) {
+	// Create int32 to hold bool result
+	var _isSession int32
+
+	hr, _, _ := i.Vtbl.GetIsSession.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(riid)),
-		uintptr(unsafe.Pointer(ppvObject)),
+		uintptr(unsafe.Pointer(&_isSession)),
 	)
-	if hr != 0 {
-		return windows.Errno(hr)
+	if windows.Handle(hr) != windows.S_OK {
+		return false, syscall.Errno(hr)
 	}
-	return nil
+	// Get result and cleanup
+	isSession := _isSession != 0
+	return isSession, nil
 }

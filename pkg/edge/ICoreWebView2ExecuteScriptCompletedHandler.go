@@ -1,64 +1,59 @@
+//go:build windows
+
 package edge
 
 import (
 	"unsafe"
 )
 
-type _ICoreWebView2ExecuteScriptCompletedHandlerVtbl struct {
-	_IUnknownVtbl
+type ICoreWebView2ExecuteScriptCompletedHandlerVtbl struct {
+	IUnknownVtbl
 	Invoke ComProc
 }
 
-type iCoreWebView2ExecuteScriptCompletedHandler struct {
-	vtbl *_ICoreWebView2ExecuteScriptCompletedHandlerVtbl
-	impl _ICoreWebView2ExecuteScriptCompletedHandlerImpl
+type ICoreWebView2ExecuteScriptCompletedHandler struct {
+	Vtbl *ICoreWebView2ExecuteScriptCompletedHandlerVtbl
+	impl ICoreWebView2ExecuteScriptCompletedHandlerImpl
 }
 
-func (i *iCoreWebView2ExecuteScriptCompletedHandler) AddRef() uint32 {
-	ret, _, _ := i.vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
-
-	return uint32(ret)
+func (i *ICoreWebView2ExecuteScriptCompletedHandler) AddRef() uintptr {
+	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
+	return refCounter
 }
 
-func (i *iCoreWebView2ExecuteScriptCompletedHandler) Release() uint32 {
-	ret, _, _ := i.vtbl.Release.Call(uintptr(unsafe.Pointer(i)))
-
-	return uint32(ret)
-}
-
-func _ICoreWebView2ExecuteScriptCompletedHandlerIUnknownQueryInterface(this *iCoreWebView2ExecuteScriptCompletedHandler, refiid, object uintptr) uintptr {
+func ICoreWebView2ExecuteScriptCompletedHandlerIUnknownQueryInterface(this *ICoreWebView2ExecuteScriptCompletedHandler, refiid, object uintptr) uintptr {
 	return this.impl.QueryInterface(refiid, object)
 }
 
-func _ICoreWebView2ExecuteScriptCompletedHandlerIUnknownAddRef(this *iCoreWebView2ExecuteScriptCompletedHandler) uintptr {
+func ICoreWebView2ExecuteScriptCompletedHandlerIUnknownAddRef(this *ICoreWebView2ExecuteScriptCompletedHandler) uintptr {
 	return this.impl.AddRef()
 }
 
-func _ICoreWebView2ExecuteScriptCompletedHandlerIUnknownRelease(this *iCoreWebView2ExecuteScriptCompletedHandler) uintptr {
+func ICoreWebView2ExecuteScriptCompletedHandlerIUnknownRelease(this *ICoreWebView2ExecuteScriptCompletedHandler) uintptr {
 	return this.impl.Release()
 }
 
-func iCoreWebView2ExecuteScriptCompletedHandlerInvoke(this *iCoreWebView2ExecuteScriptCompletedHandler, errorCode uintptr, executedScript *uint16) uintptr {
-	return this.impl.ExecuteScriptCompleted(errorCode, executedScript)
+func ICoreWebView2ExecuteScriptCompletedHandlerInvoke(this *ICoreWebView2ExecuteScriptCompletedHandler, errorCode uintptr, result string) uintptr {
+	return this.impl.ExecuteScriptCompleted(errorCode, result)
 }
 
-type _ICoreWebView2ExecuteScriptCompletedHandlerImpl interface {
-	_IUnknownImpl
-	ExecuteScriptCompleted(errorCode uintptr, executedScript *uint16) uintptr
+type ICoreWebView2ExecuteScriptCompletedHandlerImpl interface {
+	IUnknownImpl
+	ExecuteScriptCompleted(errorCode uintptr, result string) uintptr
 }
 
-var _ICoreWebView2ExecuteScriptCompletedHandlerFn = _ICoreWebView2ExecuteScriptCompletedHandlerVtbl{
-	_IUnknownVtbl{
-		NewComProc(_ICoreWebView2ExecuteScriptCompletedHandlerIUnknownQueryInterface),
-		NewComProc(_ICoreWebView2ExecuteScriptCompletedHandlerIUnknownAddRef),
-		NewComProc(_ICoreWebView2ExecuteScriptCompletedHandlerIUnknownRelease),
+var ICoreWebView2ExecuteScriptCompletedHandlerFn = ICoreWebView2ExecuteScriptCompletedHandlerVtbl{
+	IUnknownVtbl{
+		NewComProc(ICoreWebView2ExecuteScriptCompletedHandlerIUnknownQueryInterface),
+		NewComProc(ICoreWebView2ExecuteScriptCompletedHandlerIUnknownAddRef),
+		NewComProc(ICoreWebView2ExecuteScriptCompletedHandlerIUnknownRelease),
 	},
-	NewComProc(iCoreWebView2ExecuteScriptCompletedHandlerInvoke),
+	NewComProc(ICoreWebView2ExecuteScriptCompletedHandlerInvoke),
 }
 
-func newICoreWebView2ExecuteScriptCompletedHandler(impl _ICoreWebView2ExecuteScriptCompletedHandlerImpl) *iCoreWebView2ExecuteScriptCompletedHandler {
-	return &iCoreWebView2ExecuteScriptCompletedHandler{
-		vtbl: &_ICoreWebView2ExecuteScriptCompletedHandlerFn,
+func NewICoreWebView2ExecuteScriptCompletedHandler(impl ICoreWebView2ExecuteScriptCompletedHandlerImpl) *ICoreWebView2ExecuteScriptCompletedHandler {
+	return &ICoreWebView2ExecuteScriptCompletedHandler{
+		Vtbl: &ICoreWebView2ExecuteScriptCompletedHandlerFn,
 		impl: impl,
 	}
 }
