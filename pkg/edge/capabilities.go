@@ -141,6 +141,7 @@ const (
 	NewWindow87                = Capability("87.0.664.75") // New window creation (v87)
 	DocumentTitleChanged87     = Capability("87.0.664.75") // Document title changes (v87)
 	IsSuspended                = Capability("87.0.664.75") // Suspension state
+	PinchZoom                  = Capability("87.0.664.75") // Pinch zoom control
 )
 
 // WebView2 Runtime Version 86.0.622.58 (Released: January 2021)

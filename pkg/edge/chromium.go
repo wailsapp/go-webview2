@@ -76,6 +76,7 @@ type Chromium struct {
 	DataPath              string
 	BrowserPath           string
 	AdditionalBrowserArgs []string
+	PinchZoomEnabled      *bool
 
 	// permissions
 	permissions      map[CoreWebView2PermissionKind]CoreWebView2PermissionState
@@ -386,6 +387,14 @@ func (e *Chromium) CreateCoreWebView2ControllerCompleted(res uintptr, controller
 		e.errorCallback(err)
 	}
 
+	// Apply pinch zoom setting if configured
+	if e.PinchZoomEnabled != nil {
+		err = e.PutIsPinchZoomEnabled(*e.PinchZoomEnabled)
+		if err != nil {
+			e.errorCallback(err)
+		}
+	}
+
 	atomic.StoreUintptr(&e.inited, 1)
 
 	return 0
@@ -656,6 +665,38 @@ func (e *Chromium) PutIsSwipeNavigationEnabled(enabled bool) error {
 	}
 	webview2Settings6 := webview2Settings.GetICoreWebView2Settings6()
 	err = webview2Settings6.PutIsSwipeNavigationEnabled(enabled)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (e *Chromium) GetIsPinchZoomEnabled() (bool, error) {
+	if !HasCapability(e.webview2RuntimeVersion, PinchZoom) {
+		return false, UnsupportedCapabilityError
+	}
+	webview2Settings, err := e.webview.GetSettings()
+	if err != nil {
+		return false, err
+	}
+	webview2Settings5 := webview2Settings.GetICoreWebView2Settings5()
+	result, err := webview2Settings5.GetIsPinchZoomEnabled()
+	if err != nil {
+		return false, err
+	}
+	return result, nil
+}
+
+func (e *Chromium) PutIsPinchZoomEnabled(enabled bool) error {
+	if !HasCapability(e.webview2RuntimeVersion, PinchZoom) {
+		return UnsupportedCapabilityError
+	}
+	webview2Settings, err := e.webview.GetSettings()
+	if err != nil {
+		return err
+	}
+	webview2Settings5 := webview2Settings.GetICoreWebView2Settings5()
+	err = webview2Settings5.PutIsPinchZoomEnabled(enabled)
 	if err != nil {
 		return err
 	}
