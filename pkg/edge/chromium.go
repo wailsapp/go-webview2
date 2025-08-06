@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -405,18 +406,22 @@ func (e *Chromium) MessageReceived(sender *ICoreWebView2, args *ICoreWebView2Web
 	}
 
 	if HasCapability(e.webview2RuntimeVersion, GetAdditionalObjects) {
+		slog.Info("has capability to get additional objects")
 		obj, err := args.GetAdditionalObjects()
 		if err != nil {
 			e.errorCallback(err)
 		}
 
 		if obj != nil && e.MessageWithAdditionalObjectsCallback != nil {
+			slog.Info("object is not nil")
 			defer obj.Release()
 			e.MessageWithAdditionalObjectsCallback(message, sender, args)
 		} else if e.MessageCallback != nil {
+			slog.Info("object is nil")
 			e.MessageCallback(message)
 		}
 	} else if e.MessageCallback != nil {
+		slog.Info("no capability to get additional objects")
 		e.MessageCallback(message)
 	}
 
