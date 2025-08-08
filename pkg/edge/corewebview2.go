@@ -323,6 +323,20 @@ func (i *ICoreWebView2) GetSettings() (*ICoreWebViewSettings, error) {
 	return settings, nil
 }
 
+func (i *ICoreWebView2) GetSource() (string, error) {
+	var _source *uint16
+	hr, _, _ := i.vtbl.GetSource.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&_source)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", windows.Errno(hr)
+	}
+	source := windows.UTF16PtrToString(_source)
+	windows.CoTaskMemFree(unsafe.Pointer(_source))
+	return source, nil
+}
+
 func (i *ICoreWebView2) GetContainsFullScreenElement() (bool, error) {
 	var result bool
 	hr, _, _ := i.vtbl.GetContainsFullScreenElement.Call(
