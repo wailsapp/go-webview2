@@ -33,13 +33,13 @@ func ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerIUnknownRelease(this
 	return this.impl.Release()
 }
 
-func ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerInvoke(this *ICoreWebView2CallDevToolsProtocolMethodCompletedHandler, errorCode uintptr, result string) uintptr {
+func ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerInvoke(this *ICoreWebView2CallDevToolsProtocolMethodCompletedHandler, errorCode uintptr, result *uint16) uintptr {
 	return this.impl.CallDevToolsProtocolMethodCompleted(errorCode, result)
 }
 
 type ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerImpl interface {
 	IUnknownImpl
-	CallDevToolsProtocolMethodCompleted(errorCode uintptr, result string) uintptr
+	CallDevToolsProtocolMethodCompleted(errorCode uintptr, result *uint16) uintptr
 }
 
 var ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerFn = ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerVtbl{

@@ -33,13 +33,13 @@ func ICoreWebView2ExecuteScriptCompletedHandlerIUnknownRelease(this *ICoreWebVie
 	return this.impl.Release()
 }
 
-func ICoreWebView2ExecuteScriptCompletedHandlerInvoke(this *ICoreWebView2ExecuteScriptCompletedHandler, errorCode uintptr, result string) uintptr {
+func ICoreWebView2ExecuteScriptCompletedHandlerInvoke(this *ICoreWebView2ExecuteScriptCompletedHandler, errorCode uintptr, result *uint16) uintptr {
 	return this.impl.ExecuteScriptCompleted(errorCode, result)
 }
 
 type ICoreWebView2ExecuteScriptCompletedHandlerImpl interface {
 	IUnknownImpl
-	ExecuteScriptCompleted(errorCode uintptr, result string) uintptr
+	ExecuteScriptCompleted(errorCode uintptr, result *uint16) uintptr
 }
 
 var ICoreWebView2ExecuteScriptCompletedHandlerFn = ICoreWebView2ExecuteScriptCompletedHandlerVtbl{
