@@ -4,6 +4,7 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"math"
 	"syscall"
 	"unsafe"
 )
@@ -44,6 +45,19 @@ func (i *ICoreWebView2Controller) AddRef() uintptr {
 	return refCounter
 }
 
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2Controller) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
 func (i *ICoreWebView2Controller) GetIsVisible() (bool, error) {
 	// Create int32 to hold bool result
 	var _isVisible int32
@@ -64,7 +78,7 @@ func (i *ICoreWebView2Controller) PutIsVisible(isVisible bool) error {
 
 	hr, _, _ := i.Vtbl.PutIsVisible.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isVisible)),
+		boolToUintptr(isVisible),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -116,7 +130,7 @@ func (i *ICoreWebView2Controller) PutZoomFactor(zoomFactor float64) error {
 
 	hr, _, _ := i.Vtbl.PutZoomFactor.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&zoomFactor)),
+		uintptr(math.Float64bits(zoomFactor)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -143,7 +157,7 @@ func (i *ICoreWebView2Controller) RemoveZoomFactorChanged(token EventRegistratio
 
 	hr, _, _ := i.Vtbl.RemoveZoomFactorChanged.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -156,7 +170,7 @@ func (i *ICoreWebView2Controller) SetBoundsAndZoomFactor(bounds RECT, zoomFactor
 	hr, _, _ := i.Vtbl.SetBoundsAndZoomFactor.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&bounds)),
-		uintptr(unsafe.Pointer(&zoomFactor)),
+		uintptr(math.Float64bits(zoomFactor)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -195,7 +209,7 @@ func (i *ICoreWebView2Controller) RemoveMoveFocusRequested(token EventRegistrati
 
 	hr, _, _ := i.Vtbl.RemoveMoveFocusRequested.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -222,7 +236,7 @@ func (i *ICoreWebView2Controller) RemoveGotFocus(token EventRegistrationToken) e
 
 	hr, _, _ := i.Vtbl.RemoveGotFocus.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -249,7 +263,7 @@ func (i *ICoreWebView2Controller) RemoveLostFocus(token EventRegistrationToken) 
 
 	hr, _, _ := i.Vtbl.RemoveLostFocus.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -276,7 +290,7 @@ func (i *ICoreWebView2Controller) RemoveAcceleratorKeyPressed(token EventRegistr
 
 	hr, _, _ := i.Vtbl.RemoveAcceleratorKeyPressed.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -302,7 +316,7 @@ func (i *ICoreWebView2Controller) PutParentWindow(parentWindow HWND) error {
 
 	hr, _, _ := i.Vtbl.PutParentWindow.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&parentWindow)),
+		uintptr(parentWindow),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

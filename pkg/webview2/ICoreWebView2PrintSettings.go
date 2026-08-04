@@ -4,6 +4,7 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"math"
 	"syscall"
 	"unsafe"
 )
@@ -45,6 +46,19 @@ type ICoreWebView2PrintSettings struct {
 func (i *ICoreWebView2PrintSettings) AddRef() uintptr {
 	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
 	return refCounter
+}
+
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2PrintSettings) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
 }
 
 func (i *ICoreWebView2PrintSettings) GetOrientation() (COREWEBVIEW2_PRINT_ORIENTATION, error) {
@@ -91,7 +105,7 @@ func (i *ICoreWebView2PrintSettings) PutScaleFactor(scaleFactor float64) error {
 
 	hr, _, _ := i.Vtbl.PutScaleFactor.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&scaleFactor)),
+		uintptr(math.Float64bits(scaleFactor)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -117,7 +131,7 @@ func (i *ICoreWebView2PrintSettings) PutPageWidth(pageWidth float64) error {
 
 	hr, _, _ := i.Vtbl.PutPageWidth.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&pageWidth)),
+		uintptr(math.Float64bits(pageWidth)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -143,7 +157,7 @@ func (i *ICoreWebView2PrintSettings) PutPageHeight(pageHeight float64) error {
 
 	hr, _, _ := i.Vtbl.PutPageHeight.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&pageHeight)),
+		uintptr(math.Float64bits(pageHeight)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -169,7 +183,7 @@ func (i *ICoreWebView2PrintSettings) PutMarginTop(marginTop float64) error {
 
 	hr, _, _ := i.Vtbl.PutMarginTop.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&marginTop)),
+		uintptr(math.Float64bits(marginTop)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -195,7 +209,7 @@ func (i *ICoreWebView2PrintSettings) PutMarginBottom(marginBottom float64) error
 
 	hr, _, _ := i.Vtbl.PutMarginBottom.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&marginBottom)),
+		uintptr(math.Float64bits(marginBottom)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -221,7 +235,7 @@ func (i *ICoreWebView2PrintSettings) PutMarginLeft(marginLeft float64) error {
 
 	hr, _, _ := i.Vtbl.PutMarginLeft.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&marginLeft)),
+		uintptr(math.Float64bits(marginLeft)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -247,7 +261,7 @@ func (i *ICoreWebView2PrintSettings) PutMarginRight(marginRight float64) error {
 
 	hr, _, _ := i.Vtbl.PutMarginRight.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&marginRight)),
+		uintptr(math.Float64bits(marginRight)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -275,7 +289,7 @@ func (i *ICoreWebView2PrintSettings) PutShouldPrintBackgrounds(shouldPrintBackgr
 
 	hr, _, _ := i.Vtbl.PutShouldPrintBackgrounds.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&shouldPrintBackgrounds)),
+		boolToUintptr(shouldPrintBackgrounds),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -303,7 +317,7 @@ func (i *ICoreWebView2PrintSettings) PutShouldPrintSelectionOnly(shouldPrintSele
 
 	hr, _, _ := i.Vtbl.PutShouldPrintSelectionOnly.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&shouldPrintSelectionOnly)),
+		boolToUintptr(shouldPrintSelectionOnly),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -331,7 +345,7 @@ func (i *ICoreWebView2PrintSettings) PutShouldPrintHeaderAndFooter(shouldPrintHe
 
 	hr, _, _ := i.Vtbl.PutShouldPrintHeaderAndFooter.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&shouldPrintHeaderAndFooter)),
+		boolToUintptr(shouldPrintHeaderAndFooter),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -345,7 +359,7 @@ func (i *ICoreWebView2PrintSettings) GetHeaderTitle() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetHeaderTitle.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_headerTitle)),
+		uintptr(unsafe.Pointer(&_headerTitle)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -380,7 +394,7 @@ func (i *ICoreWebView2PrintSettings) GetFooterUri() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetFooterUri.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_footerUri)),
+		uintptr(unsafe.Pointer(&_footerUri)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)

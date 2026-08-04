@@ -47,9 +47,9 @@ func TestInterfaceEnum(t *testing.T) {
 	// Remove the `com.go` filename
 	files = files[1:]
 
-	//for _, file := range files {
-	//	os.WriteFile("testfiles/"+file.FileName+".txt", file.Content.Bytes(), 0644)
-	//}
+	if updateGoldens(t, files) {
+		return
+	}
 
 	expected := []*types.GeneratedFile{
 		{

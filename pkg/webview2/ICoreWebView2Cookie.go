@@ -4,6 +4,7 @@ package webview2
 
 import (
 	"golang.org/x/sys/windows"
+	"math"
 	"syscall"
 	"unsafe"
 )
@@ -35,13 +36,26 @@ func (i *ICoreWebView2Cookie) AddRef() uintptr {
 	return refCounter
 }
 
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2Cookie) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
 func (i *ICoreWebView2Cookie) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _name *uint16
 
 	hr, _, _ := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_name)),
+		uintptr(unsafe.Pointer(&_name)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -58,7 +72,7 @@ func (i *ICoreWebView2Cookie) GetValue() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetValue.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_value)),
+		uintptr(unsafe.Pointer(&_value)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -93,7 +107,7 @@ func (i *ICoreWebView2Cookie) GetDomain() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetDomain.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_domain)),
+		uintptr(unsafe.Pointer(&_domain)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -110,7 +124,7 @@ func (i *ICoreWebView2Cookie) GetPath() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetPath.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_path)),
+		uintptr(unsafe.Pointer(&_path)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -139,7 +153,7 @@ func (i *ICoreWebView2Cookie) PutExpires(expires float64) error {
 
 	hr, _, _ := i.Vtbl.PutExpires.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&expires)),
+		uintptr(math.Float64bits(expires)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -167,7 +181,7 @@ func (i *ICoreWebView2Cookie) PutIsHttpOnly(isHttpOnly bool) error {
 
 	hr, _, _ := i.Vtbl.PutIsHttpOnly.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isHttpOnly)),
+		boolToUintptr(isHttpOnly),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -221,7 +235,7 @@ func (i *ICoreWebView2Cookie) PutIsSecure(isSecure bool) error {
 
 	hr, _, _ := i.Vtbl.PutIsSecure.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isSecure)),
+		boolToUintptr(isSecure),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

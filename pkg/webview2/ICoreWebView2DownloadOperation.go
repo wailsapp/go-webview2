@@ -40,6 +40,19 @@ func (i *ICoreWebView2DownloadOperation) AddRef() uintptr {
 	return refCounter
 }
 
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2DownloadOperation) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
 func (i *ICoreWebView2DownloadOperation) AddBytesReceivedChanged(eventHandler *ICoreWebView2BytesReceivedChangedEventHandler) (EventRegistrationToken, error) {
 
 	var token EventRegistrationToken
@@ -59,7 +72,7 @@ func (i *ICoreWebView2DownloadOperation) RemoveBytesReceivedChanged(token EventR
 
 	hr, _, _ := i.Vtbl.RemoveBytesReceivedChanged.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -86,7 +99,7 @@ func (i *ICoreWebView2DownloadOperation) RemoveEstimatedEndTimeChanged(token Eve
 
 	hr, _, _ := i.Vtbl.RemoveEstimatedEndTimeChanged.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -113,7 +126,7 @@ func (i *ICoreWebView2DownloadOperation) RemoveStateChanged(token EventRegistrat
 
 	hr, _, _ := i.Vtbl.RemoveStateChanged.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -127,7 +140,7 @@ func (i *ICoreWebView2DownloadOperation) GetUri() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetUri.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_uri)),
+		uintptr(unsafe.Pointer(&_uri)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -144,7 +157,7 @@ func (i *ICoreWebView2DownloadOperation) GetContentDisposition() (string, error)
 
 	hr, _, _ := i.Vtbl.GetContentDisposition.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_contentDisposition)),
+		uintptr(unsafe.Pointer(&_contentDisposition)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -161,7 +174,7 @@ func (i *ICoreWebView2DownloadOperation) GetMimeType() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetMimeType.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_mimeType)),
+		uintptr(unsafe.Pointer(&_mimeType)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -206,7 +219,7 @@ func (i *ICoreWebView2DownloadOperation) GetEstimatedEndTime() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetEstimatedEndTime.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_estimatedEndTime)),
+		uintptr(unsafe.Pointer(&_estimatedEndTime)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -223,7 +236,7 @@ func (i *ICoreWebView2DownloadOperation) GetResultFilePath() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetResultFilePath.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_resultFilePath)),
+		uintptr(unsafe.Pointer(&_resultFilePath)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)

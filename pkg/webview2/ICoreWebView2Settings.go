@@ -39,6 +39,19 @@ func (i *ICoreWebView2Settings) AddRef() uintptr {
 	return refCounter
 }
 
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2Settings) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
 func (i *ICoreWebView2Settings) GetIsScriptEnabled() (bool, error) {
 	// Create int32 to hold bool result
 	var _isScriptEnabled int32
@@ -59,7 +72,7 @@ func (i *ICoreWebView2Settings) PutIsScriptEnabled(isScriptEnabled bool) error {
 
 	hr, _, _ := i.Vtbl.PutIsScriptEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isScriptEnabled)),
+		boolToUintptr(isScriptEnabled),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -87,7 +100,7 @@ func (i *ICoreWebView2Settings) PutIsWebMessageEnabled(isWebMessageEnabled bool)
 
 	hr, _, _ := i.Vtbl.PutIsWebMessageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isWebMessageEnabled)),
+		boolToUintptr(isWebMessageEnabled),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -115,7 +128,7 @@ func (i *ICoreWebView2Settings) PutAreDefaultScriptDialogsEnabled(areDefaultScri
 
 	hr, _, _ := i.Vtbl.PutAreDefaultScriptDialogsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&areDefaultScriptDialogsEnabled)),
+		boolToUintptr(areDefaultScriptDialogsEnabled),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -143,7 +156,7 @@ func (i *ICoreWebView2Settings) PutIsStatusBarEnabled(isStatusBarEnabled bool) e
 
 	hr, _, _ := i.Vtbl.PutIsStatusBarEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&isStatusBarEnabled)),
+		boolToUintptr(isStatusBarEnabled),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -171,7 +184,7 @@ func (i *ICoreWebView2Settings) PutAreDevToolsEnabled(areDevToolsEnabled bool) e
 
 	hr, _, _ := i.Vtbl.PutAreDevToolsEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&areDevToolsEnabled)),
+		boolToUintptr(areDevToolsEnabled),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -199,7 +212,7 @@ func (i *ICoreWebView2Settings) PutAreDefaultContextMenusEnabled(enabled bool) e
 
 	hr, _, _ := i.Vtbl.PutAreDefaultContextMenusEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&enabled)),
+		boolToUintptr(enabled),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -227,7 +240,7 @@ func (i *ICoreWebView2Settings) PutAreHostObjectsAllowed(allowed bool) error {
 
 	hr, _, _ := i.Vtbl.PutAreHostObjectsAllowed.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&allowed)),
+		boolToUintptr(allowed),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -255,7 +268,7 @@ func (i *ICoreWebView2Settings) PutIsZoomControlEnabled(enabled bool) error {
 
 	hr, _, _ := i.Vtbl.PutIsZoomControlEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&enabled)),
+		boolToUintptr(enabled),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -283,7 +296,7 @@ func (i *ICoreWebView2Settings) PutIsBuiltInErrorPageEnabled(enabled bool) error
 
 	hr, _, _ := i.Vtbl.PutIsBuiltInErrorPageEnabled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&enabled)),
+		boolToUintptr(enabled),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

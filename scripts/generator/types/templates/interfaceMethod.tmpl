@@ -2,7 +2,12 @@
 func (i *{{.Name}}) {{.Method.ProcessedName}}({{.Method.GoInputs}}) {{.Method.GoReturnTypes}} {
 {{ .Method.SetupCode}}
 
-	{{ .Method.GetHResultVariable }}, _, err := i.Vtbl.{{.Method.ProcessedName}}.Call(
+	{{/* The third return of syscall.LazyProc.Call is a syscall.Errno, which is NON-NIL even
+	     on success ("The operation completed successfully"), so returning it made every
+	     successful call look like a failure. HRESULT is the real status and is checked below.
+	     Fixed across the generated tree by hand in "fix: com error handling" and "fix:
+	     mischanged error values" but never here, so a regeneration reintroduced it. */}}
+	{{ .Method.GetHResultVariable }}, _, _ := i.Vtbl.{{.Method.ProcessedName}}.Call(
 		uintptr(unsafe.Pointer(i)),
 {{ .Method.VtableCallInputs}}	)
 

@@ -3,7 +3,9 @@ package types
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"github.com/leaanthony/slicer"
+	"go/format"
 	"log"
 	"strings"
 	"text/template"
@@ -31,10 +33,37 @@ func (i *IDL) Process() error {
 }
 
 func (i *IDL) Generate() ([]*GeneratedFile, error) {
+	// Accumulate across libraries rather than returning inside the loop. Every WebView2 IDL
+	// declares exactly one, so the old early return was never wrong -- it just read as a loop while
+	// behaving like an index, which is the kind of thing that stops being harmless quietly.
+	var all []*GeneratedFile
 	for _, library := range i.Libraries {
-		return library.Generate()
+		files, err := library.Generate()
+		if err != nil {
+			return nil, err
+		}
+		all = append(all, files...)
 	}
-	return nil, nil
+	return gofmtAll(all)
+}
+
+// gofmtAll formats every generated file, which the generator did not previously do although the
+// committed tree is gofmt-clean -- so somebody was formatting the output by hand afterwards. That
+// left ~180 files differing from a fresh generation by nothing but import order and blank lines,
+// which is enough noise to hide a real change in a regeneration diff, and hiding real changes in
+// regeneration diffs is how this package accumulated hand-patched output in the first place.
+//
+// The error path is a second, unlooked-for benefit: a template that emits invalid Go now fails the
+// generator by name instead of writing a file that only fails later at `go build`.
+func gofmtAll(files []*GeneratedFile) ([]*GeneratedFile, error) {
+	for _, f := range files {
+		formatted, err := format.Source(f.Content.Bytes())
+		if err != nil {
+			return nil, fmt.Errorf("generated %s is not valid Go: %w", f.FileName, err)
+		}
+		f.Content = bytes.NewBuffer(formatted)
+	}
+	return files, nil
 }
 
 type Import struct {
@@ -54,10 +83,29 @@ type Library struct {
 	forewardInterfaceDeclarations slicer.StringSlicer
 	enums                         slicer.StringSlicer
 	packageName                   string
+	interfaces                    map[string]*InterfaceDeclaration
 }
 
 func (l *Library) Process() error {
 	l.packageName = strings.ToLower(l.Name)
+	// Index the interfaces AND the enums before processing any of them: resolving an inheritance
+	// chain needs every declaration to be findable by name, and nothing guarantees a base -- or an
+	// enum -- is declared first.
+	//
+	// The enums were previously registered as each one was processed, while Param.IsEnum() is
+	// consulted while processing an INTERFACE. An enum declared after the interface that uses it
+	// therefore looked like an unknown type, which used to mean a silently wrong &address and now
+	// means the generator stops with advice that does not apply. Microsoft's IDLs happen to put
+	// every enum first, which is the only reason this never fired.
+	l.interfaces = map[string]*InterfaceDeclaration{}
+	for _, declaration := range l.Declarations {
+		if declaration.Interface != nil {
+			l.interfaces[declaration.Interface.Name] = declaration.Interface
+		}
+		if declaration.Enum != nil {
+			l.enums.Add(declaration.Enum.Name)
+		}
+	}
 	for _, declaration := range l.Declarations {
 		err := declaration.Process(l)
 		if err != nil {

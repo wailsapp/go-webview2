@@ -28,13 +28,26 @@ func (i *ICoreWebView2CustomSchemeRegistration) AddRef() uintptr {
 	return refCounter
 }
 
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2CustomSchemeRegistration) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
 func (i *ICoreWebView2CustomSchemeRegistration) GetSchemeName() (string, error) {
 	// Create *uint16 to hold result
 	var _schemeName *uint16
 
 	hr, _, _ := i.Vtbl.GetSchemeName.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_schemeName)),
+		uintptr(unsafe.Pointer(&_schemeName)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -65,7 +78,7 @@ func (i *ICoreWebView2CustomSchemeRegistration) PutTreatAsSecure(value bool) err
 
 	hr, _, _ := i.Vtbl.PutTreatAsSecure.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		boolToUintptr(value),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -81,7 +94,7 @@ func (i *ICoreWebView2CustomSchemeRegistration) GetAllowedOrigins() (uint32, *st
 	hr, _, _ := i.Vtbl.GetAllowedOrigins.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(&allowedOriginsCount)),
-		uintptr(unsafe.Pointer(allowedOrigins)),
+		uintptr(unsafe.Pointer(&allowedOrigins)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, nil, syscall.Errno(hr)
@@ -99,7 +112,7 @@ func (i *ICoreWebView2CustomSchemeRegistration) SetAllowedOrigins(allowedOrigins
 
 	hr, _, _ := i.Vtbl.SetAllowedOrigins.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&allowedOriginsCount)),
+		uintptr(allowedOriginsCount),
 		uintptr(unsafe.Pointer(_allowedOrigins)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
@@ -128,7 +141,7 @@ func (i *ICoreWebView2CustomSchemeRegistration) PutHasAuthorityComponent(hasAuth
 
 	hr, _, _ := i.Vtbl.PutHasAuthorityComponent.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&hasAuthorityComponent)),
+		boolToUintptr(hasAuthorityComponent),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

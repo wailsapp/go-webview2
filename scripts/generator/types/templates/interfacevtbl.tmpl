@@ -10,8 +10,24 @@ import (
 )
 {{- end}}
 
+{{/* A COM vtable is FLAT: a derived interface's vtable begins with its entire base chain and
+     only then its own methods. Embedding IUnknownVtbl instead of the parent's vtable omitted
+     every intermediate interface's slots, so each method sat too early by however many
+     methods the chain above it declares, and a call landed on whichever unrelated method
+     occupies that offset. It cannot fail loudly -- the wrong slot holds a real function
+     pointer, so it runs and returns S_OK.
+
+     The IDL always states a base ("interface ICoreWebView2_2 : ICoreWebView2") and the parser
+     already captures it as BaseClass; it was simply never used here. A first-generation
+     interface's base IS IUnknown, so one expression covers both cases.
+
+     Concretely this moves ICoreWebView2_14's AddServerCertificateErrorDetected from slot 4 --
+     ICoreWebView2::get_Settings, whose single out-parameter duly wrote the Settings pointer
+     over the caller's event-handler struct -- to its correct slot 107. 88 interfaces were
+     affected. Base-interface calls were always correct, which is why Navigate and
+     AddNavigationCompleted worked throughout and hid this for as long as they did. */}}
 type {{.Name}}Vtbl struct {
-	IUnknownVtbl
+	{{ if .BaseClass }}{{.BaseClass}}Vtbl{{ else }}IUnknownVtbl{{ end }}
 	{{- range .Methods}}
 	{{.ProcessedName}} ComProc
 	{{- end}}
@@ -28,12 +44,54 @@ func (i *{{.Name}}) AddRef() uintptr {
 	refCounter, _, _ := i.Vtbl.AddRef.Call(uintptr(unsafe.Pointer(i)))
 	return refCounter
 }
+{{ if not .HasInvokeMethod }}
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *{{.Name}}) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+{{ end }}
 
+{{/* The QueryInterface accessor belongs on an interface of the OBJECT that can answer it, and
+     the declared chain's ROOT is what names that object -- not the immediate base. See
+     InterfaceDeclaration.RootInterface.
+
+     The receiver was hardcoded to ICoreWebView2. For the ICoreWebView2_N chain that is right:
+     same object, so a webview can hand out ICoreWebView2_14 without walking thirteen
+     accessors. For every other chain it is wrong, and uselessly so --
+     GetICoreWebView2Controller2 hung off ICoreWebView2, which is a different object and can
+     only fail, while ICoreWebView2Controller, which can answer, had no accessor at all. Rooting
+     on the chain start fixes those and leaves the ICoreWebView2_N family untouched, so no
+     existing caller breaks.
+
+     An interface whose base is IUnknown gets NO accessor, here or before this change: the guard
+     below is BaseClass, which generateVtbl blanks for IUnknown. So the 169 such interfaces --
+     ICoreWebView2EnvironmentOptions among them -- have never had one, and there is no sibling
+     interface to hang one on. Giving them one would be an API addition needing a decision about
+     where it belongs, not a fix. (An earlier version of this comment claimed they "keep the
+     ICoreWebView2 receiver they have today"; there was nothing to keep.)
+
+     RootInterface is non-empty exactly when BaseClass is not IUnknown, which is the same condition
+     as the guard -- so there is no second case to handle. */}}
 {{if .BaseClass }}
-func (i *ICoreWebView2) Get{{.Name}}() *{{.Name}} {
+func (i *{{.RootInterface}}) Get{{.Name}}() *{{.Name}} {
 	var result *{{.Name}}
 
 	iid{{.Name}} := NewGUID({{.Header.AsString}})
+	// The HRESULT is deliberately not returned, because changing the signature of all 82 of these
+	// accessors is an API break. It is E_NOINTERFACE whenever the installed WebView2 Runtime is
+	// older than this interface, which is the normal case rather than an exotic one -- and then
+	// result stays nil and the CALLER's next method call dereferences it. Callers must nil-check.
+	//
+	// This also leaks a reference on success: QueryInterface AddRefs, and no Release is generated.
+	// Use Vtbl.CallRelease(unsafe.Pointer(x)) via the embedded IUnknownVtbl when finished.
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iid{{.Name}})),

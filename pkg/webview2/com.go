@@ -32,6 +32,12 @@ type IUnknownVtbl struct {
 	Release        ComProc
 }
 
+// CallRelease returns the new reference count, which is what IUnknown::Release returns.
+//
+// This used to return error, built from the Errno that LazyProc.Call yields -- which is
+// non-nil on success, so `err != windows.ERROR_SUCCESS` was true for every successful
+// Release and the refcount was thrown away. pkg/edge/com.go and the committed
+// pkg/webview2/com.go both already carry this corrected form; only the template did not.
 func (i *IUnknownVtbl) CallRelease(this unsafe.Pointer) uint32 {
 	ret, _, _ := i.Release.Call(
 		uintptr(this),
@@ -359,4 +365,17 @@ func (i *IStream) Read(p []byte) (int, error) {
 	default:
 		return 0, syscall.Errno(res)
 	}
+}
+
+// boolToUintptr converts a Go bool to a Win32 BOOL passed by value.
+//
+// A COM in-parameter declared BOOL is a 4-byte integer passed BY VALUE. Handing over the
+// address of a Go bool instead makes the callee read a pointer as an integer -- wrong, and
+// wrong differently on each call. uintptr(b) is not a legal Go conversion, so the branch in
+// Param.processVtableCallInput emits a call to this instead.
+func boolToUintptr(b bool) uintptr {
+	if b {
+		return 1
+	}
+	return 0
 }

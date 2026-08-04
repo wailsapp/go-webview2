@@ -29,13 +29,26 @@ func (i *ICoreWebView2Frame) AddRef() uintptr {
 	return refCounter
 }
 
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2Frame) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
 func (i *ICoreWebView2Frame) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _name *uint16
 
 	hr, _, _ := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_name)),
+		uintptr(unsafe.Pointer(&_name)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -65,7 +78,7 @@ func (i *ICoreWebView2Frame) RemoveNameChanged(token EventRegistrationToken) err
 
 	hr, _, _ := i.Vtbl.RemoveNameChanged.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -90,7 +103,7 @@ func (i *ICoreWebView2Frame) AddHostObjectToScriptWithOrigins(name string, objec
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(_name)),
 		uintptr(unsafe.Pointer(object)),
-		uintptr(unsafe.Pointer(&originsCount)),
+		uintptr(originsCount),
 		uintptr(unsafe.Pointer(_origins)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
@@ -136,7 +149,7 @@ func (i *ICoreWebView2Frame) RemoveDestroyed(token EventRegistrationToken) error
 
 	hr, _, _ := i.Vtbl.RemoveDestroyed.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&token)),
+		uintptr(*(*uint64)(unsafe.Pointer(&token))),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

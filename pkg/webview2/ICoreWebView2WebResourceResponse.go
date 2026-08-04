@@ -28,6 +28,19 @@ func (i *ICoreWebView2WebResourceResponse) AddRef() uintptr {
 	return refCounter
 }
 
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2WebResourceResponse) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
 func (i *ICoreWebView2WebResourceResponse) GetContent() (*IStream, error) {
 
 	var content *IStream
@@ -68,13 +81,13 @@ func (i *ICoreWebView2WebResourceResponse) GetHeaders() (*ICoreWebView2HttpRespo
 	return headers, nil
 }
 
-func (i *ICoreWebView2WebResourceResponse) GetStatusCode() (int, error) {
+func (i *ICoreWebView2WebResourceResponse) GetStatusCode() (int32, error) {
 
-	var statusCode int
+	var statusCode int32
 
 	hr, _, _ := i.Vtbl.GetStatusCode.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(statusCode),
+		uintptr(unsafe.Pointer(&statusCode)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return 0, syscall.Errno(hr)
@@ -82,7 +95,7 @@ func (i *ICoreWebView2WebResourceResponse) GetStatusCode() (int, error) {
 	return statusCode, nil
 }
 
-func (i *ICoreWebView2WebResourceResponse) PutStatusCode(statusCode int) error {
+func (i *ICoreWebView2WebResourceResponse) PutStatusCode(statusCode int32) error {
 
 	hr, _, _ := i.Vtbl.PutStatusCode.Call(
 		uintptr(unsafe.Pointer(i)),
@@ -100,7 +113,7 @@ func (i *ICoreWebView2WebResourceResponse) GetReasonPhrase() (string, error) {
 
 	hr, _, _ := i.Vtbl.GetReasonPhrase.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_reasonPhrase)),
+		uintptr(unsafe.Pointer(&_reasonPhrase)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)

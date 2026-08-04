@@ -10,13 +10,18 @@ func {{.Declaration.Name}}IUnknownRelease(this *{{.Declaration.Name}}) uintptr {
 	return this.impl.Release()
 }
 
-func {{.Declaration.Name}}Invoke(this *{{.Declaration.Name}}, {{.InvokeMethod.GoInputs}}) uintptr {
+{{/* CallbackInputs, not GoInputs: this function is the target of syscall.NewCallback, so its
+     parameters are whatever WebView2 left in the registers -- not the marshalled Go types an
+     outbound method is free to declare. GoInputs gave three handlers a "string" result parameter,
+     and because the vtable below is a package-level var, that made merely importing the package
+     panic during init on amd64. See Param.AsCallbackType. */ -}}
+func {{.Declaration.Name}}Invoke(this *{{.Declaration.Name}}, {{.InvokeMethod.CallbackInputs}}) uintptr {
 	return this.impl.{{.InvokeMethod.GoMethodName}}({{.InvokeMethod.InputParamNames}})
 }
 
 type {{.Declaration.Name}}Impl interface {
 	IUnknownImpl
-	{{.InvokeMethod.GoMethodName}}({{.InvokeMethod.GoInputs}}) uintptr
+	{{.InvokeMethod.GoMethodName}}({{.InvokeMethod.CallbackInputs}}) uintptr
 }
 
 var {{.Declaration.Name}}Fn = {{.Declaration.Name}}Vtbl{

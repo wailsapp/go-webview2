@@ -44,6 +44,10 @@ library WebView2 {
 	// Remove the `com.go` filename
 	files = files[1:]
 
+	if updateGoldens(t, files) {
+		return
+	}
+
 	expected := []*types.GeneratedFile{
 		{
 			FileName: "ICoreWebView2.go",

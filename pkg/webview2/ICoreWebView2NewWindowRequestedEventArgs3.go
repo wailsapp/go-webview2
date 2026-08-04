@@ -9,7 +9,7 @@ import (
 )
 
 type ICoreWebView2NewWindowRequestedEventArgs3Vtbl struct {
-	IUnknownVtbl
+	ICoreWebView2NewWindowRequestedEventArgs2Vtbl
 	GetOriginalSourceFrameInfo ComProc
 }
 
@@ -22,10 +22,30 @@ func (i *ICoreWebView2NewWindowRequestedEventArgs3) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2) GetICoreWebView2NewWindowRequestedEventArgs3() *ICoreWebView2NewWindowRequestedEventArgs3 {
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2NewWindowRequestedEventArgs3) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
+func (i *ICoreWebView2NewWindowRequestedEventArgs) GetICoreWebView2NewWindowRequestedEventArgs3() *ICoreWebView2NewWindowRequestedEventArgs3 {
 	var result *ICoreWebView2NewWindowRequestedEventArgs3
 
 	iidICoreWebView2NewWindowRequestedEventArgs3 := NewGUID("{842bed3c-6ad6-4dd9-b938-28c96667ad66}")
+	// The HRESULT is deliberately not returned, because changing the signature of all 82 of these
+	// accessors is an API break. It is E_NOINTERFACE whenever the installed WebView2 Runtime is
+	// older than this interface, which is the normal case rather than an exotic one -- and then
+	// result stays nil and the CALLER's next method call dereferences it. Callers must nil-check.
+	//
+	// This also leaks a reference on success: QueryInterface AddRefs, and no Release is generated.
+	// Use Vtbl.CallRelease(unsafe.Pointer(x)) via the embedded IUnknownVtbl when finished.
 	_, _, _ = i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2NewWindowRequestedEventArgs3)),

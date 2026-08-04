@@ -9,11 +9,6 @@ tasks:
       - git add .
       - git commit -m "Updated mappings"
 
-  gofmt:
-    dir: pkg/webview2
-    cmds:
-      - go fmt
-
   test:
     cmds:
       - go test ./...
@@ -22,7 +17,6 @@ tasks:
     dir: scripts
     cmds:
       - go run update_version_mapping.go
-      - task: gofmt
       - go fmt update_version_mapping.go
       - task: test
       - task: commit
@@ -31,7 +25,6 @@ tasks:
     dir: scripts
     cmds:
       - go run update_version_mapping.go -forced
-      - task: gofmt
       - go fmt update_version_mapping.go
       - task: test
       - task: commit

@@ -1,15 +1,16 @@
 //go:build windows
 
 package webview2
+
 import (
-	"unsafe"
-	"syscall"
 	"golang.org/x/sys/windows"
+	"syscall"
+	"unsafe"
 )
 
 type ICoreWebView2FrameInfoVtbl struct {
 	IUnknownVtbl
-	GetName ComProc
+	GetName   ComProc
 	GetSource ComProc
 }
 
@@ -22,15 +23,26 @@ func (i *ICoreWebView2FrameInfo) AddRef() uintptr {
 	return refCounter
 }
 
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2FrameInfo) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
 
 func (i *ICoreWebView2FrameInfo) GetName() (string, error) {
 	// Create *uint16 to hold result
 	var _name *uint16
 
-
-	hr, _, err := i.Vtbl.GetName.Call(
+	hr, _, _ := i.Vtbl.GetName.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_name)),
+		uintptr(unsafe.Pointer(&_name)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -38,17 +50,16 @@ func (i *ICoreWebView2FrameInfo) GetName() (string, error) {
 	// Get result and cleanup
 	name := UTF16PtrToString(_name)
 	CoTaskMemFree(unsafe.Pointer(_name))
-	return name, err
+	return name, nil
 }
 
 func (i *ICoreWebView2FrameInfo) GetSource() (string, error) {
 	// Create *uint16 to hold result
 	var _source *uint16
 
-
-	hr, _, err := i.Vtbl.GetSource.Call(
+	hr, _, _ := i.Vtbl.GetSource.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_source)),
+		uintptr(unsafe.Pointer(&_source)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -56,5 +67,5 @@ func (i *ICoreWebView2FrameInfo) GetSource() (string, error) {
 	// Get result and cleanup
 	source := UTF16PtrToString(_source)
 	CoTaskMemFree(unsafe.Pointer(_source))
-	return source, err
+	return source, nil
 }

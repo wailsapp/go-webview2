@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"embed"
 	_ "embed"
+	"flag"
 	"github.com/matryer/is"
 	"github.com/stretchr/testify/require"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"updater/generator/types"
@@ -20,6 +23,36 @@ func testfile(path string) *bytes.Buffer {
 		panic(err)
 	}
 	return bytes.NewBuffer(f)
+}
+
+// update rewrites the goldens in testfiles/ from the generator's current output:
+//
+//	go test ./generator -update    # then review the diff, then run without -update
+//
+// The goldens are the only executable record of what the templates are supposed to produce, so a
+// template change is not finished until they are regenerated and the diff read. Every test used to
+// carry this as a commented-out os.WriteFile loop, which made regenerating them an edit-run-revert
+// cycle across seven files -- enough friction that fixing generated output by hand looks like the
+// cheaper option. It is not: the next regeneration silently reverts it.
+var update = flag.Bool("update", false, "rewrite testfiles/ goldens from generator output")
+
+// updateGoldens writes each generated file as its golden when -update is set, and reports whether
+// it did. Callers return immediately if so: the goldens are embedded at compile time, so the
+// assertions in the same run would still be comparing against the previous build's copies.
+// Call it after the com.go strip, or com.go acquires a golden no test asserts on.
+func updateGoldens(t *testing.T, files []*types.GeneratedFile) bool {
+	t.Helper()
+	if !*update {
+		return false
+	}
+	for _, f := range files {
+		name := filepath.Join("testfiles", f.FileName+".txt")
+		if err := os.WriteFile(name, f.Content.Bytes(), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		t.Logf("updated %s", name)
+	}
+	return true
 }
 
 func makeOutput(input string) *bytes.Buffer {
@@ -93,6 +126,10 @@ func TestEnum(t *testing.T) {
 
 	// Remove the `com.go` filename
 	files = files[1:]
+
+	if updateGoldens(t, files) {
+		return
+	}
 
 	expected := []*types.GeneratedFile{
 		{

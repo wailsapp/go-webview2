@@ -29,6 +29,19 @@ func (i *ICoreWebView2DownloadStartingEventArgs) AddRef() uintptr {
 	return refCounter
 }
 
+// Release drops one reference and returns the new count.
+//
+// AddRef was generated for all 252 interfaces and Release for none, which left every caller of a
+// Get<Interface>() accessor leaking: QueryInterface AddRefs on success and there was no matching
+// call to make, short of reaching through the embedded IUnknownVtbl for CallRelease. Additive, so
+// no existing caller changes.
+//
+// Not generated for handler interfaces: those are objects WE implement and hand to WebView2, so
+// their lifetime is the Go object's, and calling through the vtable would re-enter our own impl.
+func (i *ICoreWebView2DownloadStartingEventArgs) Release() uint32 {
+	return i.Vtbl.CallRelease(unsafe.Pointer(i))
+}
+
 func (i *ICoreWebView2DownloadStartingEventArgs) GetDownloadOperation() (*ICoreWebView2DownloadOperation, error) {
 
 	var downloadOperation *ICoreWebView2DownloadOperation
@@ -63,7 +76,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) PutCancel(cancel bool) error {
 
 	hr, _, _ := i.Vtbl.PutCancel.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&cancel)),
+		boolToUintptr(cancel),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
@@ -77,7 +90,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) GetResultFilePath() (string, er
 
 	hr, _, _ := i.Vtbl.GetResultFilePath.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(_resultFilePath)),
+		uintptr(unsafe.Pointer(&_resultFilePath)),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return "", syscall.Errno(hr)
@@ -126,7 +139,7 @@ func (i *ICoreWebView2DownloadStartingEventArgs) PutHandled(handled bool) error 
 
 	hr, _, _ := i.Vtbl.PutHandled.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&handled)),
+		boolToUintptr(handled),
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)
