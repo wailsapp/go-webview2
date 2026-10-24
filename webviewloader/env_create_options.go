@@ -149,15 +149,21 @@ func WithExclusiveUserDataFolderAccess(exclusive bool) option {
 	}
 }
 
+// WithCustomCrashReportingEnabled keeps WebView2 crash reports local.
+func WithCustomCrashReportingEnabled(enabled bool) option {
+	return func(o *environmentOptions) { o.customCrashReportingEnabled = enabled }
+}
+
 type option func(*environmentOptions)
 
 var _ iCoreWebView2EnvironmentOptions = &environmentOptions{}
 var _ iCoreWebView2EnvironmentOptions2 = &environmentOptions{}
 
 type environmentOptions struct {
-	browserExecutableFolder string
-	userDataFolder          string
-	preferCanary            bool
+	browserExecutableFolder     string
+	userDataFolder              string
+	preferCanary                bool
+	customCrashReportingEnabled bool
 
 	additionalBrowserArguments             string
 	language                               string
@@ -205,7 +211,27 @@ type iCoreWebView2EnvironmentOptions2 interface {
 	ExclusiveUserDataFolderAccess() bool
 }
 
+type iCoreWebView2EnvironmentOptions3 interface {
+	combridge.IUnknown
+	CustomCrashReportingEnabled() bool
+}
+
+func (o *environmentOptions) CustomCrashReportingEnabled() bool {
+	return o.customCrashReportingEnabled
+}
+
+func _iCoreWebView2EnvironmentOptions3CustomCrashReportingEnabled(this uintptr, value *int32) uintptr {
+	*value = boolToInt(combridge.Resolve[iCoreWebView2EnvironmentOptions3](this).CustomCrashReportingEnabled())
+	return uintptr(windows.S_OK)
+}
+
 func init() {
+	combridge.RegisterVTable[combridge.IUnknown, iCoreWebView2EnvironmentOptions3](
+		"{4a5c436e-a9e3-4a2e-89c3-910d3513f5cc}",
+		_iCoreWebView2EnvironmentOptions3CustomCrashReportingEnabled,
+		_iCoreWebView2EnvironmentOptionsNOP,
+	)
+
 	combridge.RegisterVTable[combridge.IUnknown, iCoreWebView2EnvironmentOptions](
 		"{2fde08a8-1e9a-4766-8c05-95a9ceb9d1c5}",
 		_iCoreWebView2EnvironmentOptionsAdditionalBrowserArguments,

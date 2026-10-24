@@ -47,16 +47,22 @@ func (i *ICoreWebView2Settings4) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebViewSettings) GetICoreWebView2Settings4() *ICoreWebView2Settings4 {
+func (i *ICoreWebViewSettings) GetICoreWebView2Settings4() (*ICoreWebView2Settings4, error) {
 	var result *ICoreWebView2Settings4
 
 	iidICoreWebView2Settings4 := NewGUID("{cb56846c-4168-4d53-b04f-03b6d6796ff2}")
-	_, _, _ = i.vtbl.QueryInterface.Call(
+	hr, _, _ := i.vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2Settings4)),
 		uintptr(unsafe.Pointer(&result)))
 
-	return result
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	}
+	if result == nil {
+		return nil, UnsupportedCapabilityError
+	}
+	return result, nil
 }
 
 func (i *ICoreWebView2Settings4) GetIsPasswordAutosaveEnabled() (bool, error) {

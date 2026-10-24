@@ -72,10 +72,11 @@ type Chromium struct {
 	webview2RuntimeVersion string
 
 	// Settings
-	Debug                 bool
-	DataPath              string
-	BrowserPath           string
-	AdditionalBrowserArgs []string
+	Debug                       bool
+	DataPath                    string
+	BrowserPath                 string
+	AdditionalBrowserArgs       []string
+	CustomCrashReportingEnabled bool
 
 	// permissions
 	permissions      map[CoreWebView2PermissionKind]CoreWebView2PermissionState
@@ -89,6 +90,7 @@ type Chromium struct {
 	ProcessFailedCallback                    func(sender *ICoreWebView2, args *ICoreWebView2ProcessFailedEventArgs)
 	ContainsFullScreenElementChangedCallback func(sender *ICoreWebView2, args *ICoreWebView2ContainsFullScreenElementChangedEventArgs)
 	AcceleratorKeyCallback                   func(uint) bool
+	PermissionRequestedCallback              func(uri string, kind CoreWebView2PermissionKind, uriErr error) CoreWebView2PermissionState
 
 	// Error handling
 	globalErrorCallback func(error)
@@ -181,14 +183,16 @@ func (e *Chromium) Embed(hwnd uintptr) bool {
 		}
 	}
 
-	browserArgs := strings.Join(e.AdditionalBrowserArgs, " ")
-	if err := createCoreWebView2EnvironmentWithOptions(e.BrowserPath, dataPath, e.envCompleted, browserArgs); err != nil {
-		e.errorCallback(fmt.Errorf("error calling Webview2Loader: %s", err.Error()))
-	}
-
 	e.webview2RuntimeVersion, err = webviewloader.GetAvailableCoreWebView2BrowserVersionString(e.BrowserPath)
 	if err != nil {
-		e.errorCallback(fmt.Errorf("error getting Webview2 runtime version: %s", err.Error()))
+		e.errorCallback(err)
+	}
+	if e.CustomCrashReportingEnabled && !HasCapability(e.webview2RuntimeVersion, CustomCrashReporting) {
+		e.errorCallback(fmt.Errorf("custom crash reporting: %w", UnsupportedCapabilityError))
+	}
+	browserArgs := strings.Join(e.AdditionalBrowserArgs, " ")
+	if err := createCoreWebView2EnvironmentWithOptions(e.BrowserPath, dataPath, e.envCompleted, browserArgs, e.CustomCrashReportingEnabled); err != nil {
+		e.errorCallback(fmt.Errorf("error calling Webview2Loader: %s", err.Error()))
 	}
 
 	var msg w32.Msg
@@ -457,13 +461,27 @@ func (e *Chromium) SetGlobalPermission(state CoreWebView2PermissionState) {
 	e.globalPermission = &state
 }
 
+type permissionRequestedEventArgs interface {
+	GetURI() (string, error)
+	GetPermissionKind() (CoreWebView2PermissionKind, error)
+	PutState(CoreWebView2PermissionState) error
+}
+
 func (e *Chromium) PermissionRequested(_ *ICoreWebView2, args *iCoreWebView2PermissionRequestedEventArgs) uintptr {
+	e.handlePermissionRequested(args)
+	return 0
+}
+
+func (e *Chromium) handlePermissionRequested(args permissionRequestedEventArgs) {
 	kind, err := args.GetPermissionKind()
 	if err != nil {
 		e.errorCallback(err)
 	}
 	var result CoreWebView2PermissionState
-	if e.globalPermission != nil {
+	if e.PermissionRequestedCallback != nil {
+		uri, uriErr := args.GetURI()
+		result = e.PermissionRequestedCallback(uri, kind, uriErr)
+	} else if e.globalPermission != nil {
 		result = *e.globalPermission
 	} else {
 		var ok bool
@@ -476,7 +494,6 @@ func (e *Chromium) PermissionRequested(_ *ICoreWebView2, args *iCoreWebView2Perm
 	if err != nil {
 		e.errorCallback(err)
 	}
-	return 0
 }
 
 func (e *Chromium) WebResourceRequested(sender *ICoreWebView2, args *ICoreWebView2WebResourceRequestedEventArgs) uintptr {
@@ -627,7 +644,12 @@ func (e *Chromium) PutIsGeneralAutofillEnabled(value bool) error {
 	if err != nil {
 		return err
 	}
-	webview2Settings4 := webview2Settings.GetICoreWebView2Settings4()
+	defer webview2Settings.Release()
+	webview2Settings4, err := webview2Settings.GetICoreWebView2Settings4()
+	if err != nil {
+		return err
+	}
+	defer webview2Settings4.Vtbl.Release.Call(uintptr(unsafe.Pointer(webview2Settings4)))
 	return webview2Settings4.PutIsGeneralAutofillEnabled(value)
 }
 
@@ -642,7 +664,12 @@ func (e *Chromium) PutIsPasswordAutosaveEnabled(value bool) error {
 	if err != nil {
 		return err
 	}
-	webview2Settings4 := webview2Settings.GetICoreWebView2Settings4()
+	defer webview2Settings.Release()
+	webview2Settings4, err := webview2Settings.GetICoreWebView2Settings4()
+	if err != nil {
+		return err
+	}
+	defer webview2Settings4.Vtbl.Release.Call(uintptr(unsafe.Pointer(webview2Settings4)))
 	return webview2Settings4.PutIsPasswordAutosaveEnabled(value)
 }
 

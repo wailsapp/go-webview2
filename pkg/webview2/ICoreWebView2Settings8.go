@@ -9,9 +9,23 @@ import (
 )
 
 type ICoreWebView2Settings8Vtbl struct {
-	IUnknownVtbl
-	GetIsReputationCheckingRequired ComProc
-	PutIsReputationCheckingRequired ComProc
+	ICoreWebView2SettingsVtbl
+	GetUserAgent                        ComProc
+	PutUserAgent                        ComProc
+	GetAreBrowserAcceleratorKeysEnabled ComProc
+	PutAreBrowserAcceleratorKeysEnabled ComProc
+	GetIsPasswordAutosaveEnabled        ComProc
+	PutIsPasswordAutosaveEnabled        ComProc
+	GetIsGeneralAutofillEnabled         ComProc
+	PutIsGeneralAutofillEnabled         ComProc
+	GetIsPinchZoomEnabled               ComProc
+	PutIsPinchZoomEnabled               ComProc
+	GetIsSwipeNavigationEnabled         ComProc
+	PutIsSwipeNavigationEnabled         ComProc
+	GetHiddenPdfToolbarItems            ComProc
+	PutHiddenPdfToolbarItems            ComProc
+	GetIsReputationCheckingRequired     ComProc
+	PutIsReputationCheckingRequired     ComProc
 }
 
 type ICoreWebView2Settings8 struct {
@@ -23,16 +37,22 @@ func (i *ICoreWebView2Settings8) AddRef() uintptr {
 	return refCounter
 }
 
-func (i *ICoreWebView2) GetICoreWebView2Settings8() *ICoreWebView2Settings8 {
+func (i *ICoreWebView2Settings) GetICoreWebView2Settings8() (*ICoreWebView2Settings8, error) {
 	var result *ICoreWebView2Settings8
 
 	iidICoreWebView2Settings8 := NewGUID("{9e6b0e8f-86ad-4e81-8147-a9b5edb68650}")
-	_, _, _ = i.Vtbl.QueryInterface.Call(
+	hr, _, _ := i.Vtbl.QueryInterface.Call(
 		uintptr(unsafe.Pointer(i)),
 		uintptr(unsafe.Pointer(iidICoreWebView2Settings8)),
 		uintptr(unsafe.Pointer(&result)))
 
-	return result
+	if windows.Handle(hr) != windows.S_OK {
+		return nil, syscall.Errno(hr)
+	}
+	if result == nil {
+		return nil, syscall.Errno(windows.E_NOINTERFACE)
+	}
+	return result, nil
 }
 
 func (i *ICoreWebView2Settings8) GetIsReputationCheckingRequired() (bool, error) {
@@ -52,10 +72,13 @@ func (i *ICoreWebView2Settings8) GetIsReputationCheckingRequired() (bool, error)
 }
 
 func (i *ICoreWebView2Settings8) PutIsReputationCheckingRequired(value bool) error {
-
+	var enabled uintptr
+	if value {
+		enabled = 1
+	}
 	hr, _, _ := i.Vtbl.PutIsReputationCheckingRequired.Call(
 		uintptr(unsafe.Pointer(i)),
-		uintptr(unsafe.Pointer(&value)),
+		enabled,
 	)
 	if windows.Handle(hr) != windows.S_OK {
 		return syscall.Errno(hr)

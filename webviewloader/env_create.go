@@ -97,8 +97,7 @@ func createWebViewEnvironmentWithClientDll(lpLibFileName string, runtimeType web
 		return err
 	}
 
-	envOptionsCom := combridge.New2[iCoreWebView2EnvironmentOptions, iCoreWebView2EnvironmentOptions2](
-		envOptions, envOptions)
+	envOptionsCom := newEnvironmentOptionsCom(envOptions)
 
 	defer envOptionsCom.Close()
 
@@ -124,6 +123,10 @@ func createWebViewEnvironmentWithClientDll(lpLibFileName string, runtimeType web
 	}
 
 	return nil
+}
+
+func newEnvironmentOptionsCom(opts *environmentOptions) *combridge.ComObject[iCoreWebView2EnvironmentOptions] {
+	return combridge.New3[iCoreWebView2EnvironmentOptions, iCoreWebView2EnvironmentOptions2, iCoreWebView2EnvironmentOptions3](opts, opts, opts)
 }
 
 type environmentCreatedHandler struct {

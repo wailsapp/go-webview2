@@ -509,6 +509,22 @@ type iCoreWebView2PermissionRequestedEventArgs struct {
 	vtbl *iCoreWebView2PermissionRequestedEventArgsVtbl
 }
 
+func (i *iCoreWebView2PermissionRequestedEventArgs) GetURI() (string, error) {
+	var _uri *uint16
+
+	hr, _, _ := i.vtbl.GetURI.Call(
+		uintptr(unsafe.Pointer(i)),
+		uintptr(unsafe.Pointer(&_uri)),
+	)
+	if windows.Handle(hr) != windows.S_OK {
+		return "", windows.Errno(hr)
+	}
+
+	uri := windows.UTF16PtrToString(_uri)
+	windows.CoTaskMemFree(unsafe.Pointer(_uri))
+	return uri, nil
+}
+
 func (i *iCoreWebView2PermissionRequestedEventArgs) GetPermissionKind() (CoreWebView2PermissionKind, error) {
 	var kind CoreWebView2PermissionKind
 

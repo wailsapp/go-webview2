@@ -3,6 +3,7 @@
 package webview2
 
 import (
+	"golang.org/x/sys/windows"
 	"unsafe"
 )
 
@@ -33,8 +34,8 @@ func ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerIUnknownRel
 	return this.impl.Release()
 }
 
-func ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerInvoke(this *ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler, errorCode uintptr, result string) uintptr {
-	return this.impl.AddScriptToExecuteOnDocumentCreatedCompleted(errorCode, result)
+func ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerInvoke(this *ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler, errorCode uintptr, result *uint16) uintptr {
+	return this.impl.AddScriptToExecuteOnDocumentCreatedCompleted(errorCode, windows.UTF16PtrToString(result))
 }
 
 type ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerImpl interface {

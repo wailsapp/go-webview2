@@ -4,6 +4,8 @@ import "github.com/wailsapp/go-webview2/webviewloader"
 
 type Capability string
 
+const CustomCrashReporting Capability = "109.0.1518.0"
+
 var UnsupportedCapabilityError = &unsupportedCapabilityError{}
 
 type unsupportedCapabilityError struct{}

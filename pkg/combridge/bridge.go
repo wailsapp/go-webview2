@@ -52,6 +52,11 @@ func New2[T IUnknown, T2 IUnknown](obj T, obj2 T2) *ComObject[T] {
 	return newComObject[T](cObj)
 }
 
+// New3 exports three independent COM interfaces on one object.
+func New3[T IUnknown, T2 IUnknown, T3 IUnknown](obj T, obj2 T2, obj3 T3) *ComObject[T] {
+	return newComObject[T](new(ifceDef[T]{obj}, ifceDef[T2]{obj2}, ifceDef[T3]{obj3}))
+}
+
 // new returns a new ComObject which implements multiple specified Com Interfaces, com calls will be redirected
 // to the specified go interfaces accordingly.
 // This is needed if a ComObject should implement multiple interfaces that are not descendants of each other,

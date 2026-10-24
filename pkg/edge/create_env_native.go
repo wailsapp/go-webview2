@@ -12,7 +12,10 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-func createCoreWebView2EnvironmentWithOptions(browserExecutableFolder, userDataFolder string, environmentCompletedHandle *iCoreWebView2CreateCoreWebView2EnvironmentCompletedHandler, additionalBrowserArgs string) error {
+func createCoreWebView2EnvironmentWithOptions(browserExecutableFolder, userDataFolder string, environmentCompletedHandle *iCoreWebView2CreateCoreWebView2EnvironmentCompletedHandler, additionalBrowserArgs string, customCrashReporting bool) error {
+	if customCrashReporting {
+		return fmt.Errorf("custom crash reporting requires the Go WebView2 loader")
+	}
 	browserPathPtr, err := windows.UTF16PtrFromString(browserExecutableFolder)
 	if err != nil {
 		return fmt.Errorf("Error calling UTF16PtrFromString for %s: %v", browserExecutableFolder, err)
