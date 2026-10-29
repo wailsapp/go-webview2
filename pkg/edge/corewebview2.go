@@ -453,7 +453,8 @@ func (e *ICoreWebView2Environment) CreateWebResourceResponse(content []byte, sta
 
 	if len(content) > 0 {
 		// Create stream for response
-		stream, err := w32.SHCreateMemStream(content)
+		var err error
+		stream, err = w32.SHCreateMemStream(content)
 		if err != nil {
 			return nil, err
 		}
